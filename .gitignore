@@ -13,3 +13,4 @@ rm_trend_radar.db
 Thumbs.db*.egg-info/
 .streamlit-smoke.*.log
 *.egg-info
+.streamlit-run.*.log
