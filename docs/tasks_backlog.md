@@ -151,13 +151,21 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-11` 確認済み記事レビュー画面を追加する
+  Done条件: 確認済み記事だけを対象に、要約、レベニューマネジメント担当者向けの示唆、原文 URL、公開候補フラグを読みやすく確認できる画面がある。
+  依存: `P4-10`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
-- 実記事を取得して確認ワークフローを画面評価する。タイトル仮重要度を使い、先に読む記事候補を絞り込む。
+- 確認済み 7 件を画面で確認し、公開候補にする記事を選ぶ。
 
 Next:
 - 複業リポ側 LP のドメインページ構成を決める
+- X 投稿文の作成範囲と送信しない下書き運用を決める
 - AI 候補生成の後続検討を行う
 
 After Next:
@@ -168,6 +176,6 @@ Later:
 
 ## Next候補
 
-1. 実記事に気になるフラグを付け、原文確認する候補を絞り込む
+1. 確認済み 7 件を確認済みレビュー画面で確認し、公開候補にする記事を選ぶ
 2. 複業リポ側 LP のドメインページ構成を決める
-3. AI 候補生成の後続検討を行う
+3. X 投稿文の作成範囲と送信しない下書き運用を決める

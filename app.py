@@ -48,8 +48,8 @@ init_db(seed=False)
 st.title("RM Trend Radar")
 st.caption("海外レベニューマネジメント記事を日本語で確認する個人用ダッシュボード")
 
-tab_articles, tab_digest, tab_public_candidates = st.tabs(
-    ["記事確認", "週次ダイジェスト", "公開候補"]
+tab_articles, tab_reviewed, tab_digest, tab_public_candidates = st.tabs(
+    ["記事確認", "確認済みレビュー", "週次ダイジェスト", "公開候補"]
 )
 
 
@@ -212,6 +212,92 @@ def render_article_detail(article: dict) -> None:
             st.rerun()
 
 
+def reviewed_table_rows(articles: list[dict]) -> list[dict]:
+    return [
+        {
+            "id": article["id"],
+            "公開日": article["published_date"],
+            "取得元": article["source_name"],
+            "重要度": article["importance"],
+            "公開候補": "候補" if article["public_candidate"] else "",
+            "タイトル": article["title_ja"],
+            "タグ": ", ".join(article["tags"][:5]),
+        }
+        for article in articles
+    ]
+
+
+def render_reviewed_article(article: dict) -> None:
+    st.subheader(article["title_ja"])
+    st.caption(article["title_en"])
+
+    meta_cols = st.columns([0.12, 0.16, 0.18, 0.18, 0.18, 0.18])
+    meta_cols[0].metric("重要度", article["importance"])
+    meta_cols[1].write(f"取得元: {article['source_name']}")
+    meta_cols[2].write(f"公開日: {article['published_date']}")
+    meta_cols[3].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
+    meta_cols[4].write(f"気になる: {'対象' if article['interest_candidate'] else '未指定'}")
+    meta_cols[5].markdown(f"[原文で詳細を見る]({article['url']})")
+
+    st.write("タグ: " + ", ".join(article["tags"]))
+    st.markdown("#### 要約")
+    st.write(article["summary_ja"])
+    st.markdown("#### RM担当者向けの示唆")
+    st.write(article["rm_implication"])
+
+    with st.expander("公開導線の確認", expanded=True):
+        st.write("LP 掲載時の役割: 短い紹介と独自の示唆だけを掲載し、詳細理解は原文サイトへ戻す。")
+        st.write("X 投稿時の役割: 記事の論点を短く知らせ、詳細は LP または原文リンクで確認してもらう。")
+        st.markdown(f"- 原文 URL: {article['url']}")
+
+    with st.expander("編集", expanded=False):
+        with st.form(key=f"reviewed_form_{article['id']}"):
+            title_ja = st.text_input("日本語タイトル", value=article["title_ja"])
+            summary_ja = st.text_area(
+                "日本語要約",
+                value=article["summary_ja"],
+                height=220,
+            )
+            tag_text = st.text_input("タグ", value=", ".join(article["tags"]))
+            importance = st.slider(
+                "重要度",
+                min_value=1,
+                max_value=5,
+                value=article["importance"],
+            )
+            rm_implication = st.text_area(
+                "RM担当者向けの示唆",
+                value=article["rm_implication"],
+                height=180,
+            )
+            note = st.text_area("手動メモ", value=article["note"], height=140)
+            public_candidate = st.checkbox(
+                "複業リポ側 LP の公開候補にする",
+                value=article["public_candidate"],
+            )
+            interest_candidate = st.checkbox(
+                "気になる記事として残す",
+                value=article["interest_candidate"],
+            )
+            submitted = st.form_submit_button("保存")
+
+        if submitted:
+            update_article_review(
+                article_id=article["id"],
+                title_ja=title_ja,
+                summary_ja=summary_ja,
+                tags=split_tags(tag_text),
+                importance=importance,
+                rm_implication=rm_implication,
+                note=note,
+                review_status=REVIEW_STATUS_CONFIRMED,
+                public_candidate=public_candidate,
+                interest_candidate=interest_candidate,
+            )
+            st.success("保存しました。")
+            st.rerun()
+
+
 with tab_articles:
     articles = get_articles()
 
@@ -352,6 +438,97 @@ with tab_articles:
                 list(detail_options),
             )
             render_article_detail(visible_articles[detail_options[selected_detail_label]])
+
+with tab_reviewed:
+    reviewed_articles = get_articles(review_status=REVIEW_STATUS_CONFIRMED)
+
+    if not reviewed_articles:
+        st.info("確認済み記事はまだありません。")
+    else:
+        reviewed_sources = sorted(
+            {article["source_name"] for article in reviewed_articles}
+        )
+        reviewed_source_filter = st.multiselect(
+            "取得元",
+            reviewed_sources,
+            default=reviewed_sources,
+            key="reviewed_sources",
+        )
+        reviewed_public_filter = st.radio(
+            "公開候補",
+            ["すべて", "候補のみ", "候補外"],
+            key="reviewed_public_filter",
+        )
+        reviewed_min_importance = st.slider(
+            "最低重要度",
+            min_value=1,
+            max_value=5,
+            value=1,
+            key="reviewed_min_importance",
+        )
+        reviewed_keyword = st.text_input("検索", key="reviewed_keyword")
+
+        visible_reviewed = []
+        for article in reviewed_articles:
+            if (
+                reviewed_source_filter
+                and article["source_name"] not in reviewed_source_filter
+            ):
+                continue
+            if reviewed_public_filter == "候補のみ" and not article["public_candidate"]:
+                continue
+            if reviewed_public_filter == "候補外" and article["public_candidate"]:
+                continue
+            if article["importance"] < reviewed_min_importance:
+                continue
+            if reviewed_keyword.strip().lower() not in _search_text(article):
+                continue
+            visible_reviewed.append(article)
+
+        reviewed_cols = st.columns(4)
+        reviewed_cols[0].metric("表示件数", len(visible_reviewed))
+        reviewed_cols[1].metric(
+            "重要度5",
+            sum(1 for article in visible_reviewed if article["importance"] == 5),
+        )
+        reviewed_cols[2].metric(
+            "公開候補",
+            sum(1 for article in visible_reviewed if article["public_candidate"]),
+        )
+        reviewed_cols[3].metric(
+            "気になる",
+            sum(1 for article in visible_reviewed if article["interest_candidate"]),
+        )
+
+        if not visible_reviewed:
+            st.info("条件に一致する確認済み記事がありません。")
+        else:
+            st.dataframe(
+                reviewed_table_rows(visible_reviewed),
+                hide_index=True,
+                use_container_width=True,
+                height=250,
+                column_config={
+                    "id": None,
+                    "公開日": st.column_config.TextColumn(width="small"),
+                    "取得元": st.column_config.TextColumn(width="small"),
+                    "重要度": st.column_config.NumberColumn(width="small"),
+                    "公開候補": st.column_config.TextColumn(width="small"),
+                    "タイトル": st.column_config.TextColumn(width="large"),
+                    "タグ": st.column_config.TextColumn(width="medium"),
+                },
+            )
+            reviewed_options = {
+                f"{article['importance']} | {article['published_date']} | {article['title_ja']}": index
+                for index, article in enumerate(visible_reviewed)
+            }
+            selected_reviewed_label = st.selectbox(
+                "読む記事",
+                list(reviewed_options),
+            )
+            render_reviewed_article(
+                visible_reviewed[reviewed_options[selected_reviewed_label]]
+            )
 
 with tab_digest:
     today = date.today()

@@ -45,9 +45,11 @@ Last Updated: 2026-05-02
 - ローカル DB の実記事 128 件を `title_priority` で再計算した結果は、`high` 62 件、`medium` 66 件、`low` 0 件である。これはタイトルだけに基づく仮分類であり、記事内容確認後の `importance` とは別に扱う。
 - `P4-10` で、記事確認画面の一覧に `気になる` チェックを追加した。これは原文確認前に気になった記事を残す内部フラグであり、確認済み状態、重要度、公開候補とは別に扱う。
 - 2026-05-03 時点で、利用者が気になる記事 42 件にチェックを入れた。そのうち `title_priority = high` の新しい順から 7 件を Codex が原文確認し、日本語要約、タグ、重要度、レベニューマネジメント担当者向けの示唆をローカル DB に下書き保存した。確認済み 7 件、気になる確認済み 7 件、公開候補 0 件である。
+- `P4-11` で、確認済み記事だけを対象に、要約、レベニューマネジメント担当者向けの示唆、原文 URL、公開候補フラグを確認できる `確認済みレビュー` タブを追加した。
+- 公開 LP と X は、記事の短い紹介、独自の示唆、原文リンクを届ける導線として扱う。詳細な内容理解は、原文サイトを開いてブラウザ翻訳も使いながら確認してもらう方針にする。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
-- 次の本線は、確認済み 7 件を画面で確認し、公開候補にする記事を選ぶこと、または残りの気になる記事から次の原文確認対象を選ぶことから始める。
+- 次の本線は、確認済みレビュー画面で確認済み 7 件を確認し、公開候補にする記事を選ぶことから始める。
 
 ## Next Re-entry
 
@@ -135,6 +137,12 @@ Last Updated: 2026-05-02
   - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認。終了時に Python tempfile cleanup の `PermissionError [WinError 5]` が出るが、AppTest 本体は `streamlit AppTest ok` で終了する。
   - `http://127.0.0.1:8502/` が HTTP 200 を返すことを確認
   - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` の DOM を確認し、`気になる`、`気になるを保存`、`気になるのみ`、`詳細表示する記事` が表示されることを確認
+  - `P4-11` 確認済みレビュー画面の追加
+  - `.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_title_priority.py tests\test_digest.py tests\test_public_export.py tests\test_rss.py -p no:cacheprovider` が 16 passed になることを確認
+  - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認。終了時に Python tempfile cleanup の `PermissionError [WinError 5]` が出るが、AppTest 本体は `streamlit AppTest ok` で終了する。
+  - `http://127.0.0.1:8502/` が HTTP 200 を返すことを確認
+  - Browser Use で `確認済みレビュー` タブを開き、表示件数 7、重要度5 が 5、公開候補 0、気になる 7、要約、RM担当者向けの示唆、公開導線の確認が表示されることを確認
   - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認
