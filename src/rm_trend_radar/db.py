@@ -301,6 +301,23 @@ def get_digest_articles(
     return [_article_from_row(row) for row in rows]
 
 
+def get_public_candidate_articles() -> list[dict[str, Any]]:
+    with connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, source_name, url, published_date, title_en, title_ja,
+                   summary_ja, tags_json, importance, rm_implication, note,
+                   review_status, reviewed_at, public_candidate
+            FROM articles
+            WHERE review_status = ?
+              AND public_candidate = 1
+            ORDER BY importance DESC, published_date DESC, id DESC
+            """,
+            (REVIEW_STATUS_CONFIRMED,),
+        ).fetchall()
+    return [_article_from_row(row) for row in rows]
+
+
 def _article_from_row(row: sqlite3.Row) -> dict[str, Any]:
     article = dict(row)
     article["public_candidate"] = bool(article["public_candidate"])

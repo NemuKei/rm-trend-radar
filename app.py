@@ -9,10 +9,15 @@ from rm_trend_radar.db import (
     REVIEW_STATUS_UNREVIEWED,
     get_articles,
     get_digest_articles,
+    get_public_candidate_articles,
     init_db,
     update_article_review,
 )
 from rm_trend_radar.digest import generate_weekly_digest_markdown
+from rm_trend_radar.public_export import (
+    generate_public_candidate_json,
+    generate_public_candidate_markdown,
+)
 
 
 REVIEW_STATUS_LABELS = {
@@ -29,7 +34,9 @@ init_db(seed=False)
 st.title("RM Trend Radar")
 st.caption("海外レベニューマネジメント記事を日本語で確認する個人用ダッシュボード")
 
-tab_articles, tab_digest = st.tabs(["記事確認", "週次ダイジェスト"])
+tab_articles, tab_digest, tab_public_candidates = st.tabs(
+    ["記事確認", "週次ダイジェスト", "公開候補"]
+)
 
 
 def split_tags(value: str) -> list[str]:
@@ -272,3 +279,13 @@ with tab_digest:
     st.write(f"対象記事数: {len(digest_articles)}")
     st.markdown(digest_markdown)
     st.text_area("Markdown", value=digest_markdown, height=360)
+
+with tab_public_candidates:
+    public_candidate_articles = get_public_candidate_articles()
+    public_markdown = generate_public_candidate_markdown(public_candidate_articles)
+    public_json = generate_public_candidate_json(public_candidate_articles)
+
+    st.write(f"対象記事数: {len(public_candidate_articles)}")
+    st.markdown(public_markdown)
+    st.text_area("Markdown", value=public_markdown, height=320)
+    st.text_area("JSON", value=public_json, height=320)

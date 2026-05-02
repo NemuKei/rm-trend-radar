@@ -40,6 +40,7 @@ Last Updated: 2026-05-02
 - 実記事確認の邪魔にならないように、Streamlit 起動時のサンプル記事自動投入を停止した。既存ローカル DB から `Sample Source` のサンプル記事 2 件も削除した。
 - 実記事一覧はカード表示では俯瞰しづらいため、`P4-06` で記事確認画面を表形式の俯瞰テーブルに変更し、複業リポ側 LP の公開候補フラグを追加した。
 - 今後の方向性として、`rm-trend-radar` は非公開の収集、確認、編集、選別用リポジトリとし、複業リポ側 LP は確認済みで公開してよい内容だけを掲載する公開面として扱う。
+- `P4-07` で、公開候補タブを追加した。対象は確認済みかつ公開候補の記事だけで、Markdown と JSON の preview を表示する。手動メモは export preview に含めない。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
 - 次の本線は、実記事を取得し、記事確認画面と週次ダイジェスト画面を実データで評価することから始める。
@@ -64,7 +65,7 @@ Last Updated: 2026-05-02
   1. `docs/context/INTENT.md` の判断原則を確認する。
   2. `http://localhost:8502/` を更新し、記事確認タブで俯瞰テーブル、取得元 filter、確認状態 filter、公開候補 filter、最低重要度 filter、タグ filter、検索が使いやすいか確認する。
   3. 必要に応じて、いくつかの記事を確認済みまたは公開候補に変更し、詳細欄と週次ダイジェストタブで表示を確認する。
-  4. UI、タグ、重要度、公開候補、ダイジェスト Markdown の調整点を整理する。
+  4. UI、タグ、重要度、公開候補、ダイジェスト Markdown、公開候補 preview の調整点を整理する。
   5. 必要な調整を `tasks_backlog.md` に追加し、Now/Next を更新する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
@@ -111,6 +112,8 @@ Last Updated: 2026-05-02
   - `.venv\Scripts\python.exe -m rm_trend_radar fetch --timeout 20` で実記事を取得し、128 件が `review_status=unreviewed` として保存されることを確認
   - 実記事取得後、`http://127.0.0.1:8502` が HTTP 200 を返すことを確認
   - `P4-06` 俯瞰テーブルと公開候補フラグの追加
+  - `P4-07` 公開候補タブと Markdown/JSON preview の追加
+  - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認
   - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認
@@ -133,5 +136,5 @@ Last Updated: 2026-05-02
 
 - AI 候補生成を行う場合、入力データを保存済みメタデータだけにするか、RSS `description` の一時利用まで広げるか。
 - AI 出力を候補表示だけにするか、人間が確認して保存するか。
-- 複業リポ側 LP へ公開候補記事を渡す場合の export 形式、掲載項目、公開前チェックをどう定義するか。
+- 複業リポ側 LP に公開候補記事を載せる場合のドメインページ URL、見出し構成、掲載粒度、反映手順をどう定義するか。
 - Cloudflare と独自ドメインを、紹介 LP の導線だけに使うか、将来のアプリ公開先として使うか。

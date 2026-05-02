@@ -123,9 +123,16 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
-- [ ] `P4-07` 複業リポ側 LP への公開候補 export 契約を決める
-  Done条件: 公開候補記事を複業リポ側 LP に渡す場合の出力形式、出力項目、掲載前チェック、原文代替公開を避ける制約、ドメインページ構成が仕様化されている。
+- [x] `P4-07` 複業リポ側 LP への公開候補 export 契約を決める
+  Done条件: 公開候補記事を複業リポ側 LP に渡す場合の出力形式、出力項目、掲載前チェック、原文代替公開を避ける制約が仕様化され、公開候補タブで Markdown と JSON の preview を確認できる。
   依存: `P4-06`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
+- [ ] `P4-08` 複業リポ側 LP のドメインページ構成を決める
+  Done条件: 公開候補記事を掲載するドメインページの URL、見出し構成、掲載粒度、掲載前チェック、`rm-trend-radar` からの反映手順が仕様化されている。
+  依存: `P4-07`
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
@@ -136,7 +143,7 @@ Now:
 - 実記事を取得して確認ワークフローを画面評価する
 
 Next:
-- 複業リポ側 LP への公開候補 export 契約を決める
+- 複業リポ側 LP のドメインページ構成を決める
 - AI 候補生成の後続検討を行う
 
 After Next:
@@ -148,5 +155,5 @@ Later:
 ## Next候補
 
 1. 実記事を取得して確認ワークフローを画面評価する
-2. 複業リポ側 LP への公開候補 export 契約を決める
+2. 複業リポ側 LP のドメインページ構成を決める
 3. AI 候補生成の後続検討を行う

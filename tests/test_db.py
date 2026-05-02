@@ -5,6 +5,7 @@ import sqlite3
 from rm_trend_radar.db import (
     get_articles,
     get_digest_articles,
+    get_public_candidate_articles,
     init_db,
     update_article_review,
     upsert_rss_items,
@@ -250,3 +251,54 @@ def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
     )
 
     assert [article["url"] for article in digest_articles] == ["https://example.com/a"]
+
+
+def test_get_public_candidate_articles_includes_only_confirmed_candidates(
+    tmp_path, monkeypatch
+):
+    monkeypatch.chdir(tmp_path)
+    init_db()
+    items = [
+        ParsedRssItem("IDeaS", "https://example.com/a", "2026-05-01", "A", ("tag",)),
+        ParsedRssItem("IDeaS", "https://example.com/b", "2026-05-01", "B", ("tag",)),
+        ParsedRssItem("IDeaS", "https://example.com/c", "2026-05-01", "C", ("tag",)),
+    ]
+    upsert_rss_items(items)
+    articles = {article["url"]: article for article in get_articles()}
+    update_article_review(
+        article_id=articles["https://example.com/a"]["id"],
+        title_ja="A",
+        summary_ja="A summary",
+        tags=["tag"],
+        importance=5,
+        rm_implication="A implication",
+        note="",
+        review_status="confirmed",
+        public_candidate=True,
+    )
+    update_article_review(
+        article_id=articles["https://example.com/b"]["id"],
+        title_ja="B",
+        summary_ja="B summary",
+        tags=["tag"],
+        importance=5,
+        rm_implication="B implication",
+        note="",
+        review_status="confirmed",
+        public_candidate=False,
+    )
+    update_article_review(
+        article_id=articles["https://example.com/c"]["id"],
+        title_ja="C",
+        summary_ja="C summary",
+        tags=["tag"],
+        importance=5,
+        rm_implication="C implication",
+        note="",
+        review_status="unreviewed",
+        public_candidate=True,
+    )
+
+    public_articles = get_public_candidate_articles()
+
+    assert [article["url"] for article in public_articles] == ["https://example.com/a"]
