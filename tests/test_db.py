@@ -26,6 +26,7 @@ def test_init_db_seeds_articles(tmp_path, monkeypatch):
     assert all(article["review_status"] == "confirmed" for article in articles)
     assert all(article["reviewed_at"] is not None for article in articles)
     assert all(not article["public_candidate"] for article in articles)
+    assert all(article["title_priority"] == "high" for article in articles)
 
 
 def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
@@ -58,6 +59,8 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
     assert "review_status" in columns
     assert "reviewed_at" in columns
     assert "public_candidate" in columns
+    assert "title_priority" in columns
+    assert "title_priority_reason" in columns
 
 
 def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monkeypatch):
@@ -88,6 +91,8 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["review_status"] == "unreviewed"
     assert articles[0]["reviewed_at"] is None
     assert articles[0]["public_candidate"] is False
+    assert articles[0]["title_priority"] == "high"
+    assert "revenue" in articles[0]["title_priority_reason"]
 
 
 def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch):
@@ -147,6 +152,8 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["source_name"] == "SiteMinder"
     assert articles[0]["published_date"] == "2026-05-02"
     assert articles[0]["title_en"] == "Updated English Title"
+    assert articles[0]["title_priority"] == "medium"
+    assert articles[0]["title_priority_reason"] == "no title rule matched, defaulted to medium"
     assert articles[0]["title_ja"] == "手動タイトル"
     assert articles[0]["summary_ja"] == "手動要約"
     assert articles[0]["tags"] == ["manual"]

@@ -18,6 +18,11 @@ from rm_trend_radar.public_export import (
     generate_public_candidate_json,
     generate_public_candidate_markdown,
 )
+from rm_trend_radar.title_priority import (
+    TITLE_PRIORITY_HIGH,
+    TITLE_PRIORITY_LOW,
+    TITLE_PRIORITY_MEDIUM,
+)
 
 
 REVIEW_STATUS_LABELS = {
@@ -25,6 +30,14 @@ REVIEW_STATUS_LABELS = {
     REVIEW_STATUS_CONFIRMED: "確認済み",
 }
 REVIEW_STATUS_BY_LABEL = {label: value for value, label in REVIEW_STATUS_LABELS.items()}
+TITLE_PRIORITY_LABELS = {
+    TITLE_PRIORITY_HIGH: "高",
+    TITLE_PRIORITY_MEDIUM: "中",
+    TITLE_PRIORITY_LOW: "低",
+}
+TITLE_PRIORITY_BY_LABEL = {
+    label: value for value, label in TITLE_PRIORITY_LABELS.items()
+}
 
 
 st.set_page_config(page_title="RM Trend Radar", page_icon="📡", layout="wide")
@@ -50,6 +63,7 @@ def filter_articles(
     selected_sources: list[str],
     selected_tag: str,
     public_candidate_filter: str,
+    title_priority_filter: str | None,
     min_importance: int,
     keyword: str,
 ) -> list[dict]:
@@ -65,6 +79,11 @@ def filter_articles(
         if public_candidate_filter == "候補のみ" and not article["public_candidate"]:
             continue
         if public_candidate_filter == "候補外" and article["public_candidate"]:
+            continue
+        if (
+            title_priority_filter is not None
+            and article["title_priority"] != title_priority_filter
+        ):
             continue
         if article["importance"] < min_importance:
             continue
@@ -82,6 +101,8 @@ def _search_text(article: dict) -> str:
         article["rm_implication"],
         article["source_name"],
         " ".join(article["tags"]),
+        article["title_priority"],
+        article["title_priority_reason"],
     ]
     return " ".join(values).lower()
 
@@ -95,6 +116,7 @@ def table_rows(articles: list[dict]) -> list[dict]:
                 "公開日": article["published_date"],
                 "取得元": article["source_name"],
                 "確認": REVIEW_STATUS_LABELS[article["review_status"]],
+                "仮重要度": TITLE_PRIORITY_LABELS[article["title_priority"]],
                 "重要度": article["importance"],
                 "公開候補": "候補" if article["public_candidate"] else "",
                 "タイトル": article["title_ja"],
@@ -109,15 +131,20 @@ def render_article_detail(article: dict) -> None:
     st.divider()
     st.subheader(article["title_ja"])
 
-    meta_cols = st.columns([0.18, 0.18, 0.16, 0.16, 0.16, 0.16])
+    meta_cols = st.columns([0.14, 0.14, 0.16, 0.14, 0.14, 0.14, 0.14])
     meta_cols[0].metric("重要度", article["importance"])
-    meta_cols[1].write(f"確認状態: {status_label}")
-    meta_cols[2].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
-    meta_cols[3].write(f"取得元: {article['source_name']}")
-    meta_cols[4].write(f"公開日: {article['published_date']}")
-    meta_cols[5].markdown(f"[原文を開く]({article['url']})")
+    meta_cols[1].metric(
+        "仮重要度",
+        TITLE_PRIORITY_LABELS[article["title_priority"]],
+    )
+    meta_cols[2].write(f"確認状態: {status_label}")
+    meta_cols[3].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
+    meta_cols[4].write(f"取得元: {article['source_name']}")
+    meta_cols[5].write(f"公開日: {article['published_date']}")
+    meta_cols[6].markdown(f"[原文を開く]({article['url']})")
 
     st.write("タグ: " + ", ".join(article["tags"]))
+    st.write("タイトル仮重要度の理由: " + article["title_priority_reason"])
     st.write("英語タイトル: " + article["title_en"])
     st.write(article["summary_ja"])
     st.write("RM担当者向けの示唆")
@@ -191,6 +218,13 @@ with tab_articles:
             "公開候補",
             ["すべて", "候補のみ", "候補外"],
         )
+        title_priority_filter_label = st.sidebar.radio(
+            "タイトル仮重要度",
+            ["すべて", "高", "中", "低"],
+        )
+        title_priority_filter = None
+        if title_priority_filter_label != "すべて":
+            title_priority_filter = TITLE_PRIORITY_BY_LABEL[title_priority_filter_label]
         min_importance = st.sidebar.slider("最低重要度", 1, 5, 1)
         selected_tag = st.sidebar.selectbox("タグ", ["すべて", *all_tags])
         keyword = st.sidebar.text_input("検索")
@@ -201,21 +235,38 @@ with tab_articles:
             selected_sources=selected_sources,
             selected_tag=selected_tag,
             public_candidate_filter=public_candidate_filter,
+            title_priority_filter=title_priority_filter,
             min_importance=min_importance,
             keyword=keyword,
         )
 
-        summary_cols = st.columns(4)
+        summary_cols = st.columns(5)
         summary_cols[0].metric("表示件数", len(visible_articles))
         summary_cols[1].metric(
-            "未確認",
-            sum(1 for article in visible_articles if article["review_status"] == REVIEW_STATUS_UNREVIEWED),
+            "高候補",
+            sum(
+                1
+                for article in visible_articles
+                if article["title_priority"] == TITLE_PRIORITY_HIGH
+            ),
         )
         summary_cols[2].metric(
-            "確認済み",
-            sum(1 for article in visible_articles if article["review_status"] == REVIEW_STATUS_CONFIRMED),
+            "未確認",
+            sum(
+                1
+                for article in visible_articles
+                if article["review_status"] == REVIEW_STATUS_UNREVIEWED
+            ),
         )
         summary_cols[3].metric(
+            "確認済み",
+            sum(
+                1
+                for article in visible_articles
+                if article["review_status"] == REVIEW_STATUS_CONFIRMED
+            ),
+        )
+        summary_cols[4].metric(
             "公開候補",
             sum(1 for article in visible_articles if article["public_candidate"]),
         )
@@ -235,6 +286,7 @@ with tab_articles:
                     "公開日": st.column_config.TextColumn(width="small"),
                     "取得元": st.column_config.TextColumn(width="small"),
                     "確認": st.column_config.TextColumn(width="small"),
+                    "仮重要度": st.column_config.TextColumn(width="small"),
                     "重要度": st.column_config.NumberColumn(width="small"),
                     "公開候補": st.column_config.TextColumn(width="small"),
                     "タイトル": st.column_config.TextColumn(width="large"),

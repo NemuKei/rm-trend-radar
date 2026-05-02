@@ -151,6 +151,8 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 | Stored column | Initial value for fetched item |
 | --- | --- |
 | `title_ja` | `title_en` と同じ値を入れる。これは翻訳済みタイトルではなく、未翻訳の仮表示である。 |
+| `title_priority` | `title_en` のキーワードだけから機械的に付ける仮重要度。`high`, `medium`, `low` のいずれかを保存する。人間が確定する `importance` とは別項目である。 |
+| `title_priority_reason` | `title_priority` の判定に使ったタイトル内キーワード、または既定値にした理由を保存する。 |
 | `summary_ja` | `未要約。原文リンクを確認してください。` |
 | `importance` | `3` |
 | `rm_implication` | `未記入。原文確認後に追記してください。` |
@@ -162,7 +164,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 - 同じ `url` が存在しない場合は、新規記事として追加する。
 - 同じ `url` が存在する場合は、既存記事として扱い、手動確認済みの項目を上書きしない。
-- 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `updated_at` に限定する。
+- 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `title_priority`, `title_priority_reason`, `updated_at` に限定する。
 - `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
 - RSS 側から item が消えても、SQLite の既存記事は削除しない。
 
@@ -243,6 +245,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 - 取得失敗 source があっても、成功した source の処理は取り消さない。
 - `--dry-run` 指定時は SQLite に書き込まない。
 - 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は RSS 再取得で上書きしない。
+- `title_priority` と `title_priority_reason` は `title_en` から機械的に再計算できる項目であり、RSS 再取得で `title_en` が変わった場合は更新してよい。
 - 記事本文全文、`description`, `content:encoded`, 画像、動画、添付資料は保存しない。
 
 ## Disallowed Stored Fields

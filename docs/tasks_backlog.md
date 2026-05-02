@@ -137,10 +137,17 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-09` タイトルベースの仮重要度を追加する
+  Done条件: 記事タイトルから読む順番の候補を `high`, `medium`, `low` として保存し、記事確認画面の表、詳細、絞り込み条件で確認できる。人間が確定する `importance` は上書きしない。
+  依存: `P4-05`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
-- 実記事を取得して確認ワークフローを画面評価する
+- 実記事を取得して確認ワークフローを画面評価する。タイトル仮重要度を使い、先に読む記事候補を絞り込む。
 
 Next:
 - 複業リポ側 LP のドメインページ構成を決める
@@ -154,6 +161,6 @@ Later:
 
 ## Next候補
 
-1. 実記事を取得して確認ワークフローを画面評価する
+1. 実記事をタイトル仮重要度で絞り込み、確認対象を選ぶ
 2. 複業リポ側 LP のドメインページ構成を決める
 3. AI 候補生成の後続検討を行う

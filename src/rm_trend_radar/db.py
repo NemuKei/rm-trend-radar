@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .rss import ParsedRssItem, normalize_tag
+from .title_priority import classify_title_priority
 
 DB_PATH = Path("rm_trend_radar.db")
 
@@ -24,6 +25,9 @@ CREATE TABLE IF NOT EXISTS articles (
     url TEXT NOT NULL UNIQUE,
     published_date TEXT NOT NULL,
     title_en TEXT NOT NULL,
+    title_priority TEXT NOT NULL DEFAULT 'medium'
+        CHECK (title_priority IN ('high', 'medium', 'low')),
+    title_priority_reason TEXT NOT NULL DEFAULT 'no title rule matched, defaulted to medium',
     title_ja TEXT NOT NULL,
     summary_ja TEXT NOT NULL,
     tags_json TEXT NOT NULL,
@@ -45,6 +49,8 @@ SAMPLE_ARTICLES = [
         "url": "https://example.com/revenue-management-trend",
         "published_date": "2026-05-01",
         "title_en": "Revenue teams refine pricing workflows",
+        "title_priority": "high",
+        "title_priority_reason": "title includes revenue-management term: revenue",
         "title_ja": "レベニューチームが価格調整業務を見直す動き",
         "summary_ja": "価格調整の判断を、需要変化、競合価格、予約ペースを組み合わせて行う事例が増えているという想定サンプルです。",
         "tags": ["pricing", "workflow"],
@@ -59,6 +65,8 @@ SAMPLE_ARTICLES = [
         "url": "https://example.com/hotel-forecasting-ai",
         "published_date": "2026-04-28",
         "title_en": "Hotels evaluate AI-assisted forecasting",
+        "title_priority": "high",
+        "title_priority_reason": "title includes revenue-management term: forecast",
         "title_ja": "ホテルがAI支援の需要予測を検証する動き",
         "summary_ja": "需要予測の自動化だけでなく、担当者が予測根拠を確認できる説明性が重視されているという想定サンプルです。",
         "tags": ["forecast", "ai"],
@@ -87,21 +95,25 @@ def init_db(seed: bool = False) -> None:
     with connect() as conn:
         conn.executescript(SCHEMA)
         _migrate_articles_table(conn)
+        _refresh_title_priorities(conn)
         if seed:
             for article in SAMPLE_ARTICLES:
                 conn.execute(
                     """
                     INSERT OR IGNORE INTO articles (
-                        source_name, url, published_date, title_en, title_ja,
+                        source_name, url, published_date, title_en,
+                        title_priority, title_priority_reason, title_ja,
                         summary_ja, tags_json, importance, rm_implication, note,
                         review_status, reviewed_at, public_candidate
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?)
                     """,
                     (
                         article["source_name"],
                         article["url"],
                         article["published_date"],
                         article["title_en"],
+                        article["title_priority"],
+                        article["title_priority_reason"],
                         article["title_ja"],
                         article["summary_ja"],
                         json.dumps(article["tags"], ensure_ascii=False),
@@ -137,6 +149,37 @@ def _migrate_articles_table(conn: sqlite3.Connection) -> None:
             CHECK (public_candidate IN (0, 1))
             """
         )
+    if "title_priority" not in columns:
+        conn.execute(
+            """
+            ALTER TABLE articles
+            ADD COLUMN title_priority TEXT NOT NULL DEFAULT 'medium'
+            CHECK (title_priority IN ('high', 'medium', 'low'))
+            """
+        )
+    if "title_priority_reason" not in columns:
+        conn.execute(
+            """
+            ALTER TABLE articles
+            ADD COLUMN title_priority_reason TEXT NOT NULL
+            DEFAULT 'no title rule matched, defaulted to medium'
+            """
+        )
+
+
+def _refresh_title_priorities(conn: sqlite3.Connection) -> None:
+    rows = conn.execute("SELECT id, title_en FROM articles").fetchall()
+    for row in rows:
+        title_priority = classify_title_priority(row["title_en"])
+        conn.execute(
+            """
+            UPDATE articles
+            SET title_priority = ?,
+                title_priority_reason = ?
+            WHERE id = ?
+            """,
+            (title_priority.priority, title_priority.reason, row["id"]),
+        )
 
 
 def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
@@ -152,19 +195,23 @@ def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
                 (item.url,),
             ).fetchone()
             if existing is None:
+                title_priority = classify_title_priority(item.title_en)
                 conn.execute(
                     """
                     INSERT INTO articles (
-                        source_name, url, published_date, title_en, title_ja,
+                        source_name, url, published_date, title_en,
+                        title_priority, title_priority_reason, title_ja,
                         summary_ja, tags_json, importance, rm_implication, note,
                         review_status, public_candidate
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         item.source_name,
                         item.url,
                         item.published_date,
                         item.title_en,
+                        title_priority.priority,
+                        title_priority.reason,
                         item.title_en,
                         FETCHED_SUMMARY_PLACEHOLDER,
                         json.dumps(list(item.tags), ensure_ascii=False),
@@ -186,16 +233,26 @@ def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
                 result["unchanged"] += 1
                 continue
 
+            title_priority = classify_title_priority(item.title_en)
             conn.execute(
                 """
                 UPDATE articles
                 SET source_name = ?,
                     published_date = ?,
                     title_en = ?,
+                    title_priority = ?,
+                    title_priority_reason = ?,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE url = ?
                 """,
-                (item.source_name, item.published_date, item.title_en, item.url),
+                (
+                    item.source_name,
+                    item.published_date,
+                    item.title_en,
+                    title_priority.priority,
+                    title_priority.reason,
+                    item.url,
+                ),
             )
             result["updated"] += 1
     return result
@@ -265,6 +322,7 @@ def get_articles(review_status: str | None = None) -> list[dict[str, Any]]:
         rows = conn.execute(
             f"""
             SELECT id, source_name, url, published_date, title_en, title_ja,
+                   title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication, note,
                    review_status, reviewed_at, public_candidate
             FROM articles
@@ -288,6 +346,7 @@ def get_digest_articles(
         rows = conn.execute(
             """
             SELECT id, source_name, url, published_date, title_en, title_ja,
+                   title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication, note,
                    review_status, reviewed_at, public_candidate
             FROM articles
@@ -306,6 +365,7 @@ def get_public_candidate_articles() -> list[dict[str, Any]]:
         rows = conn.execute(
             """
             SELECT id, source_name, url, published_date, title_en, title_ja,
+                   title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication, note,
                    review_status, reviewed_at, public_candidate
             FROM articles
