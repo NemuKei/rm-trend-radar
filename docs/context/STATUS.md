@@ -43,9 +43,10 @@ Last Updated: 2026-05-02
 - `P4-07` で、公開候補タブを追加した。対象は確認済みかつ公開候補の記事だけで、Markdown と JSON の preview を表示する。手動メモは export preview に含めない。
 - `P4-09` で、記事タイトルだけから読む順番の候補を `high`, `medium`, `low` として保存する `title_priority` と、判定理由を保存する `title_priority_reason` を追加した。これは人間が確定する `importance` とは別項目であり、公開候補選定や週次ダイジェスト掲載の確定条件には使わない。
 - ローカル DB の実記事 128 件を `title_priority` で再計算した結果は、`high` 62 件、`medium` 66 件、`low` 0 件である。これはタイトルだけに基づく仮分類であり、記事内容確認後の `importance` とは別に扱う。
+- `P4-10` で、記事確認画面の一覧に `気になる` チェックを追加した。これは原文確認前に気になった記事を残す内部フラグであり、確認済み状態、重要度、公開候補とは別に扱う。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
-- 次の本線は、タイトル仮重要度で実記事を絞り込み、確認済みにする記事と公開候補にする記事を選ぶことから始める。
+- 次の本線は、記事確認画面で気になる記事にチェックを入れ、原文確認する候補を絞り込むことから始める。
 
 ## Next Re-entry
 
@@ -65,7 +66,7 @@ Last Updated: 2026-05-02
   - `docs/context/DECISIONS.md`
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
-  2. `http://localhost:8502/` を更新し、記事確認タブで俯瞰テーブル、取得元 filter、確認状態 filter、公開候補 filter、タイトル仮重要度 filter、最低重要度 filter、タグ filter、検索が使いやすいか確認する。
+  2. `http://localhost:8502/` を更新し、記事確認タブで俯瞰テーブル、気になるチェック、取得元 filter、確認状態 filter、気になる filter、公開候補 filter、タイトル仮重要度 filter、最低重要度 filter、タグ filter、検索が使いやすいか確認する。
   3. 必要に応じて、いくつかの記事を確認済みまたは公開候補に変更し、詳細欄と週次ダイジェストタブで表示を確認する。
   4. UI、タグ、重要度、公開候補、ダイジェスト Markdown、公開候補 preview の調整点を整理する。
   5. 必要な調整を `tasks_backlog.md` に追加し、Now/Next を更新する。
@@ -125,6 +126,14 @@ Last Updated: 2026-05-02
   - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` の DOM を確認し、`タイトル仮重要度`、`仮重要度`、`高候補`、`タイトル仮重要度の理由` が表示されることを確認
   - ローカル DB の実記事で `title_priority` を再計算し、件数が `high` 62、`medium` 66 になることを確認
   - `.venv\Scripts\python.exe -m pytest -p no:cacheprovider` は 18 passed, 9 errors。失敗理由は `C:\Users\n-kei\AppData\Local\Temp\pytest-of-n-kei` を pytest が列挙できない `PermissionError [WinError 5]` で、`tmp_path` を使う `tests\test_db.py` と `tests\test_fetch.py` の setup 前に停止する。
+  - `P4-10` 気になる記事チェックの追加
+  - `.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_title_priority.py tests\test_digest.py tests\test_public_export.py tests\test_rss.py -p no:cacheprovider` が 16 passed になることを確認
+  - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `interest_candidate` を追加できることを確認
+  - `.venv\Scripts\python.exe` の手動 smoke で気になるフラグを保存でき、RSS 再取得で気になるフラグが上書きされないことを確認
+  - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認。終了時に Python tempfile cleanup の `PermissionError [WinError 5]` が出るが、AppTest 本体は `streamlit AppTest ok` で終了する。
+  - `http://127.0.0.1:8502/` が HTTP 200 を返すことを確認
+  - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` の DOM を確認し、`気になる`、`気になるを保存`、`気になるのみ`、`詳細表示する記事` が表示されることを確認
   - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認

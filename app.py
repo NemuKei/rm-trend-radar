@@ -11,6 +11,7 @@ from rm_trend_radar.db import (
     get_digest_articles,
     get_public_candidate_articles,
     init_db,
+    update_article_interest_flags,
     update_article_review,
 )
 from rm_trend_radar.digest import generate_weekly_digest_markdown
@@ -62,6 +63,7 @@ def filter_articles(
     review_status: str | None,
     selected_sources: list[str],
     selected_tag: str,
+    interest_candidate_filter: str,
     public_candidate_filter: str,
     title_priority_filter: str | None,
     min_importance: int,
@@ -75,6 +77,10 @@ def filter_articles(
         if selected_sources and article["source_name"] not in selected_sources:
             continue
         if selected_tag != "すべて" and selected_tag not in article["tags"]:
+            continue
+        if interest_candidate_filter == "気になるのみ" and not article["interest_candidate"]:
+            continue
+        if interest_candidate_filter == "未指定" and article["interest_candidate"]:
             continue
         if public_candidate_filter == "候補のみ" and not article["public_candidate"]:
             continue
@@ -115,6 +121,7 @@ def table_rows(articles: list[dict]) -> list[dict]:
                 "id": article["id"],
                 "公開日": article["published_date"],
                 "取得元": article["source_name"],
+                "気になる": article["interest_candidate"],
                 "確認": REVIEW_STATUS_LABELS[article["review_status"]],
                 "仮重要度": TITLE_PRIORITY_LABELS[article["title_priority"]],
                 "重要度": article["importance"],
@@ -126,22 +133,29 @@ def table_rows(articles: list[dict]) -> list[dict]:
     return rows
 
 
+def iter_editor_rows(edited_rows) -> list[dict]:
+    if hasattr(edited_rows, "to_dict"):
+        return edited_rows.to_dict("records")
+    return list(edited_rows)
+
+
 def render_article_detail(article: dict) -> None:
     status_label = REVIEW_STATUS_LABELS[article["review_status"]]
     st.divider()
     st.subheader(article["title_ja"])
 
-    meta_cols = st.columns([0.14, 0.14, 0.16, 0.14, 0.14, 0.14, 0.14])
+    meta_cols = st.columns([0.12, 0.12, 0.14, 0.14, 0.13, 0.13, 0.13, 0.09])
     meta_cols[0].metric("重要度", article["importance"])
     meta_cols[1].metric(
         "仮重要度",
         TITLE_PRIORITY_LABELS[article["title_priority"]],
     )
-    meta_cols[2].write(f"確認状態: {status_label}")
-    meta_cols[3].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
-    meta_cols[4].write(f"取得元: {article['source_name']}")
-    meta_cols[5].write(f"公開日: {article['published_date']}")
-    meta_cols[6].markdown(f"[原文を開く]({article['url']})")
+    meta_cols[2].write(f"気になる: {'対象' if article['interest_candidate'] else '未指定'}")
+    meta_cols[3].write(f"確認状態: {status_label}")
+    meta_cols[4].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
+    meta_cols[5].write(f"取得元: {article['source_name']}")
+    meta_cols[6].write(f"公開日: {article['published_date']}")
+    meta_cols[7].markdown(f"[原文]({article['url']})")
 
     st.write("タグ: " + ", ".join(article["tags"]))
     st.write("タイトル仮重要度の理由: " + article["title_priority_reason"])
@@ -175,6 +189,10 @@ def render_article_detail(article: dict) -> None:
                 "複業リポ側 LP の公開候補にする",
                 value=article["public_candidate"],
             )
+            interest_candidate = st.checkbox(
+                "気になる記事として残す",
+                value=article["interest_candidate"],
+            )
             submitted = st.form_submit_button("保存")
 
         if submitted:
@@ -188,6 +206,7 @@ def render_article_detail(article: dict) -> None:
                 note=note,
                 review_status=REVIEW_STATUS_BY_LABEL[review_status_label],
                 public_candidate=public_candidate,
+                interest_candidate=interest_candidate,
             )
             st.success("保存しました。")
             st.rerun()
@@ -218,6 +237,10 @@ with tab_articles:
             "公開候補",
             ["すべて", "候補のみ", "候補外"],
         )
+        interest_candidate_filter = st.sidebar.radio(
+            "気になる",
+            ["すべて", "気になるのみ", "未指定"],
+        )
         title_priority_filter_label = st.sidebar.radio(
             "タイトル仮重要度",
             ["すべて", "高", "中", "低"],
@@ -234,13 +257,14 @@ with tab_articles:
             review_status=review_status_filter,
             selected_sources=selected_sources,
             selected_tag=selected_tag,
+            interest_candidate_filter=interest_candidate_filter,
             public_candidate_filter=public_candidate_filter,
             title_priority_filter=title_priority_filter,
             min_importance=min_importance,
             keyword=keyword,
         )
 
-        summary_cols = st.columns(5)
+        summary_cols = st.columns(6)
         summary_cols[0].metric("表示件数", len(visible_articles))
         summary_cols[1].metric(
             "高候補",
@@ -251,6 +275,10 @@ with tab_articles:
             ),
         )
         summary_cols[2].metric(
+            "気になる",
+            sum(1 for article in visible_articles if article["interest_candidate"]),
+        )
+        summary_cols[3].metric(
             "未確認",
             sum(
                 1
@@ -258,7 +286,7 @@ with tab_articles:
                 if article["review_status"] == REVIEW_STATUS_UNREVIEWED
             ),
         )
-        summary_cols[3].metric(
+        summary_cols[4].metric(
             "確認済み",
             sum(
                 1
@@ -266,7 +294,7 @@ with tab_articles:
                 if article["review_status"] == REVIEW_STATUS_CONFIRMED
             ),
         )
-        summary_cols[4].metric(
+        summary_cols[5].metric(
             "公開候補",
             sum(1 for article in visible_articles if article["public_candidate"]),
         )
@@ -274,17 +302,16 @@ with tab_articles:
         if not visible_articles:
             st.info("条件に一致する記事データがありません。")
         else:
-            event = st.dataframe(
+            edited_rows = st.data_editor(
                 table_rows(visible_articles),
                 hide_index=True,
                 use_container_width=True,
                 height=430,
-                on_select="rerun",
-                selection_mode="single-row",
                 column_config={
                     "id": None,
                     "公開日": st.column_config.TextColumn(width="small"),
                     "取得元": st.column_config.TextColumn(width="small"),
+                    "気になる": st.column_config.CheckboxColumn(width="small"),
                     "確認": st.column_config.TextColumn(width="small"),
                     "仮重要度": st.column_config.TextColumn(width="small"),
                     "重要度": st.column_config.NumberColumn(width="small"),
@@ -292,10 +319,39 @@ with tab_articles:
                     "タイトル": st.column_config.TextColumn(width="large"),
                     "タグ": st.column_config.TextColumn(width="medium"),
                 },
+                disabled=[
+                    "公開日",
+                    "取得元",
+                    "確認",
+                    "仮重要度",
+                    "重要度",
+                    "公開候補",
+                    "タイトル",
+                    "タグ",
+                ],
+                key="article_interest_editor",
             )
-            selected_rows = event.selection.rows
-            selected_index = selected_rows[0] if selected_rows else 0
-            render_article_detail(visible_articles[selected_index])
+            if st.button("気になるを保存", type="primary"):
+                update_article_interest_flags(
+                    {
+                        int(row.get("id", visible_articles[index]["id"])): bool(
+                            row["気になる"]
+                        )
+                        for index, row in enumerate(iter_editor_rows(edited_rows))
+                    }
+                )
+                st.success("気になるフラグを保存しました。")
+                st.rerun()
+
+            detail_options = {
+                f"{article['published_date']} | {article['source_name']} | {article['title_ja']}": index
+                for index, article in enumerate(visible_articles)
+            }
+            selected_detail_label = st.selectbox(
+                "詳細表示する記事",
+                list(detail_options),
+            )
+            render_article_detail(visible_articles[detail_options[selected_detail_label]])
 
 with tab_digest:
     today = date.today()

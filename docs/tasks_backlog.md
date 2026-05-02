@@ -144,6 +144,13 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-10` 気になる記事チェックを追加する
+  Done条件: 記事確認画面の一覧で、タイトルを見ながら気になる記事にチェックを入れて保存でき、気になる記事だけで絞り込める。気になるフラグは公開候補フラグとは別に保存する。
+  依存: `P4-09`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
@@ -161,6 +168,6 @@ Later:
 
 ## Next候補
 
-1. 実記事をタイトル仮重要度で絞り込み、確認対象を選ぶ
+1. 実記事に気になるフラグを付け、原文確認する候補を絞り込む
 2. 複業リポ側 LP のドメインページ構成を決める
 3. AI 候補生成の後続検討を行う

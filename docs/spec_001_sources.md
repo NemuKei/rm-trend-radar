@@ -166,6 +166,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 - 同じ `url` が存在する場合は、既存記事として扱い、手動確認済みの項目を上書きしない。
 - 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `title_priority`, `title_priority_reason`, `updated_at` に限定する。
 - `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
+- `interest_candidate` と `public_candidate` は、利用者が画面で付ける内部フラグであるため RSS 再取得では上書きしない。
 - RSS 側から item が消えても、SQLite の既存記事は削除しない。
 
 このルールにより、RSS 再取得は「新着記事の追加」と「原文側メタデータの軽い更新」だけを行う。手動メモ、重要度、示唆は、利用者が明示的に変更したデータとして扱う。
@@ -244,7 +245,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 - 取得失敗 source があっても、成功した source の処理は取り消さない。
 - `--dry-run` 指定時は SQLite に書き込まない。
-- 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は RSS 再取得で上書きしない。
+- 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `interest_candidate`, `public_candidate` は RSS 再取得で上書きしない。
 - `title_priority` と `title_priority_reason` は `title_en` から機械的に再計算できる項目であり、RSS 再取得で `title_en` が変わった場合は更新してよい。
 - 記事本文全文、`description`, `content:encoded`, 画像、動画、添付資料は保存しない。
 

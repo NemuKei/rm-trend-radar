@@ -7,6 +7,7 @@ from rm_trend_radar.db import (
     get_digest_articles,
     get_public_candidate_articles,
     init_db,
+    update_article_interest_flags,
     update_article_review,
     upsert_rss_items,
 )
@@ -25,6 +26,7 @@ def test_init_db_seeds_articles(tmp_path, monkeypatch):
     assert any("forecast" in article["tags"] for article in articles)
     assert all(article["review_status"] == "confirmed" for article in articles)
     assert all(article["reviewed_at"] is not None for article in articles)
+    assert all(not article["interest_candidate"] for article in articles)
     assert all(not article["public_candidate"] for article in articles)
     assert all(article["title_priority"] == "high" for article in articles)
 
@@ -58,6 +60,7 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
         columns = {row[1] for row in conn.execute("PRAGMA table_info(articles)")}
     assert "review_status" in columns
     assert "reviewed_at" in columns
+    assert "interest_candidate" in columns
     assert "public_candidate" in columns
     assert "title_priority" in columns
     assert "title_priority_reason" in columns
@@ -90,6 +93,7 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["tags"] == ["revenue-management", "unreviewed"]
     assert articles[0]["review_status"] == "unreviewed"
     assert articles[0]["reviewed_at"] is None
+    assert articles[0]["interest_candidate"] is False
     assert articles[0]["public_candidate"] is False
     assert articles[0]["title_priority"] == "high"
     assert "revenue" in articles[0]["title_priority_reason"]
@@ -118,6 +122,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 note = ?,
                 review_status = ?,
                 reviewed_at = CURRENT_TIMESTAMP,
+                interest_candidate = ?,
                 public_candidate = ?
             WHERE url = ?
             """,
@@ -129,6 +134,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 "手動示唆",
                 "手動メモ",
                 "confirmed",
+                1,
                 1,
                 item.url,
             ),
@@ -162,6 +168,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["note"] == "手動メモ"
     assert articles[0]["review_status"] == "confirmed"
     assert articles[0]["reviewed_at"] is not None
+    assert articles[0]["interest_candidate"] is True
     assert articles[0]["public_candidate"] is True
 
 
@@ -191,6 +198,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
         note="確認済みメモ",
         review_status="confirmed",
         public_candidate=True,
+        interest_candidate=True,
     )
 
     article = get_articles(review_status="confirmed")[0]
@@ -202,7 +210,34 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
     assert article["rm_implication"] == "確認済み示唆"
     assert article["note"] == "確認済みメモ"
     assert article["reviewed_at"] is not None
+    assert article["interest_candidate"] is True
     assert article["public_candidate"] is True
+
+
+def test_update_article_interest_flags_saves_only_interest_candidate(
+    tmp_path, monkeypatch
+):
+    monkeypatch.chdir(tmp_path)
+    init_db()
+    items = [
+        ParsedRssItem("IDeaS", "https://example.com/a", "2026-05-01", "A", ("tag",)),
+        ParsedRssItem("IDeaS", "https://example.com/b", "2026-05-01", "B", ("tag",)),
+    ]
+    upsert_rss_items(items)
+    articles = {article["url"]: article for article in get_articles()}
+
+    update_article_interest_flags(
+        {
+            articles["https://example.com/a"]["id"]: True,
+            articles["https://example.com/b"]["id"]: False,
+        }
+    )
+
+    updated_articles = {article["url"]: article for article in get_articles()}
+    assert updated_articles["https://example.com/a"]["interest_candidate"] is True
+    assert updated_articles["https://example.com/b"]["interest_candidate"] is False
+    assert updated_articles["https://example.com/a"]["review_status"] == "unreviewed"
+    assert updated_articles["https://example.com/a"]["importance"] == 3
 
 
 def test_get_digest_articles_includes_only_confirmed_recent_important_articles(

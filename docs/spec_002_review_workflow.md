@@ -13,8 +13,9 @@
 - 取得済み記事の確認状態を保存する。
 - 取得済み記事の日本語タイトル、日本語要約、タグ、重要度、レベニューマネジメント担当者向けの示唆、手動メモを画面から編集する。
 - 未確認記事、確認済み記事、すべての記事を画面で切り替える。
+- タイトルを見て気になった記事を、原文確認前の精査候補として保存する。
 - 複業リポ側 LP に掲載する候補かどうかを保存する。
-- 記事を表形式で俯瞰し、取得元、確認状態、重要度、タグ、公開候補を比較する。
+- 記事を表形式で俯瞰し、取得元、気になるフラグ、確認状態、重要度、タグ、公開候補を比較する。
 - 記事タイトルだけから、読む順番を決めるための仮重要度を機械的に表示する。
 - 確認済み記事だけを使って週次ダイジェストを Markdown として表示する。
 
@@ -52,6 +53,7 @@
 | --- | --- |
 | `review_status` | 記事の確認状態。`unreviewed` または `confirmed` を保存する。 |
 | `reviewed_at` | `review_status` を `confirmed` として保存した日時。未確認に戻した場合は空にする。 |
+| `interest_candidate` | タイトルを見て気になった記事、あとで原文を読む候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
 | `public_candidate` | 複業リポ側 LP に掲載する候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
 | `title_priority` | `title_en` に含まれるキーワードだけから機械的に付ける仮重要度。`high`, `medium`, `low` のいずれかを保存する。 |
 | `title_priority_reason` | `title_priority` の判定に使ったタイトル内キーワード、または既定値にした理由を保存する。 |
@@ -63,7 +65,7 @@
 | `unreviewed` | RSS 取得直後、または人間が内容を確認していない記事。 |
 | `confirmed` | 人間が原文または必要な周辺情報を確認し、日本語要約、タグ、重要度、示唆、メモを保存してよい状態にした記事。 |
 
-既存 DB に `review_status`、`reviewed_at`、`public_candidate`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、公開候補ではない記事として扱い、`title_en` から仮重要度と理由を再計算する。
+既存 DB に `review_status`、`reviewed_at`、`interest_candidate`、`public_candidate`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、気になる候補ではない記事、公開候補ではない記事として扱い、`title_en` から仮重要度と理由を再計算する。
 
 ## Title-based Provisional Priority
 
@@ -79,15 +81,16 @@
 
 複数の種類の語が含まれる場合は、`high` を優先する。`high` が該当しない場合に `medium`、`medium` も該当しない場合に `low` を判定する。どのルールにも該当しない場合は `medium` とする。
 
-この判定は仮分類であり、記事内容の正確な重要度を保証しない。公開候補選定、週次ダイジェスト掲載、複業リポ側 LP への掲載判断では、人間が保存した `importance`、`review_status`、`public_candidate` を使う。
+この判定は仮分類であり、記事内容の正確な重要度を保証しない。原文を読む候補の選定では `interest_candidate` を使い、公開候補選定、週次ダイジェスト掲載、複業リポ側 LP への掲載判断では、人間が保存した `importance`、`review_status`、`public_candidate` を使う。
 
 ## Review UI
 
 記事確認画面は、次の操作を提供する。
 
 - 確認状態で `すべて`, `未確認`, `確認済み` を切り替える。
-- 表形式で、公開日、取得元、確認状態、タイトル仮重要度、重要度、公開候補、タイトル、タグを俯瞰する。
-- 取得元、確認状態、公開候補、タイトル仮重要度、最低重要度、タグ、検索語で絞り込む。
+- 表形式で、公開日、取得元、気になるフラグ、確認状態、タイトル仮重要度、重要度、公開候補、タイトル、タグを俯瞰する。
+- 一覧上で、表示中の記事の気になるフラグを付け外しして保存できる。
+- 取得元、確認状態、気になるフラグ、公開候補、タイトル仮重要度、最低重要度、タグ、検索語で絞り込む。
 - 表で選択した 1 件について、詳細情報と編集フォームを表示する。
 - 各記事で次の項目を編集する。
   - 日本語タイトル
@@ -97,11 +100,24 @@
   - レベニューマネジメント担当者向けの示唆
   - 手動メモ
   - 確認状態
+  - 気になる記事かどうか
   - 複業リポ側 LP の公開候補
 
 タグは、当面は slug 形式で保存する。画面入力ではカンマ区切りを受け取り、保存時に小文字化し、空白や記号を `-` に寄せ、重複を除去する。
 
-RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `review_status`, `reviewed_at`, `public_candidate` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
+RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `review_status`, `reviewed_at`, `interest_candidate`, `public_candidate` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
+
+## Interest Candidate Policy
+
+`interest_candidate` は、記事タイトルを見て原文確認の候補にするための内部フラグである。
+
+`interest_candidate` は、次の状態とは別に扱う。
+
+- `review_status`: 原文または必要な周辺情報を確認し、保存内容を確定したかどうか。
+- `importance`: 原文確認後に人間が保存する重要度。
+- `public_candidate`: 複業リポ側 LP に掲載する候補かどうか。
+
+初期運用では、記事確認タブの一覧で日本語タイトルを見ながら `interest_candidate` を付ける。その後、`気になるのみ` で絞り込み、原文確認、要約、重要度、レベニューマネジメント担当者向けの示唆、公開候補の判断を行う。
 
 ## Public Candidate Policy
 
@@ -158,15 +174,18 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 ## Acceptance Criteria
 
 - 既存 DB でも `review_status` と `reviewed_at` が追加され、起動できる。
+- 既存 DB でも `interest_candidate` が追加され、起動できる。
 - 既存 DB でも `public_candidate` が追加され、起動できる。
 - 既存 DB でも `title_priority` と `title_priority_reason` が追加され、既存記事の `title_en` から再計算される。
 - RSS 取得直後の記事は `unreviewed` になる。
 - RSS 取得直後の記事は `title_en` から `title_priority` と `title_priority_reason` が保存される。
 - 画面から確認項目を保存できる。
+- 画面の一覧から、表示中の記事の気になるフラグを保存できる。
+- 気になるフラグで、`すべて`, `気になるのみ`, `未指定` を切り替えられる。
 - 画面から公開候補フラグを保存できる。
 - 記事確認画面で、タイトル仮重要度を列、詳細、絞り込み条件として確認できる。
 - `confirmed` にした記事は `reviewed_at` が保存される。
-- RSS 再取得で確認済み項目と公開候補フラグが上書きされない。
+- RSS 再取得で確認済み項目、気になるフラグ、公開候補フラグが上書きされない。
 - RSS 再取得で `title_en` が変わった場合、タイトル仮重要度は新しい `title_en` から再計算される。
 - 週次ダイジェストには、確認済み、対象期間内、重要度条件を満たす記事だけが含まれる。
 - 週次ダイジェストは AI API を呼び出さず、保存済みデータだけから生成される。
