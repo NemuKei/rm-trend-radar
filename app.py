@@ -196,7 +196,7 @@ def render_article_detail(article: dict) -> None:
                 index=list(REVIEW_STATUS_BY_LABEL).index(status_label),
             )
             public_candidate = st.checkbox(
-                "複業リポ側 LP の公開候補にする",
+                "副業リポ側 LP の公開候補にする",
                 value=article["public_candidate"],
             )
             interest_candidate = st.checkbox(
@@ -292,7 +292,7 @@ def render_reviewed_article(article: dict) -> None:
             )
             note = st.text_area("手動メモ", value=article["note"], height=140)
             public_candidate = st.checkbox(
-                "複業リポ側 LP の公開候補にする",
+                "副業リポ側 LP の公開候補にする",
                 value=article["public_candidate"],
             )
             interest_candidate = st.checkbox(

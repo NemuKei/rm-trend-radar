@@ -35,7 +35,7 @@ def generate_public_candidate_markdown(articles: list[dict[str, Any]]) -> str:
     lines = [
         "# 公開候補記事",
         "",
-        "- 対象: 確認済み、かつ複業リポ側 LP の公開候補にした記事",
+        "- 対象: 確認済み、かつ副業リポ側 LP の公開候補にした記事",
         "- 注意: 原文記事の代替になる長文転載ではなく、公開ページ作成前の候補一覧として使う。",
         "",
     ]
