@@ -36,6 +36,8 @@ Last Updated: 2026-05-02
 - `P4-02` で記事の確認状態、手動確認項目の保存処理、Streamlit の記事編集フォームを追加した。
 - `P4-03` で確認済み記事だけから Markdown 形式の週次ダイジェストを表示する画面を追加した。
 - 2026-05-02 の画面確認では、現在の画面構成は暫定的に許容し、次の調整は実記事を可視化してから判断する方針とした。
+- `P4-05` で初期対象 5 件から実記事 128 件をローカル SQLite に取得した。内訳は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18、Hotel Speak 10。
+- 実記事確認の邪魔にならないように、Streamlit 起動時のサンプル記事自動投入を停止した。既存ローカル DB から `Sample Source` のサンプル記事 2 件も削除した。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
 - 次の本線は、実記事を取得し、記事確認画面と週次ダイジェスト画面を実データで評価することから始める。
@@ -58,8 +60,8 @@ Last Updated: 2026-05-02
   - `docs/context/DECISIONS.md`
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
-  2. `.venv\Scripts\python.exe -m rm_trend_radar fetch` で実記事を取得する。
-  3. `.venv\Scripts\python.exe -m streamlit run app.py` で画面を開き、記事確認タブと週次ダイジェストタブを実記事で確認する。
+  2. `http://localhost:8502/` を更新し、記事確認タブで実記事 128 件の見え方を確認する。
+  3. 必要に応じて、いくつかの記事を確認済みに変更し、週次ダイジェストタブで Markdown 表示を確認する。
   4. UI、タグ、重要度、ダイジェスト Markdown の調整点を整理する。
   5. 必要な調整を `tasks_backlog.md` に追加し、Now/Next を更新する。
 - この bundle で変更しない契約:
@@ -104,6 +106,8 @@ Last Updated: 2026-05-02
   - `.venv\Scripts\python.exe` の手動 smoke で確認済み、対象期間内、重要度条件を満たす記事だけがダイジェスト対象になることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で fetch した新規記事が `review_status=unreviewed` になることを確認
   - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8503 --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:8503` が HTTP 200 を返すことを確認
+  - `.venv\Scripts\python.exe -m rm_trend_radar fetch --timeout 20` で実記事を取得し、128 件が `review_status=unreviewed` として保存されることを確認
+  - 実記事取得後、`http://127.0.0.1:8502` が HTTP 200 を返すことを確認
   - `.venv\Scripts\python.exe -m rm_trend_radar fetch --source unknown` が exit 1 で未知 source を stderr 表示することを確認
   - ネットワーク許可後、`.venv\Scripts\python.exe -m rm_trend_radar fetch --dry-run --timeout 20` が exit 0 で初期対象 5 件すべてを取得できることを確認。件数は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18、Hotel Speak 10
   - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8502 --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:8502` が HTTP 200 を返すことを確認

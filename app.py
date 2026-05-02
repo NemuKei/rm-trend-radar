@@ -24,7 +24,7 @@ REVIEW_STATUS_BY_LABEL = {label: value for value, label in REVIEW_STATUS_LABELS.
 
 st.set_page_config(page_title="RM Trend Radar", page_icon="📡", layout="wide")
 
-init_db(seed=True)
+init_db(seed=False)
 
 st.title("RM Trend Radar")
 st.caption("海外レベニューマネジメント記事を日本語で確認する個人用ダッシュボード")
