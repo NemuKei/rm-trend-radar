@@ -108,12 +108,21 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [ ] `P4-05` 実記事を取得して確認ワークフローを画面評価する
+  Done条件: 初期対象 5 件から実記事を取得し、記事確認タブと週次ダイジェストタブで、未確認記事の見え方、確認フォームの入力しやすさ、タグ表示、重要度条件、ダイジェスト Markdown の読みやすさを確認し、必要な調整タスクが backlog に追加されている。
+  依存: `P4-03`
+  spec-impact: unknown
+  spec-checkpoint: during-impl
+  target-spec: docs/spec_002_review_workflow.md
+  備考: 現在の画面構成は暫定的に許容する。次の調整は、サンプル記事ではなく実記事を可視化してから判断する。
+
 ## Remaining Task Triage
 
 Now:
-- AI 候補生成の後続検討を行う
+- 実記事を取得して確認ワークフローを画面評価する
 
 Next:
+- AI 候補生成の後続検討を行う
 - Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
 
 After Next:
@@ -124,5 +133,6 @@ Later:
 
 ## Next候補
 
-1. AI 候補生成の後続検討を行う
-2. Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
+1. 実記事を取得して確認ワークフローを画面評価する
+2. AI 候補生成の後続検討を行う
+3. Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
