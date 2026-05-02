@@ -1,6 +1,14 @@
 from __future__ import annotations
 
-from rm_trend_radar.db import get_articles, init_db, upsert_rss_items
+import sqlite3
+
+from rm_trend_radar.db import (
+    get_articles,
+    get_digest_articles,
+    init_db,
+    update_article_review,
+    upsert_rss_items,
+)
 from rm_trend_radar.rss import ParsedRssItem
 
 
@@ -14,6 +22,39 @@ def test_init_db_seeds_articles(tmp_path, monkeypatch):
     assert articles[0]["published_date"] == "2026-05-01"
     assert max(article["importance"] for article in articles) == 5
     assert any("forecast" in article["tags"] for article in articles)
+    assert all(article["review_status"] == "confirmed" for article in articles)
+    assert all(article["reviewed_at"] is not None for article in articles)
+
+
+def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with sqlite3.connect("rm_trend_radar.db") as conn:
+        conn.execute(
+            """
+            CREATE TABLE articles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source_name TEXT NOT NULL,
+                url TEXT NOT NULL UNIQUE,
+                published_date TEXT NOT NULL,
+                title_en TEXT NOT NULL,
+                title_ja TEXT NOT NULL,
+                summary_ja TEXT NOT NULL,
+                tags_json TEXT NOT NULL,
+                importance INTEGER NOT NULL CHECK (importance BETWEEN 1 AND 5),
+                rm_implication TEXT NOT NULL,
+                note TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+
+    init_db()
+
+    with sqlite3.connect("rm_trend_radar.db") as conn:
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(articles)")}
+    assert "review_status" in columns
+    assert "reviewed_at" in columns
 
 
 def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monkeypatch):
@@ -41,9 +82,11 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["rm_implication"] == "未記入。原文確認後に追記してください。"
     assert articles[0]["note"] == "RSS取得直後。要約、重要度、示唆は未確認。"
     assert articles[0]["tags"] == ["revenue-management", "unreviewed"]
+    assert articles[0]["review_status"] == "unreviewed"
+    assert articles[0]["reviewed_at"] is None
 
 
-def test_upsert_rss_items_does_not_overwrite_manual_fields(tmp_path, monkeypatch):
+def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     init_db()
     item = ParsedRssItem(
@@ -54,9 +97,6 @@ def test_upsert_rss_items_does_not_overwrite_manual_fields(tmp_path, monkeypatch
         tags=("pricing", "unreviewed"),
     )
     upsert_rss_items([item])
-
-    import sqlite3
-
     with sqlite3.connect("rm_trend_radar.db") as conn:
         conn.execute(
             """
@@ -66,7 +106,9 @@ def test_upsert_rss_items_does_not_overwrite_manual_fields(tmp_path, monkeypatch
                 tags_json = ?,
                 importance = ?,
                 rm_implication = ?,
-                note = ?
+                note = ?,
+                review_status = ?,
+                reviewed_at = CURRENT_TIMESTAMP
             WHERE url = ?
             """,
             (
@@ -76,6 +118,7 @@ def test_upsert_rss_items_does_not_overwrite_manual_fields(tmp_path, monkeypatch
                 5,
                 "手動示唆",
                 "手動メモ",
+                "confirmed",
                 item.url,
             ),
         )
@@ -104,3 +147,95 @@ def test_upsert_rss_items_does_not_overwrite_manual_fields(tmp_path, monkeypatch
     assert articles[0]["importance"] == 5
     assert articles[0]["rm_implication"] == "手動示唆"
     assert articles[0]["note"] == "手動メモ"
+    assert articles[0]["review_status"] == "confirmed"
+    assert articles[0]["reviewed_at"] is not None
+
+
+def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    init_db()
+    upsert_rss_items(
+        [
+            ParsedRssItem(
+                source_name="IDeaS",
+                url="https://example.com/review-target",
+                published_date="2026-05-01",
+                title_en="Review Target",
+                tags=("revenue-management", "unreviewed"),
+            )
+        ]
+    )
+    article_id = get_articles()[0]["id"]
+
+    update_article_review(
+        article_id=article_id,
+        title_ja="確認済みタイトル",
+        summary_ja="確認済み要約",
+        tags=["Revenue Management", "Pricing", "Pricing"],
+        importance=4,
+        rm_implication="確認済み示唆",
+        note="確認済みメモ",
+        review_status="confirmed",
+    )
+
+    article = get_articles(review_status="confirmed")[0]
+    assert article["id"] == article_id
+    assert article["title_ja"] == "確認済みタイトル"
+    assert article["summary_ja"] == "確認済み要約"
+    assert article["tags"] == ["revenue-management", "pricing"]
+    assert article["importance"] == 4
+    assert article["rm_implication"] == "確認済み示唆"
+    assert article["note"] == "確認済みメモ"
+    assert article["reviewed_at"] is not None
+
+
+def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
+    tmp_path, monkeypatch
+):
+    monkeypatch.chdir(tmp_path)
+    init_db()
+    items = [
+        ParsedRssItem("IDeaS", "https://example.com/a", "2026-05-01", "A", ("tag",)),
+        ParsedRssItem("IDeaS", "https://example.com/b", "2026-05-01", "B", ("tag",)),
+        ParsedRssItem("IDeaS", "https://example.com/c", "2026-04-20", "C", ("tag",)),
+    ]
+    upsert_rss_items(items)
+    articles = {article["url"]: article for article in get_articles()}
+    update_article_review(
+        article_id=articles["https://example.com/a"]["id"],
+        title_ja="A",
+        summary_ja="A summary",
+        tags=["tag"],
+        importance=4,
+        rm_implication="A implication",
+        note="",
+        review_status="confirmed",
+    )
+    update_article_review(
+        article_id=articles["https://example.com/b"]["id"],
+        title_ja="B",
+        summary_ja="B summary",
+        tags=["tag"],
+        importance=3,
+        rm_implication="B implication",
+        note="",
+        review_status="confirmed",
+    )
+    update_article_review(
+        article_id=articles["https://example.com/c"]["id"],
+        title_ja="C",
+        summary_ja="C summary",
+        tags=["tag"],
+        importance=5,
+        rm_implication="C implication",
+        note="",
+        review_status="confirmed",
+    )
+
+    digest_articles = get_digest_articles(
+        start_date="2026-04-25",
+        end_date="2026-05-02",
+        min_importance=4,
+    )
+
+    assert [article["url"] for article in digest_articles] == ["https://example.com/a"]

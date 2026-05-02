@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from .rss import ParsedRssItem
+from .rss import ParsedRssItem, normalize_tag
 
 DB_PATH = Path("rm_trend_radar.db")
 
@@ -13,6 +13,9 @@ FETCHED_SUMMARY_PLACEHOLDER = "未要約。原文リンクを確認してくだ�
 FETCHED_RM_IMPLICATION_PLACEHOLDER = "未記入。原文確認後に追記してください。"
 FETCHED_NOTE_PLACEHOLDER = "RSS取得直後。要約、重要度、示唆は未確認。"
 FETCHED_DEFAULT_IMPORTANCE = 3
+REVIEW_STATUS_UNREVIEWED = "unreviewed"
+REVIEW_STATUS_CONFIRMED = "confirmed"
+VALID_REVIEW_STATUSES = {REVIEW_STATUS_UNREVIEWED, REVIEW_STATUS_CONFIRMED}
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS articles (
@@ -27,6 +30,9 @@ CREATE TABLE IF NOT EXISTS articles (
     importance INTEGER NOT NULL CHECK (importance BETWEEN 1 AND 5),
     rm_implication TEXT NOT NULL,
     note TEXT NOT NULL DEFAULT '',
+    review_status TEXT NOT NULL DEFAULT 'unreviewed'
+        CHECK (review_status IN ('unreviewed', 'confirmed')),
+    reviewed_at TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -44,6 +50,7 @@ SAMPLE_ARTICLES = [
         "importance": 4,
         "rm_implication": "価格変更の理由を記録し、後から判断品質を振り返れる運用を作ることが重要です。",
         "note": "初期表示確認用のサンプルです。",
+        "review_status": REVIEW_STATUS_CONFIRMED,
     },
     {
         "source_name": "Sample Source",
@@ -56,6 +63,7 @@ SAMPLE_ARTICLES = [
         "importance": 5,
         "rm_implication": "予測値だけでなく、需要増減の要因、対象日、比較基準を画面で確認できることが導入判断に影響します。",
         "note": "初期表示確認用のサンプルです。",
+        "review_status": REVIEW_STATUS_CONFIRMED,
     },
 ]
 
@@ -75,14 +83,16 @@ def connect() -> sqlite3.Connection:
 def init_db(seed: bool = False) -> None:
     with connect() as conn:
         conn.executescript(SCHEMA)
+        _migrate_articles_table(conn)
         if seed:
             for article in SAMPLE_ARTICLES:
                 conn.execute(
                     """
                     INSERT OR IGNORE INTO articles (
                         source_name, url, published_date, title_en, title_ja,
-                        summary_ja, tags_json, importance, rm_implication, note
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        summary_ja, tags_json, importance, rm_implication, note,
+                        review_status, reviewed_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                     """,
                     (
                         article["source_name"],
@@ -95,8 +105,26 @@ def init_db(seed: bool = False) -> None:
                         article["importance"],
                         article["rm_implication"],
                         article["note"],
+                        article["review_status"],
                     ),
                 )
+
+
+def _migrate_articles_table(conn: sqlite3.Connection) -> None:
+    columns = {
+        row["name"]
+        for row in conn.execute("PRAGMA table_info(articles)").fetchall()
+    }
+    if "review_status" not in columns:
+        conn.execute(
+            """
+            ALTER TABLE articles
+            ADD COLUMN review_status TEXT NOT NULL DEFAULT 'unreviewed'
+            CHECK (review_status IN ('unreviewed', 'confirmed'))
+            """
+        )
+    if "reviewed_at" not in columns:
+        conn.execute("ALTER TABLE articles ADD COLUMN reviewed_at TEXT")
 
 
 def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
@@ -116,8 +144,9 @@ def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
                     """
                     INSERT INTO articles (
                         source_name, url, published_date, title_en, title_ja,
-                        summary_ja, tags_json, importance, rm_implication, note
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        summary_ja, tags_json, importance, rm_implication, note,
+                        review_status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         item.source_name,
@@ -130,6 +159,7 @@ def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
                         FETCHED_DEFAULT_IMPORTANCE,
                         FETCHED_RM_IMPLICATION_PLACEHOLDER,
                         FETCHED_NOTE_PLACEHOLDER,
+                        REVIEW_STATUS_UNREVIEWED,
                     ),
                 )
                 result["added"] += 1
@@ -158,20 +188,119 @@ def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
     return result
 
 
-def get_articles() -> list[dict[str, Any]]:
+def update_article_review(
+    *,
+    article_id: int,
+    title_ja: str,
+    summary_ja: str,
+    tags: list[str],
+    importance: int,
+    rm_implication: str,
+    note: str,
+    review_status: str,
+) -> None:
+    if review_status not in VALID_REVIEW_STATUSES:
+        raise ValueError(f"Unknown review_status: {review_status}")
+    if not 1 <= importance <= 5:
+        raise ValueError("importance must be between 1 and 5")
+
+    normalized_tags = _normalize_review_tags(tags)
+    reviewed_at_expression = (
+        "CURRENT_TIMESTAMP" if review_status == REVIEW_STATUS_CONFIRMED else "NULL"
+    )
+    with connect() as conn:
+        conn.execute(
+            f"""
+            UPDATE articles
+            SET title_ja = ?,
+                summary_ja = ?,
+                tags_json = ?,
+                importance = ?,
+                rm_implication = ?,
+                note = ?,
+                review_status = ?,
+                reviewed_at = {reviewed_at_expression},
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (
+                title_ja.strip(),
+                summary_ja.strip(),
+                json.dumps(normalized_tags, ensure_ascii=False),
+                importance,
+                rm_implication.strip(),
+                note.strip(),
+                review_status,
+                article_id,
+            ),
+        )
+
+
+def get_articles(review_status: str | None = None) -> list[dict[str, Any]]:
+    if review_status is not None and review_status not in VALID_REVIEW_STATUSES:
+        raise ValueError(f"Unknown review_status: {review_status}")
+    where_clause = ""
+    params: tuple[str, ...] = ()
+    if review_status is not None:
+        where_clause = "WHERE review_status = ?"
+        params = (review_status,)
+
+    with connect() as conn:
+        rows = conn.execute(
+            f"""
+            SELECT id, source_name, url, published_date, title_en, title_ja,
+                   summary_ja, tags_json, importance, rm_implication, note,
+                   review_status, reviewed_at
+            FROM articles
+            {where_clause}
+            ORDER BY published_date DESC, id DESC
+            """,
+            params,
+        ).fetchall()
+    return [_article_from_row(row) for row in rows]
+
+
+def get_digest_articles(
+    *,
+    start_date: str,
+    end_date: str,
+    min_importance: int = 4,
+) -> list[dict[str, Any]]:
+    if not 1 <= min_importance <= 5:
+        raise ValueError("min_importance must be between 1 and 5")
     with connect() as conn:
         rows = conn.execute(
             """
-            SELECT source_name, url, published_date, title_en, title_ja,
-                   summary_ja, tags_json, importance, rm_implication, note
+            SELECT id, source_name, url, published_date, title_en, title_ja,
+                   summary_ja, tags_json, importance, rm_implication, note,
+                   review_status, reviewed_at
             FROM articles
-            ORDER BY published_date DESC, id DESC
-            """
+            WHERE review_status = ?
+              AND published_date BETWEEN ? AND ?
+              AND importance >= ?
+            ORDER BY importance DESC, published_date DESC, id DESC
+            """,
+            (REVIEW_STATUS_CONFIRMED, start_date, end_date, min_importance),
         ).fetchall()
+    return [_article_from_row(row) for row in rows]
+
+
+def _article_from_row(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        **dict(row),
+        "tags": json.loads(row["tags_json"]),
+    }
+
+
+def _normalize_review_tags(tags: list[str]) -> list[str]:
+    normalized_tags: list[str] = []
+    for value in tags:
+        tag = normalize_tag(value)
+        if tag is not None and tag not in normalized_tags:
+            normalized_tags.append(tag)
+    if not normalized_tags:
+        normalized_tags.append(REVIEW_STATUS_UNREVIEWED)
     return [
-        {
-            **dict(row),
-            "tags": json.loads(row["tags_json"]),
-        }
-        for row in rows
+        tag
+        for tag in normalized_tags
     ]

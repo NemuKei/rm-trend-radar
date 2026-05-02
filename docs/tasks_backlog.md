@@ -78,10 +78,40 @@
   target-spec: docs/spec_001_sources.md
   結果: CLI は `python -m rm_trend_radar fetch` とし、`--source`, `--dry-run`, `--json`, `--timeout` を持つ。CLI 契約は `docs/spec_001_sources.md` に記録した。
 
+## Phase 4: 記事確認ワークフローを実装する
+
+- [x] `P4-01` 初期 MVP の AI 範囲と確認ワークフロー仕様を確定する
+  Done条件: 初期 MVP では AI API を呼び出さず、取得済み記事を人間が確認する方針が `DECISIONS` と `spec_002_review_workflow` に記録されている。
+  依存: `P3-03`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
+- [x] `P4-02` 記事の確認状態と手動確認項目の保存処理を実装する
+  Done条件: 既存 DB に `review_status` と `reviewed_at` を追加でき、画面から `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `review_status` を保存できる。
+  依存: `P4-01`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
+- [x] `P4-03` 確認済み記事から週次ダイジェストを表示する
+  Done条件: Streamlit 画面で、確認済み、対象期間内、重要度条件を満たす記事だけを使い、Markdown 形式の週次ダイジェストを表示できる。
+  依存: `P4-02`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
+- [ ] `P4-04` AI 候補生成の後続検討を行う
+  Done条件: AI に渡す入力データ、保存する出力、保存しないデータ、候補表示と自動保存の違いが仕様化され、実装する場合のタスクが追加されている。
+  依存: `P4-03`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
-- AI 要約、タグ付け、重要度付け、週次ダイジェストの MVP 範囲を決める
+- AI 候補生成の後続検討を行う
 
 Next:
 - Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
@@ -94,5 +124,5 @@ Later:
 
 ## Next候補
 
-1. AI 要約、タグ付け、重要度付け、週次ダイジェストの MVP 範囲を決める
+1. AI 候補生成の後続検討を行う
 2. Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
