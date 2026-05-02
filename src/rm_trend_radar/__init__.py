@@ -1,0 +1,1 @@
+"""RM Trend Radar application package."""

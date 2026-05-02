@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rm-trend-radar"
+version = "0.1.0"
+description = "Personal Streamlit app for reviewing hotel revenue management trend articles in Japanese."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit==1.45.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
