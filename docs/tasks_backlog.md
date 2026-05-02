@@ -165,6 +165,13 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-13` 自分用要約フォームを追加する
+  Done条件: 既存 DB に `personal_summary` を追加でき、記事確認画面と確認済みレビュー画面から自分用要約を保存でき、公開候補 export preview と週次ダイジェストには含まれない。
+  依存: `P4-12`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:

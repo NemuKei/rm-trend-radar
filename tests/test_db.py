@@ -64,6 +64,7 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
     assert "public_candidate" in columns
     assert "title_priority" in columns
     assert "title_priority_reason" in columns
+    assert "personal_summary" in columns
 
 
 def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monkeypatch):
@@ -89,6 +90,7 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["summary_ja"] == "未要約。原文リンクを確認してください。"
     assert articles[0]["importance"] == 3
     assert articles[0]["rm_implication"] == "未記入。原文確認後に追記してください。"
+    assert articles[0]["personal_summary"] == ""
     assert articles[0]["note"] == "RSS取得直後。要約、重要度、示唆は未確認。"
     assert articles[0]["tags"] == ["revenue-management", "unreviewed"]
     assert articles[0]["review_status"] == "unreviewed"
@@ -119,6 +121,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 tags_json = ?,
                 importance = ?,
                 rm_implication = ?,
+                personal_summary = ?,
                 note = ?,
                 review_status = ?,
                 reviewed_at = CURRENT_TIMESTAMP,
@@ -132,6 +135,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 '["manual"]',
                 5,
                 "手動示唆",
+                "自分用要約",
                 "手動メモ",
                 "confirmed",
                 1,
@@ -165,6 +169,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["tags"] == ["manual"]
     assert articles[0]["importance"] == 5
     assert articles[0]["rm_implication"] == "手動示唆"
+    assert articles[0]["personal_summary"] == "自分用要約"
     assert articles[0]["note"] == "手動メモ"
     assert articles[0]["review_status"] == "confirmed"
     assert articles[0]["reviewed_at"] is not None
@@ -195,6 +200,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
         tags=["Revenue Management", "Pricing", "Pricing"],
         importance=4,
         rm_implication="確認済み示唆",
+        personal_summary="自分用の詳細要約",
         note="確認済みメモ",
         review_status="confirmed",
         public_candidate=True,
@@ -208,6 +214,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
     assert article["tags"] == ["revenue-management", "pricing"]
     assert article["importance"] == 4
     assert article["rm_implication"] == "確認済み示唆"
+    assert article["personal_summary"] == "自分用の詳細要約"
     assert article["note"] == "確認済みメモ"
     assert article["reviewed_at"] is not None
     assert article["interest_candidate"] is True

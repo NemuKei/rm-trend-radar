@@ -105,6 +105,7 @@ def _search_text(article: dict) -> str:
         article["title_en"],
         article["summary_ja"],
         article["rm_implication"],
+        article["personal_summary"],
         article["source_name"],
         " ".join(article["tags"]),
         article["title_priority"],
@@ -163,6 +164,9 @@ def render_article_detail(article: dict) -> None:
     st.write(article["summary_ja"])
     st.write("RM担当者向けの示唆")
     st.write(article["rm_implication"])
+    if article["personal_summary"]:
+        with st.expander("自分用要約", expanded=False):
+            st.write(article["personal_summary"])
 
     with st.expander("確認内容を編集", expanded=False):
         with st.form(key=f"review_form_{article['id']}"):
@@ -178,6 +182,12 @@ def render_article_detail(article: dict) -> None:
             rm_implication = st.text_area(
                 "RM担当者向けの示唆",
                 value=article["rm_implication"],
+            )
+            personal_summary = st.text_area(
+                "自分用要約",
+                value=article["personal_summary"],
+                height=260,
+                help="公開候補 export、週次ダイジェスト、LP、X には出さない内部確認用の詳細要約です。",
             )
             note = st.text_area("手動メモ", value=article["note"])
             review_status_label = st.selectbox(
@@ -203,6 +213,7 @@ def render_article_detail(article: dict) -> None:
                 tags=split_tags(tag_text),
                 importance=importance,
                 rm_implication=rm_implication,
+                personal_summary=personal_summary,
                 note=note,
                 review_status=REVIEW_STATUS_BY_LABEL[review_status_label],
                 public_candidate=public_candidate,
@@ -244,6 +255,9 @@ def render_reviewed_article(article: dict) -> None:
     st.write(article["summary_ja"])
     st.markdown("#### RM担当者向けの示唆")
     st.write(article["rm_implication"])
+    if article["personal_summary"]:
+        with st.expander("自分用要約", expanded=False):
+            st.write(article["personal_summary"])
 
     with st.expander("公開導線の確認", expanded=True):
         st.write("LP 掲載時の役割: 短い紹介と独自の示唆だけを掲載し、詳細理解は原文サイトへ戻す。")
@@ -270,6 +284,12 @@ def render_reviewed_article(article: dict) -> None:
                 value=article["rm_implication"],
                 height=180,
             )
+            personal_summary = st.text_area(
+                "自分用要約",
+                value=article["personal_summary"],
+                height=320,
+                help="公開候補 export、週次ダイジェスト、LP、X には出さない内部確認用の詳細要約です。",
+            )
             note = st.text_area("手動メモ", value=article["note"], height=140)
             public_candidate = st.checkbox(
                 "複業リポ側 LP の公開候補にする",
@@ -289,6 +309,7 @@ def render_reviewed_article(article: dict) -> None:
                 tags=split_tags(tag_text),
                 importance=importance,
                 rm_implication=rm_implication,
+                personal_summary=personal_summary,
                 note=note,
                 review_status=REVIEW_STATUS_CONFIRMED,
                 public_candidate=public_candidate,

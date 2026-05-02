@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS articles (
     tags_json TEXT NOT NULL,
     importance INTEGER NOT NULL CHECK (importance BETWEEN 1 AND 5),
     rm_implication TEXT NOT NULL,
+    personal_summary TEXT NOT NULL DEFAULT '',
     note TEXT NOT NULL DEFAULT '',
     review_status TEXT NOT NULL DEFAULT 'unreviewed'
         CHECK (review_status IN ('unreviewed', 'confirmed')),
@@ -57,6 +58,7 @@ SAMPLE_ARTICLES = [
         "tags": ["pricing", "workflow"],
         "importance": 4,
         "rm_implication": "価格変更の理由を記録し、後から判断品質を振り返れる運用を作ることが重要です。",
+        "personal_summary": "",
         "note": "初期表示確認用のサンプルです。",
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
@@ -74,6 +76,7 @@ SAMPLE_ARTICLES = [
         "tags": ["forecast", "ai"],
         "importance": 5,
         "rm_implication": "予測値だけでなく、需要増減の要因、対象日、比較基準を画面で確認できることが導入判断に影響します。",
+        "personal_summary": "",
         "note": "初期表示確認用のサンプルです。",
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
@@ -106,9 +109,10 @@ def init_db(seed: bool = False) -> None:
                     INSERT OR IGNORE INTO articles (
                         source_name, url, published_date, title_en,
                         title_priority, title_priority_reason, title_ja,
-                        summary_ja, tags_json, importance, rm_implication, note,
+                        summary_ja, tags_json, importance, rm_implication,
+                        personal_summary, note,
                         review_status, reviewed_at, interest_candidate, public_candidate
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)
                     """,
                     (
                         article["source_name"],
@@ -122,6 +126,7 @@ def init_db(seed: bool = False) -> None:
                         json.dumps(article["tags"], ensure_ascii=False),
                         article["importance"],
                         article["rm_implication"],
+                        article["personal_summary"],
                         article["note"],
                         article["review_status"],
                         int(article["interest_candidate"]),
@@ -145,6 +150,13 @@ def _migrate_articles_table(conn: sqlite3.Connection) -> None:
         )
     if "reviewed_at" not in columns:
         conn.execute("ALTER TABLE articles ADD COLUMN reviewed_at TEXT")
+    if "personal_summary" not in columns:
+        conn.execute(
+            """
+            ALTER TABLE articles
+            ADD COLUMN personal_summary TEXT NOT NULL DEFAULT ''
+            """
+        )
     if "public_candidate" not in columns:
         conn.execute(
             """
@@ -283,6 +295,7 @@ def update_article_review(
     review_status: str,
     public_candidate: bool = False,
     interest_candidate: bool = False,
+    personal_summary: str = "",
 ) -> None:
     if review_status not in VALID_REVIEW_STATUSES:
         raise ValueError(f"Unknown review_status: {review_status}")
@@ -302,6 +315,7 @@ def update_article_review(
                 tags_json = ?,
                 importance = ?,
                 rm_implication = ?,
+                personal_summary = ?,
                 note = ?,
                 review_status = ?,
                 reviewed_at = {reviewed_at_expression},
@@ -316,6 +330,7 @@ def update_article_review(
                 json.dumps(normalized_tags, ensure_ascii=False),
                 importance,
                 rm_implication.strip(),
+                personal_summary.strip(),
                 note.strip(),
                 review_status,
                 int(interest_candidate),
@@ -357,7 +372,8 @@ def get_articles(review_status: str | None = None) -> list[dict[str, Any]]:
             f"""
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
-                   summary_ja, tags_json, importance, rm_implication, note,
+                   summary_ja, tags_json, importance, rm_implication,
+                   personal_summary, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             {where_clause}
@@ -381,7 +397,8 @@ def get_digest_articles(
             """
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
-                   summary_ja, tags_json, importance, rm_implication, note,
+                   summary_ja, tags_json, importance, rm_implication,
+                   personal_summary, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             WHERE review_status = ?
@@ -400,7 +417,8 @@ def get_public_candidate_articles() -> list[dict[str, Any]]:
             """
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
-                   summary_ja, tags_json, importance, rm_implication, note,
+                   summary_ja, tags_json, importance, rm_implication,
+                   personal_summary, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             WHERE review_status = ?

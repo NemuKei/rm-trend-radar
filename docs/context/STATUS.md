@@ -48,6 +48,7 @@ Last Updated: 2026-05-03
 - `P4-11` で、確認済み記事だけを対象に、要約、レベニューマネジメント担当者向けの示唆、原文 URL、公開候補フラグを確認できる `確認済みレビュー` タブを追加した。
 - 2026-05-03 時点で、確認済み 7 件の日本語要約とレベニューマネジメント担当者向けの示唆を、内部確認用に増量した。`summary_ja` はおおむね 246 から 270 文字、`rm_implication` はおおむね 156 から 184 文字である。これは原文の代替公開用本文ではなく、確認済みレビュー画面で内容を見極めるための下書きである。公開候補は引き続き 0 件である。
 - `P4-12` で、今後の確認済み記事に適用する要約レベルを `docs/spec_002_review_workflow.md` に仕様化した。`summary_ja` は原則 250 から 350 文字程度、`rm_implication` は原則 150 から 250 文字程度とし、どちらも公開 LP や X にそのまま掲載する文章ではなく、内部確認用テキストとして扱う。
+- `P4-13` で、自分用の詳細要約または読解メモを保存する `personal_summary` を追加した。これは公開候補 export preview、週次ダイジェスト、複業リポ側 LP、X 投稿には含めない内部項目である。記事確認画面と確認済みレビュー画面から編集できる。
 - 公開 LP と X は、記事の短い紹介、独自の示唆、原文リンクを届ける導線として扱う。詳細な内容理解は、原文サイトを開いてブラウザ翻訳も使いながら確認してもらう方針にする。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
@@ -149,6 +150,11 @@ Last Updated: 2026-05-03
   - Browser Use で `確認済みレビュー` タブを再読み込みし、増量後の日本語要約とレベニューマネジメント担当者向けの示唆が画面上で読めることを確認
   - `P4-12` 確認済み記事の要約レベル仕様の追加
   - `docs/spec_002_review_workflow.md` に、`summary_ja` と `rm_implication` の目的、文字数目安、含める内容、含めない内容が記録されていることを確認
+  - `P4-13` 自分用要約フォームの追加
+  - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `personal_summary` を追加できることを確認
+  - `.venv\Scripts\python.exe` の手動 smoke で `personal_summary` を保存でき、RSS 再取得で上書きされないことを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_db.py tests\test_public_export.py -p no:cacheprovider --basetemp=.pytest_basetemp_p4_13_elevated` が 12 passed になることを確認。通常権限では一時ディレクトリの列挙で `PermissionError [WinError 5]` が出るため、権限昇格で実行した。
+  - Browser Use で `http://127.0.0.1:8502/` を開き、記事確認画面と確認済みレビュー画面の編集フォームに `自分用要約` 欄が表示されることを確認
   - CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認

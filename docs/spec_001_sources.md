@@ -115,6 +115,7 @@
 - タグ
 - 重要度
 - レベニューマネジメント担当者向けの示唆
+- 自分用要約
 - 手動メモ
 - 取得日時
 - 更新確認日時
@@ -156,6 +157,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 | `summary_ja` | `未要約。原文リンクを確認してください。` |
 | `importance` | `3` |
 | `rm_implication` | `未記入。原文確認後に追記してください。` |
+| `personal_summary` | 空文字。自分用の詳細要約または読解メモは、原文確認後に画面から保存する。 |
 | `note` | `RSS取得直後。要約、重要度、示唆は未確認。` |
 
 ## Duplicate and Update Rules
@@ -165,7 +167,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 - 同じ `url` が存在しない場合は、新規記事として追加する。
 - 同じ `url` が存在する場合は、既存記事として扱い、手動確認済みの項目を上書きしない。
 - 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `title_priority`, `title_priority_reason`, `updated_at` に限定する。
-- `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
+- `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
 - `interest_candidate` と `public_candidate` は、利用者が画面で付ける内部フラグであるため RSS 再取得では上書きしない。
 - RSS 側から item が消えても、SQLite の既存記事は削除しない。
 

@@ -3,9 +3,11 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .pytest_basetemp*/
+.pytest_tmp/
 .ruff_cache/
 .mypy_cache/
 .tmp_*/
+tmp*/
 .streamlit/secrets.toml
 rm_trend_radar.db
 *.sqlite

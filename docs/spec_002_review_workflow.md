@@ -57,6 +57,7 @@
 | `reviewed_at` | `review_status` を `confirmed` として保存した日時。未確認に戻した場合は空にする。 |
 | `interest_candidate` | タイトルを見て気になった記事、あとで原文を読む候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
 | `public_candidate` | 複業リポ側 LP に掲載する候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
+| `personal_summary` | 自分用の詳細要約または読解メモ。公開候補 export、週次ダイジェスト、複業リポ側 LP、X 投稿には含めない。 |
 | `title_priority` | `title_en` に含まれるキーワードだけから機械的に付ける仮重要度。`high`, `medium`, `low` のいずれかを保存する。 |
 | `title_priority_reason` | `title_priority` の判定に使ったタイトル内キーワード、または既定値にした理由を保存する。 |
 
@@ -67,7 +68,7 @@
 | `unreviewed` | RSS 取得直後、または人間が内容を確認していない記事。 |
 | `confirmed` | 人間が原文または必要な周辺情報を確認し、日本語要約、タグ、重要度、示唆、メモを保存してよい状態にした記事。 |
 
-既存 DB に `review_status`、`reviewed_at`、`interest_candidate`、`public_candidate`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、気になる候補ではない記事、公開候補ではない記事として扱い、`title_en` から仮重要度と理由を再計算する。
+既存 DB に `review_status`、`reviewed_at`、`interest_candidate`、`public_candidate`、`personal_summary`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、気になる候補ではない記事、公開候補ではない記事、自分用要約が空の記事として扱い、`title_en` から仮重要度と理由を再計算する。
 
 ## Title-based Provisional Priority
 
@@ -100,6 +101,7 @@
   - タグ
   - 重要度
   - レベニューマネジメント担当者向けの示唆
+  - 自分用要約
   - 手動メモ
   - 確認状態
   - 気になる記事かどうか
@@ -107,7 +109,7 @@
 
 タグは、当面は slug 形式で保存する。画面入力ではカンマ区切りを受け取り、保存時に小文字化し、空白や記号を `-` に寄せ、重複を除去する。
 
-RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `review_status`, `reviewed_at`, `interest_candidate`, `public_candidate` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
+RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `note`, `review_status`, `reviewed_at`, `interest_candidate`, `public_candidate` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
 
 ## Manual Summary Level
 
@@ -143,6 +145,21 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 - 具体的な根拠がない売上改善効果の断定。
 - 公開 LP や X にそのまま使う宣伝文。
 
+## Personal Summary Policy
+
+`personal_summary` は、利用者が自分で読むための詳細要約、ChatGPT などの大規模言語モデルで作成した読解メモ、原文確認時の詳しい論点整理を保存する内部項目である。
+
+`personal_summary` は、`summary_ja` より長くてよい。原文確認、公開候補選定、後日の再読に使うための項目であり、公開 LP、X、公開候補 export preview、週次ダイジェストには含めない。
+
+`personal_summary` に保存してよい内容は次の通りである。
+
+- 原文記事の主題、全体要約、読むときの注意点。
+- レベニューマネジメント担当者としての詳しい読解メモ。
+- 大規模言語モデルで作成した自分用の要約または解説。
+- 公開用文面にする前の下書き、論点整理、確認メモ。
+
+`personal_summary` は非公開の内部項目である。第三者へ配布する要約リンク、公開 LP に掲載する本文、X 投稿文として扱わない。公開に使う場合は、原文記事の代替にならない短い紹介文と独自コメントへ別途圧縮する。
+
 ## Interest Candidate Policy
 
 `interest_candidate` は、記事タイトルを見て原文確認の候補にするための内部フラグである。
@@ -165,7 +182,7 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 - 取得元、公開候補、最低重要度、検索語で絞り込む。
 - 表形式で、公開日、取得元、重要度、公開候補、タイトル、タグを俯瞰する。
 - 選択した記事について、日本語タイトル、英語タイトル、タグ、要約、レベニューマネジメント担当者向けの示唆、原文 URL を読みやすく表示する。
-- 選択した記事について、公開候補フラグ、要約、示唆、メモを編集できる。
+- 選択した記事について、公開候補フラグ、要約、示唆、自分用要約、メモを編集できる。
 
 確認済みレビュー画面は、公開前の確認を効率化するための画面である。公開 LP や X にそのまま転記する長文を作る画面ではない。
 
@@ -197,7 +214,7 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 - 重要度
 - レベニューマネジメント担当者向けの示唆
 
-手動メモ `note` は、内部作業用の記録を含む可能性があるため公開候補 export preview には含めない。
+自分用要約 `personal_summary` と手動メモ `note` は、内部作業用の記録を含む可能性があるため公開候補 export preview には含めない。
 
 公開候補 export preview は、複業リポ側 LP の実ファイルを更新しない。公開ページへ反映する前に、人間が Markdown または JSON の内容を確認し、原文記事の代替になる長文転載になっていないことを確認する。
 
@@ -228,6 +245,7 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 - 既存 DB でも `review_status` と `reviewed_at` が追加され、起動できる。
 - 既存 DB でも `interest_candidate` が追加され、起動できる。
 - 既存 DB でも `public_candidate` が追加され、起動できる。
+- 既存 DB でも `personal_summary` が追加され、起動できる。
 - 既存 DB でも `title_priority` と `title_priority_reason` が追加され、既存記事の `title_en` から再計算される。
 - RSS 取得直後の記事は `unreviewed` になる。
 - RSS 取得直後の記事は `title_en` から `title_priority` と `title_priority_reason` が保存される。
@@ -235,13 +253,15 @@ RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tag
 - 画面の一覧から、表示中の記事の気になるフラグを保存できる。
 - 気になるフラグで、`すべて`, `気になるのみ`, `未指定` を切り替えられる。
 - 画面から公開候補フラグを保存できる。
+- 画面から自分用要約を保存できる。
 - 記事確認画面で、タイトル仮重要度を列、詳細、絞り込み条件として確認できる。
 - `confirmed` にした記事は `reviewed_at` が保存される。
-- RSS 再取得で確認済み項目、気になるフラグ、公開候補フラグが上書きされない。
+- RSS 再取得で確認済み項目、自分用要約、気になるフラグ、公開候補フラグが上書きされない。
 - RSS 再取得で `title_en` が変わった場合、タイトル仮重要度は新しい `title_en` から再計算される。
 - 週次ダイジェストには、確認済み、対象期間内、重要度条件を満たす記事だけが含まれる。
 - 週次ダイジェストは AI API を呼び出さず、保存済みデータだけから生成される。
 - 公開候補タブには、確認済みかつ公開候補の記事だけが含まれる。
 - 公開候補 export preview に手動メモは含まれない。
+- 公開候補 export preview に自分用要約は含まれない。
 - 確認済みレビュー画面には、確認済み記事だけが表示される。
 - 確認済みレビュー画面で、要約、レベニューマネジメント担当者向けの示唆、原文 URL を同じ画面で確認できる。

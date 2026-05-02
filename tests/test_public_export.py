@@ -19,6 +19,7 @@ ARTICLE = {
     "tags": ["pricing", "forecast"],
     "importance": 5,
     "rm_implication": "業務上の示唆",
+    "personal_summary": "自分用の詳細要約",
     "note": "内部メモ",
     "review_status": "confirmed",
     "public_candidate": True,
@@ -47,6 +48,7 @@ def test_generate_public_candidate_json_is_machine_readable():
     data = json.loads(generate_public_candidate_json([ARTICLE]))
 
     assert data[0]["title_ja"] == "公開候補記事"
+    assert "personal_summary" not in data[0]
     assert "note" not in data[0]
 
 
@@ -57,6 +59,7 @@ def test_generate_public_candidate_markdown_uses_public_fields_only():
     assert "## 公開候補記事" in markdown
     assert "短い紹介" in markdown
     assert "業務上の示唆" in markdown
+    assert "自分用の詳細要約" not in markdown
     assert "内部メモ" not in markdown
 
 
