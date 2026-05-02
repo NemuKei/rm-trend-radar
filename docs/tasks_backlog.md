@@ -41,37 +41,58 @@
 
 ## Phase 2: 初期取得対象を決める
 
-- [ ] `P2-01` 初期取得対象サイトを調査する
+- [x] `P2-01` 初期取得対象サイトを調査する
   Done条件: 3〜5 サイトについて、RSS の有無、公開ブログ一覧 URL、想定取得頻度、保存項目、注意点が文書化されている。
   依存: `P1-02`
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_001_sources.md
-  open-spec-questions: 初期対象を 3 件に絞るか、5 件まで広げるか。
+  結果: 初期対象は IDeaS、SiteMinder、RoomPriceGenie、Revfine、Hotel Speak の 5 件とする。Mews、Lighthouse、Hospitality Net は後回しにする。
 
-- [ ] `P2-02` 記事取得スキーマを確定する
+- [x] `P2-02` 記事取得スキーマを確定する
   Done条件: RSS または公開ブログ一覧ページから取り込む項目、重複判定、更新判定、取得失敗時の扱いが仕様化されている。
   依存: `P2-01`
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_001_sources.md
 
+## Phase 3: RSS 取得を実装する
+
+- [x] `P3-01` 初期対象 5 件の source config と RSS item parser を実装する
+  Done条件: IDeaS、SiteMinder、RoomPriceGenie、Revfine、Hotel Speak の feed URL をコードから参照でき、RSS XML から `source_name`, `url`, `published_date`, `title_en`, `tags` を取り出す単体テストが存在する。
+  依存: `P2-02`
+  spec-impact: no
+  spec-checkpoint: not-needed
+
+- [x] `P3-02` RSS item を SQLite に upsert する
+  Done条件: 正規化した原文 URL を一意キーとして新規記事を追加でき、既存記事の `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` を RSS 再取得で上書きしないテストが存在する。
+  依存: `P3-01`
+  spec-impact: no
+  spec-checkpoint: not-needed
+
+- [x] `P3-03` 手動実行できる RSS 取得入口を追加する
+  Done条件: `.venv\Scripts\python.exe -m rm_trend_radar fetch` のような手動コマンドで初期対象 5 件を取得でき、取得件数、追加件数、更新件数、失敗 source を確認できる。
+  依存: `P3-02`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_001_sources.md
+  結果: CLI は `python -m rm_trend_radar fetch` とし、`--source`, `--dry-run`, `--json`, `--timeout` を持つ。CLI 契約は `docs/spec_001_sources.md` に記録した。
+
 ## Remaining Task Triage
 
 Now:
-- `P2-01` 初期取得対象サイトを調査する
-
-Next:
-- `P2-02` 記事取得スキーマを確定する
-
-After Next:
 - AI 要約、タグ付け、重要度付け、週次ダイジェストの MVP 範囲を決める
 
+Next:
+- Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
+
+After Next:
+- なし
+
 Later:
-- Cloudflare 連携、独自ドメイン導線、公開用認証を検討する。
+- なし
 
 ## Next候補
 
-1. `P2-01` 初期取得対象サイトを調査する
-2. `P2-02` 記事取得スキーマを確定する
-3. AI 要約、タグ付け、重要度付け、週次ダイジェストの MVP 範囲を決める
+1. AI 要約、タグ付け、重要度付け、週次ダイジェストの MVP 範囲を決める
+2. Cloudflare 連携、独自ドメイン導線、公開用認証を検討する

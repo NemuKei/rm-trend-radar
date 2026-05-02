@@ -39,7 +39,27 @@
 
 ## Candidate Sources
 
-次スレッドでは、まず次の候補から 3〜5 件を調査対象として選ぶ。
+2026-05-02 の初期調査では、候補 8 件から初期 MVP の取得対象を 5 件に絞った。
+
+初期 MVP の取得対象は、公式 RSS またはカテゴリ別 RSS が確認でき、robots.txt で RSS またはブログ記事への一般取得が明示的に禁止されていない候補を優先した。
+
+初期 MVP の取得対象:
+
+- IDeaS
+- SiteMinder
+- RoomPriceGenie
+- Revfine
+- Hotel Speak
+
+初期 MVP では後回しにする候補:
+
+- Mews
+- Lighthouse
+- Hospitality Net
+
+後回しにする理由は `Source Evaluation Table` の `Notes` に記録する。
+
+初期調査前の候補一覧は次の通りであった。
 
 - IDeaS
 - SiteMinder
@@ -58,14 +78,29 @@
 
 | Source | Status | RSS | Public listing URL | Allowed fields | Proposed frequency | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| IDeaS | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| SiteMinder | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| Mews | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| RoomPriceGenie | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| Lighthouse | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| Revfine | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| Hospitality Net | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
-| Hotel Speak | 未調査 | 未確認 | 未確認 | 未確認 | 未確認 | 初期候補。次スレッドで確認する。 |
+| IDeaS | 初期対象 | `https://ideas.com/feed/` | `https://ideas.com/blog/` | RSS の `link`, `title`, `pubDate`, `category`, `description`。`content:encoded` と画像 URL は取得しても保存しない。 | 1 日 1 回以下 | robots.txt は `User-agent: *` に対して全体 Disallow なし。RSS はサイト全体フィードで、ホテル以外に駐車場領域の記事も含まれるため、P2-02 でカテゴリまたはキーワードによる採否判定を決める。 |
+| SiteMinder | 初期対象 | `https://www.siteminder.com/r/feed/` | `https://www.siteminder.com/r/` | RSS の `link`, `title`, `pubDate`, `category`, `description`。`content:encoded` と画像 URL は取得しても保存しない。 | 1 日 1 回以下 | robots.txt は `/wp-admin/` などを禁止し、`/r/` と `/r/feed/` は禁止対象ではない。RSS の記事量が多いため、P2-02 でカテゴリ採否を決める。 |
+| Mews | 後回し | 公式 RSS は未採用。robots.txt に `Disallow: */feed` があるため feed 形式の取得を初期対象にしない。 | `https://www.mews.com/en/blog` | 公開一覧ページから記事 URL、タイトル、公開日、カテゴリを確認できる可能性はあるが、初期 MVP ではページ解析を実装しない。 | 未設定 | 公開ブログ一覧は確認できたが、RSS 利用が robots.txt で禁止されている。RSS なしのページ解析は、RSS 対象の取得契約が固まった後に再検討する。 |
+| RoomPriceGenie | 初期対象 | `https://roompricegenie.com/feed/` | `https://roompricegenie.com/category/blog/` | RSS の `link`, `title`, `pubDate`, `category`, `description`。`content:encoded` と画像 URL は取得しても保存しない。 | 1 日 1 回以下 | robots.txt は `/wp-admin/` を禁止し、主要検索クローラと主要 AI クローラを許可している。RSS はサイト全体フィードで、Revenue Management 以外の記事も含まれるため、P2-02 でカテゴリ採否を決める。 |
+| Lighthouse | 後回し | 公式 RSS は確認できない。`https://www.mylighthouse.com/resources/blog/rss.xml` は 404 相当の HTML を返す。 | `https://www.mylighthouse.com/resources/blog` | 公開一覧ページから記事 URL、タイトル、公開日、カテゴリを確認できる可能性はあるが、初期 MVP ではページ解析を実装しない。 | 未設定 | robots.txt は一般取得を許可しているが、RSS が確認できない。ページ構造は Next.js 生成 HTML で、RSS 対象より実装負荷が高いため後回しにする。 |
+| Revfine | 初期対象 | `https://www.revfine.com/category/hotel-blog/revenue-management/feed/` | `https://www.revfine.com/category/hotel-blog/revenue-management/` | RSS の `link`, `title`, `pubDate`, `category`, `description`。`content:encoded` と画像 URL は取得しても保存しない。 | 1 日 1 回以下 | 公式 RSS 一覧に Revenue Management Tips がある。robots.txt は `User-agent: *` に対して全体 Disallow なし。カテゴリ別 RSS を優先する。 |
+| Hospitality Net | 後回し | `https://www.hospitalitynet.org/rss/news.xml` | `https://www.hospitalitynet.org/news` | RSS の `link`, `title`, `pubDate`, `category`, `description` は確認できる。 | 未設定 | 公式 RSS ページと robots.txt の `/rss/` Allow は確認済み。ただしニュース量が多く、プレスリリース、投資、採用、開業など幅広い記事が混在する。初期 MVP では対象を広げすぎない方針のため、RSS 対象 5 件の取得契約を先に固める。 |
+| Hotel Speak | 初期対象 | `https://www.hotelspeak.com/category/hotel-revenue-management/feed/` | `https://www.hotelspeak.com/category/hotel-revenue-management/` | RSS の `link`, `title`, `pubDate`, `category`, `description`。`content:encoded` と画像 URL は取得しても保存しない。 | 1 日 1 回以下 | robots.txt は `User-agent: *` に対して全体 Disallow なし。カテゴリ別 RSS を優先する。更新頻度は高すぎないため初期対象に適する。 |
+
+## Research Evidence
+
+2026-05-02 時点で確認した公開 URL は次の通りである。
+
+| Source | Evidence URLs |
+| --- | --- |
+| IDeaS | `https://ideas.com/blog/`, `https://ideas.com/feed/`, `https://ideas.com/robots.txt` |
+| SiteMinder | `https://www.siteminder.com/r/`, `https://www.siteminder.com/r/feed/`, `https://www.siteminder.com/robots.txt` |
+| Mews | `https://www.mews.com/en/blog`, `https://www.mews.com/robots.txt` |
+| RoomPriceGenie | `https://roompricegenie.com/category/blog/`, `https://roompricegenie.com/feed/`, `https://roompricegenie.com/robots.txt` |
+| Lighthouse | `https://www.mylighthouse.com/resources/blog`, `https://www.mylighthouse.com/resources/blog/rss.xml`, `https://www.mylighthouse.com/robots.txt` |
+| Revfine | `https://www.revfine.com/rss-feeds/`, `https://www.revfine.com/category/hotel-blog/revenue-management/feed/`, `https://www.revfine.com/robots.txt` |
+| Hospitality Net | `https://www.hospitalitynet.org/rss`, `https://www.hospitalitynet.org/rss/news.xml`, `https://www.hospitalitynet.org/robots.txt` |
+| Hotel Speak | `https://www.hotelspeak.com/category/hotel-revenue-management/`, `https://www.hotelspeak.com/category/hotel-revenue-management/feed/`, `https://www.hotelspeak.com/robots.txt` |
 
 ## Allowed Stored Fields
 
@@ -83,6 +118,132 @@
 - 手動メモ
 - 取得日時
 - 更新確認日時
+
+## Initial Fetch Method
+
+初期 MVP の記事取得は RSS を優先する。
+
+- 初期対象 5 件は、`Source Evaluation Table` に記録した RSS URL から取得する。
+- RSS が確認できない Mews と Lighthouse は、初期 MVP の取得実装に含めない。
+- Hospitality Net は RSS が確認できるが、記事範囲が広いため初期 MVP の取得実装に含めない。
+- 公開ブログ一覧ページの HTML 解析は、初期 RSS 取得が安定してから別タスクで検討する。
+
+RSS に `content:encoded` が含まれる場合でも、記事本文全文として扱い、保存しない。RSS item の `description` は記事概要または抜粋を含むことがあるため、初期 MVP では永続化しない。将来、要約生成の入力として一時的に使う場合も、保存可否を別途仕様化してから実装する。
+
+## RSS Item Mapping
+
+RSS item から読み取る項目と、SQLite の `articles` テーブルへ保存する項目の対応は次の通りである。
+
+| RSS item field | Use | Stored column | Rule |
+| --- | --- | --- | --- |
+| `link` | 原文 URL と重複判定キー | `url` | 前後空白を除去し、URL フラグメントと `utm_*`, `fbclid`, `gclid`, `mc_cid`, `mc_eid` などの追跡用クエリを除去した URL を保存する。記事本文は取得しない。 |
+| `title` | 英語タイトル | `title_en` | HTML エンティティを文字として復元し、前後空白を除去して保存する。 |
+| `pubDate` | 原文公開日 | `published_date` | RSS の日時を解釈し、日付部分を `YYYY-MM-DD` で保存する。`pubDate` が存在しない item は初期 MVP では取り込まない。 |
+| source config | 取得元サイト名 | `source_name` | RSS URL ごとに固定値を持つ。例: `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak`。 |
+| `category` | 初期タグ候補 | `tags_json` | RSS category を小文字化し、空白を `-` に置換したタグにする。すべての新規取得記事に `unreviewed` を追加する。category がない場合は `unreviewed` のみ保存する。 |
+| `guid` | 補助情報 | 保存しない | `link` がない場合の代替キーには使わない。初期 MVP では `link` がない item を取り込まない。 |
+| `description` | 将来の要約入力候補 | 保存しない | 初期 MVP では永続化しない。画面表示にも使わない。 |
+| `content:encoded` | 使用しない | 保存しない | 記事本文全文を含む可能性があるため、読み取っても保存、表示、要約欄への転記をしない。 |
+| image, enclosure, media fields | 使用しない | 保存しない | 画像、動画、添付資料本体は初期 MVP の対象外とする。 |
+
+RSS 取得直後の記事は、手動確認または将来の自動処理の前段階である。既存の `articles` テーブルは日本語確認項目を必須としているため、新規取得時の初期値は次の通りにする。
+
+| Stored column | Initial value for fetched item |
+| --- | --- |
+| `title_ja` | `title_en` と同じ値を入れる。これは翻訳済みタイトルではなく、未翻訳の仮表示である。 |
+| `summary_ja` | `未要約。原文リンクを確認してください。` |
+| `importance` | `3` |
+| `rm_implication` | `未記入。原文確認後に追記してください。` |
+| `note` | `RSS取得直後。要約、重要度、示唆は未確認。` |
+
+## Duplicate and Update Rules
+
+重複判定は、正規化した `url` を唯一のキーとして行う。
+
+- 同じ `url` が存在しない場合は、新規記事として追加する。
+- 同じ `url` が存在する場合は、既存記事として扱い、手動確認済みの項目を上書きしない。
+- 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `updated_at` に限定する。
+- `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
+- RSS 側から item が消えても、SQLite の既存記事は削除しない。
+
+このルールにより、RSS 再取得は「新着記事の追加」と「原文側メタデータの軽い更新」だけを行う。手動メモ、重要度、示唆は、利用者が明示的に変更したデータとして扱う。
+
+## Fetch Failure Handling
+
+取得失敗時の扱いは次の通りである。
+
+- 1 つの source の取得に失敗しても、他の source の取得は続行する。
+- 取得失敗時に即時再試行しない。
+- 失敗した source は次回実行時に再確認する。
+- 失敗した source の既存記事を削除しない。
+- RSS の XML 解析に失敗した場合、その source の item は取り込まない。
+- 必須項目である `link`, `title`, `pubDate` のいずれかが欠ける item は取り込まない。
+- 初期 MVP では取得エラーを SQLite に保存しない。実行ログまたは画面上の一時メッセージで確認する。
+
+## Initial Source Config
+
+初期実装では、取得対象 source をコード内または設定ファイルで次のように固定定義する。実装時に配置先を決めるが、設定が表す契約はこの表を正本にする。
+
+| source_name | feed_url | listing_url | use in initial MVP |
+| --- | --- | --- | --- |
+| IDeaS | `https://ideas.com/feed/` | `https://ideas.com/blog/` | yes |
+| SiteMinder | `https://www.siteminder.com/r/feed/` | `https://www.siteminder.com/r/` | yes |
+| RoomPriceGenie | `https://roompricegenie.com/feed/` | `https://roompricegenie.com/category/blog/` | yes |
+| Revfine | `https://www.revfine.com/category/hotel-blog/revenue-management/feed/` | `https://www.revfine.com/category/hotel-blog/revenue-management/` | yes |
+| Hotel Speak | `https://www.hotelspeak.com/category/hotel-revenue-management/feed/` | `https://www.hotelspeak.com/category/hotel-revenue-management/` | yes |
+| Mews | none | `https://www.mews.com/en/blog` | no |
+| Lighthouse | none | `https://www.mylighthouse.com/resources/blog` | no |
+| Hospitality Net | `https://www.hospitalitynet.org/rss/news.xml` | `https://www.hospitalitynet.org/news` | no |
+
+## Manual Fetch Command
+
+初期 MVP の RSS 取得は、人間が端末から明示的に実行する手動コマンドとして開始する。定期実行、バックグラウンド常駐、クラウド実行は初期 MVP に含めない。
+
+### Command
+
+```powershell
+.venv\Scripts\python.exe -m rm_trend_radar fetch
+```
+
+`.venv` が壊れている環境では、同等の Python 実行環境から `PYTHONPATH=src` を指定して実行してよい。ただし正本の利用コマンドは、リポジトリの標準に合わせて `.venv\Scripts\python.exe -m rm_trend_radar fetch` とする。
+
+### Options
+
+| Option | Required | Default | Meaning |
+| --- | --- | --- | --- |
+| `--source SOURCE_NAME` | no | all initial MVP sources | 指定した source だけを取得する。複数回指定できる。source 名は `Initial Source Config` の `source_name` を使う。大文字小文字は区別しない。 |
+| `--dry-run` | no | false | RSS を取得して parser までは実行するが、SQLite へ追加または更新しない。 |
+| `--json` | no | false | 人間向けの行表示ではなく、機械可読な JSON を標準出力へ出す。 |
+| `--timeout SECONDS` | no | 20 | 1 source あたりの HTTP 取得 timeout 秒数。 |
+
+### Output Contract
+
+通常出力では、source ごとに次の値を標準出力へ表示する。
+
+- `source`: 取得元サイト名
+- `fetched`: RSS item から parser が取り出した item 数
+- `added`: SQLite に新規追加した記事数
+- `updated`: SQLite 上の原文メタデータを更新した記事数
+- `unchanged`: 既存記事と同じだった記事数
+- `failed`: source 取得または XML 解析に失敗した場合は `1`、成功した場合は `0`
+
+失敗理由は標準エラーへ表示する。`--json` の場合も、失敗理由は JSON の `error` に含める。
+
+### Exit Codes
+
+| Exit code | Meaning |
+| --- | --- |
+| `0` | 指定された全 source の取得、解析、保存処理が成功した。 |
+| `1` | CLI の引数が不正、または未定義の source が指定された。 |
+| `2` | 指定された全 source の取得または解析に失敗した。 |
+| `3` | 一部 source は成功し、一部 source は失敗した。成功した source の記事は保存される。 |
+
+### Safety Behavior
+
+- 取得失敗 source があっても、成功した source の処理は取り消さない。
+- `--dry-run` 指定時は SQLite に書き込まない。
+- 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note` は RSS 再取得で上書きしない。
+- 記事本文全文、`description`, `content:encoded`, 画像、動画、添付資料は保存しない。
 
 ## Disallowed Stored Fields
 

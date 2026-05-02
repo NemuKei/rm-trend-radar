@@ -5,7 +5,14 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from .rss import ParsedRssItem
+
 DB_PATH = Path("rm_trend_radar.db")
+
+FETCHED_SUMMARY_PLACEHOLDER = "未要約。原文リンクを確認してください。"
+FETCHED_RM_IMPLICATION_PLACEHOLDER = "未記入。原文確認後に追記してください。"
+FETCHED_NOTE_PLACEHOLDER = "RSS取得直後。要約、重要度、示唆は未確認。"
+FETCHED_DEFAULT_IMPORTANCE = 3
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS articles (
@@ -53,6 +60,12 @@ SAMPLE_ARTICLES = [
 ]
 
 
+class UpsertResult(dict[str, int]):
+    added: int
+    updated: int
+    unchanged: int
+
+
 def connect() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -84,6 +97,65 @@ def init_db(seed: bool = False) -> None:
                         article["note"],
                     ),
                 )
+
+
+def upsert_rss_items(items: list[ParsedRssItem]) -> UpsertResult:
+    result = UpsertResult(added=0, updated=0, unchanged=0)
+    with connect() as conn:
+        for item in items:
+            existing = conn.execute(
+                """
+                SELECT source_name, published_date, title_en
+                FROM articles
+                WHERE url = ?
+                """,
+                (item.url,),
+            ).fetchone()
+            if existing is None:
+                conn.execute(
+                    """
+                    INSERT INTO articles (
+                        source_name, url, published_date, title_en, title_ja,
+                        summary_ja, tags_json, importance, rm_implication, note
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        item.source_name,
+                        item.url,
+                        item.published_date,
+                        item.title_en,
+                        item.title_en,
+                        FETCHED_SUMMARY_PLACEHOLDER,
+                        json.dumps(list(item.tags), ensure_ascii=False),
+                        FETCHED_DEFAULT_IMPORTANCE,
+                        FETCHED_RM_IMPLICATION_PLACEHOLDER,
+                        FETCHED_NOTE_PLACEHOLDER,
+                    ),
+                )
+                result["added"] += 1
+                continue
+
+            if (
+                existing["source_name"],
+                existing["published_date"],
+                existing["title_en"],
+            ) == (item.source_name, item.published_date, item.title_en):
+                result["unchanged"] += 1
+                continue
+
+            conn.execute(
+                """
+                UPDATE articles
+                SET source_name = ?,
+                    published_date = ?,
+                    title_en = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE url = ?
+                """,
+                (item.source_name, item.published_date, item.title_en, item.url),
+            )
+            result["updated"] += 1
+    return result
 
 
 def get_articles() -> list[dict[str, Any]]:

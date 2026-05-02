@@ -2,8 +2,10 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest_basetemp*/
 .ruff_cache/
 .mypy_cache/
+.tmp_*/
 .streamlit/secrets.toml
 rm_trend_radar.db
 *.sqlite
