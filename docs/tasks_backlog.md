@@ -32,6 +32,13 @@
   spec-impact: no
   spec-checkpoint: not-needed
 
+- [x] `P1-04` 次スレッド移行用の正本文書を整備する
+  Done条件: `STATUS`、`tasks_backlog`、`spec_001_sources` が、次スレッドで `P2-01` から再開できる内容になっている。
+  依存: `P1-03`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_001_sources.md
+
 ## Phase 2: 初期取得対象を決める
 
 - [ ] `P2-01` 初期取得対象サイトを調査する
@@ -40,7 +47,7 @@
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_001_sources.md
-  open-spec-questions: `docs/spec_001_sources.md` を新規作成するか、`docs/spec_000_overview.md` に追記するか。
+  open-spec-questions: 初期対象を 3 件に絞るか、5 件まで広げるか。
 
 - [ ] `P2-02` 記事取得スキーマを確定する
   Done条件: RSS または公開ブログ一覧ページから取り込む項目、重複判定、更新判定、取得失敗時の扱いが仕様化されている。

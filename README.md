@@ -25,7 +25,7 @@
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m rm_trend_radar.db
+.\.venv\Scripts\python.exe -m rm_trend_radar
 ```
 
 ## 起動
@@ -63,3 +63,4 @@ python -m venv .venv
 - 意思決定: `docs/context/DECISIONS.md`
 - タスク: `docs/tasks_backlog.md`
 - 仕様概要: `docs/spec_000_overview.md`
+- 取得対象調査と取得契約: `docs/spec_001_sources.md`
