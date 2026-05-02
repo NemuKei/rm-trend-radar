@@ -24,6 +24,7 @@ def test_init_db_seeds_articles(tmp_path, monkeypatch):
     assert any("forecast" in article["tags"] for article in articles)
     assert all(article["review_status"] == "confirmed" for article in articles)
     assert all(article["reviewed_at"] is not None for article in articles)
+    assert all(not article["public_candidate"] for article in articles)
 
 
 def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
@@ -55,6 +56,7 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
         columns = {row[1] for row in conn.execute("PRAGMA table_info(articles)")}
     assert "review_status" in columns
     assert "reviewed_at" in columns
+    assert "public_candidate" in columns
 
 
 def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monkeypatch):
@@ -84,6 +86,7 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["tags"] == ["revenue-management", "unreviewed"]
     assert articles[0]["review_status"] == "unreviewed"
     assert articles[0]["reviewed_at"] is None
+    assert articles[0]["public_candidate"] is False
 
 
 def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch):
@@ -108,7 +111,8 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 rm_implication = ?,
                 note = ?,
                 review_status = ?,
-                reviewed_at = CURRENT_TIMESTAMP
+                reviewed_at = CURRENT_TIMESTAMP,
+                public_candidate = ?
             WHERE url = ?
             """,
             (
@@ -119,6 +123,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 "手動示唆",
                 "手動メモ",
                 "confirmed",
+                1,
                 item.url,
             ),
         )
@@ -149,6 +154,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["note"] == "手動メモ"
     assert articles[0]["review_status"] == "confirmed"
     assert articles[0]["reviewed_at"] is not None
+    assert articles[0]["public_candidate"] is True
 
 
 def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch):
@@ -176,6 +182,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
         rm_implication="確認済み示唆",
         note="確認済みメモ",
         review_status="confirmed",
+        public_candidate=True,
     )
 
     article = get_articles(review_status="confirmed")[0]
@@ -187,6 +194,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
     assert article["rm_implication"] == "確認済み示唆"
     assert article["note"] == "確認済みメモ"
     assert article["reviewed_at"] is not None
+    assert article["public_candidate"] is True
 
 
 def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
@@ -210,6 +218,7 @@ def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
         rm_implication="A implication",
         note="",
         review_status="confirmed",
+        public_candidate=True,
     )
     update_article_review(
         article_id=articles["https://example.com/b"]["id"],
@@ -220,6 +229,7 @@ def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
         rm_implication="B implication",
         note="",
         review_status="confirmed",
+        public_candidate=False,
     )
     update_article_review(
         article_id=articles["https://example.com/c"]["id"],
@@ -230,6 +240,7 @@ def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
         rm_implication="C implication",
         note="",
         review_status="confirmed",
+        public_candidate=False,
     )
 
     digest_articles = get_digest_articles(

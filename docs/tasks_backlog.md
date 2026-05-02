@@ -116,17 +116,31 @@
   target-spec: docs/spec_002_review_workflow.md
   備考: 現在の画面構成は暫定的に許容する。次の調整は、サンプル記事ではなく実記事を可視化してから判断する。2026-05-02 に初期対象 5 件から 128 件を取得し、実データ確認用にアプリ起動時のサンプル自動投入を停止した。次は画面上で記事確認タブと週次ダイジェストタブを確認する。
 
+- [x] `P4-06` 俯瞰テーブルと公開候補フラグを追加する
+  Done条件: 記事確認画面で、公開日、取得元、確認状態、重要度、公開候補、タイトル、タグを表形式で俯瞰でき、各記事に複業リポ側 LP の公開候補フラグを保存できる。
+  依存: `P4-05`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
+- [ ] `P4-07` 複業リポ側 LP への公開候補 export 契約を決める
+  Done条件: 公開候補記事を複業リポ側 LP に渡す場合の出力形式、出力項目、掲載前チェック、原文代替公開を避ける制約、ドメインページ構成が仕様化されている。
+  依存: `P4-06`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
 - 実記事を取得して確認ワークフローを画面評価する
 
 Next:
+- 複業リポ側 LP への公開候補 export 契約を決める
 - AI 候補生成の後続検討を行う
-- Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
 
 After Next:
-- なし
+- Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
 
 Later:
 - なし
@@ -134,5 +148,5 @@ Later:
 ## Next候補
 
 1. 実記事を取得して確認ワークフローを画面評価する
-2. AI 候補生成の後続検討を行う
-3. Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
+2. 複業リポ側 LP への公開候補 export 契約を決める
+3. AI 候補生成の後続検討を行う
