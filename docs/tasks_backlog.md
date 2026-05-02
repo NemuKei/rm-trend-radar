@@ -158,6 +158,13 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-12` 確認済み記事の要約レベルを仕様化する
+  Done条件: `summary_ja` と `rm_implication` の目的、文字数目安、含める内容、含めない内容が `docs/spec_002_review_workflow.md` に記録されている。
+  依存: `P4-11`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:
