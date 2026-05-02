@@ -172,6 +172,13 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-14` ChatGPT 出力の公開用仕訳項目を追加する
+  Done条件: 既存 DB に `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit` を追加でき、記事確認画面と確認済みレビュー画面から保存でき、公開候補 export preview に含まれる。`personal_summary` と `note` は引き続き公開候補 export preview に含めない。
+  依存: `P4-13`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Remaining Task Triage
 
 Now:

@@ -20,6 +20,12 @@ ARTICLE = {
     "importance": 5,
     "rm_implication": "業務上の示唆",
     "personal_summary": "自分用の詳細要約",
+    "public_tip_ja": "日本施設向けTips",
+    "sns_post_draft": "SNS投稿案",
+    "newsletter_lead_draft": "メルマガ用リード文",
+    "internal_share_summary": "社内共有用3行要約",
+    "manager_checklist": "支配人向けチェックリスト",
+    "source_credit": "参考: IDeaS",
     "note": "内部メモ",
     "review_status": "confirmed",
     "public_candidate": True,
@@ -40,6 +46,12 @@ def test_build_public_candidate_records_excludes_internal_note():
             "tags": ["pricing", "forecast"],
             "importance": 5,
             "rm_implication": "業務上の示唆",
+            "public_tip_ja": "日本施設向けTips",
+            "sns_post_draft": "SNS投稿案",
+            "newsletter_lead_draft": "メルマガ用リード文",
+            "internal_share_summary": "社内共有用3行要約",
+            "manager_checklist": "支配人向けチェックリスト",
+            "source_credit": "参考: IDeaS",
         }
     ]
 
@@ -59,6 +71,12 @@ def test_generate_public_candidate_markdown_uses_public_fields_only():
     assert "## 公開候補記事" in markdown
     assert "短い紹介" in markdown
     assert "業務上の示唆" in markdown
+    assert "日本施設向けTips" in markdown
+    assert "SNS投稿案" in markdown
+    assert "メルマガ用リード文" in markdown
+    assert "社内共有用3行要約" in markdown
+    assert "支配人向けチェックリスト" in markdown
+    assert "参考: IDeaS" in markdown
     assert "自分用の詳細要約" not in markdown
     assert "内部メモ" not in markdown
 

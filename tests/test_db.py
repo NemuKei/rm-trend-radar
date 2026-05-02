@@ -65,6 +65,12 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
     assert "title_priority" in columns
     assert "title_priority_reason" in columns
     assert "personal_summary" in columns
+    assert "public_tip_ja" in columns
+    assert "sns_post_draft" in columns
+    assert "newsletter_lead_draft" in columns
+    assert "internal_share_summary" in columns
+    assert "manager_checklist" in columns
+    assert "source_credit" in columns
 
 
 def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monkeypatch):
@@ -91,6 +97,12 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["importance"] == 3
     assert articles[0]["rm_implication"] == "未記入。原文確認後に追記してください。"
     assert articles[0]["personal_summary"] == ""
+    assert articles[0]["public_tip_ja"] == ""
+    assert articles[0]["sns_post_draft"] == ""
+    assert articles[0]["newsletter_lead_draft"] == ""
+    assert articles[0]["internal_share_summary"] == ""
+    assert articles[0]["manager_checklist"] == ""
+    assert articles[0]["source_credit"] == ""
     assert articles[0]["note"] == "RSS取得直後。要約、重要度、示唆は未確認。"
     assert articles[0]["tags"] == ["revenue-management", "unreviewed"]
     assert articles[0]["review_status"] == "unreviewed"
@@ -122,6 +134,12 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 importance = ?,
                 rm_implication = ?,
                 personal_summary = ?,
+                public_tip_ja = ?,
+                sns_post_draft = ?,
+                newsletter_lead_draft = ?,
+                internal_share_summary = ?,
+                manager_checklist = ?,
+                source_credit = ?,
                 note = ?,
                 review_status = ?,
                 reviewed_at = CURRENT_TIMESTAMP,
@@ -136,6 +154,12 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 5,
                 "手動示唆",
                 "自分用要約",
+                "公開Tips",
+                "SNS案",
+                "メルマガリード",
+                "社内3行",
+                "チェックリスト",
+                "参考: Example",
                 "手動メモ",
                 "confirmed",
                 1,
@@ -170,6 +194,12 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["importance"] == 5
     assert articles[0]["rm_implication"] == "手動示唆"
     assert articles[0]["personal_summary"] == "自分用要約"
+    assert articles[0]["public_tip_ja"] == "公開Tips"
+    assert articles[0]["sns_post_draft"] == "SNS案"
+    assert articles[0]["newsletter_lead_draft"] == "メルマガリード"
+    assert articles[0]["internal_share_summary"] == "社内3行"
+    assert articles[0]["manager_checklist"] == "チェックリスト"
+    assert articles[0]["source_credit"] == "参考: Example"
     assert articles[0]["note"] == "手動メモ"
     assert articles[0]["review_status"] == "confirmed"
     assert articles[0]["reviewed_at"] is not None
@@ -201,6 +231,12 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
         importance=4,
         rm_implication="確認済み示唆",
         personal_summary="自分用の詳細要約",
+        public_tip_ja="日本施設向けTips",
+        sns_post_draft="SNS投稿案",
+        newsletter_lead_draft="メルマガ用リード文",
+        internal_share_summary="社内共有用3行要約",
+        manager_checklist="支配人向けチェックリスト",
+        source_credit="参考: Example",
         note="確認済みメモ",
         review_status="confirmed",
         public_candidate=True,
@@ -215,6 +251,12 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
     assert article["importance"] == 4
     assert article["rm_implication"] == "確認済み示唆"
     assert article["personal_summary"] == "自分用の詳細要約"
+    assert article["public_tip_ja"] == "日本施設向けTips"
+    assert article["sns_post_draft"] == "SNS投稿案"
+    assert article["newsletter_lead_draft"] == "メルマガ用リード文"
+    assert article["internal_share_summary"] == "社内共有用3行要約"
+    assert article["manager_checklist"] == "支配人向けチェックリスト"
+    assert article["source_credit"] == "参考: Example"
     assert article["note"] == "確認済みメモ"
     assert article["reviewed_at"] is not None
     assert article["interest_candidate"] is True

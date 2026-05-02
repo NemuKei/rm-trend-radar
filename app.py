@@ -106,6 +106,12 @@ def _search_text(article: dict) -> str:
         article["summary_ja"],
         article["rm_implication"],
         article["personal_summary"],
+        article["public_tip_ja"],
+        article["sns_post_draft"],
+        article["newsletter_lead_draft"],
+        article["internal_share_summary"],
+        article["manager_checklist"],
+        article["source_credit"],
         article["source_name"],
         " ".join(article["tags"]),
         article["title_priority"],
@@ -167,6 +173,36 @@ def render_article_detail(article: dict) -> None:
     if article["personal_summary"]:
         with st.expander("自分用要約", expanded=False):
             st.write(article["personal_summary"])
+    if any(
+        article[field]
+        for field in (
+            "public_tip_ja",
+            "sns_post_draft",
+            "newsletter_lead_draft",
+            "internal_share_summary",
+            "manager_checklist",
+            "source_credit",
+        )
+    ):
+        with st.expander("公開用コンテンツ", expanded=False):
+            if article["source_credit"]:
+                st.markdown("#### 出典表記")
+                st.write(article["source_credit"])
+            if article["public_tip_ja"]:
+                st.markdown("#### 日本施設向けTips")
+                st.write(article["public_tip_ja"])
+            if article["sns_post_draft"]:
+                st.markdown("#### SNS投稿案")
+                st.write(article["sns_post_draft"])
+            if article["newsletter_lead_draft"]:
+                st.markdown("#### メルマガ用リード文")
+                st.write(article["newsletter_lead_draft"])
+            if article["internal_share_summary"]:
+                st.markdown("#### 社内共有用3行要約")
+                st.write(article["internal_share_summary"])
+            if article["manager_checklist"]:
+                st.markdown("#### 支配人・現場向けチェックリスト")
+                st.write(article["manager_checklist"])
 
     with st.expander("確認内容を編集", expanded=False):
         with st.form(key=f"review_form_{article['id']}"):
@@ -188,6 +224,37 @@ def render_article_detail(article: dict) -> None:
                 value=article["personal_summary"],
                 height=260,
                 help="公開候補 export、週次ダイジェスト、LP、X には出さない内部確認用の詳細要約です。",
+            )
+            st.markdown("##### 公開用コンテンツ")
+            source_credit = st.text_area(
+                "出典表記",
+                value=article["source_credit"],
+                height=90,
+            )
+            public_tip_ja = st.text_area(
+                "日本施設向けTips",
+                value=article["public_tip_ja"],
+                height=260,
+            )
+            sns_post_draft = st.text_area(
+                "SNS投稿案",
+                value=article["sns_post_draft"],
+                height=180,
+            )
+            newsletter_lead_draft = st.text_area(
+                "メルマガ用リード文",
+                value=article["newsletter_lead_draft"],
+                height=160,
+            )
+            internal_share_summary = st.text_area(
+                "社内共有用3行要約",
+                value=article["internal_share_summary"],
+                height=140,
+            )
+            manager_checklist = st.text_area(
+                "支配人・現場向けチェックリスト",
+                value=article["manager_checklist"],
+                height=220,
             )
             note = st.text_area("手動メモ", value=article["note"])
             review_status_label = st.selectbox(
@@ -214,6 +281,12 @@ def render_article_detail(article: dict) -> None:
                 importance=importance,
                 rm_implication=rm_implication,
                 personal_summary=personal_summary,
+                public_tip_ja=public_tip_ja,
+                sns_post_draft=sns_post_draft,
+                newsletter_lead_draft=newsletter_lead_draft,
+                internal_share_summary=internal_share_summary,
+                manager_checklist=manager_checklist,
+                source_credit=source_credit,
                 note=note,
                 review_status=REVIEW_STATUS_BY_LABEL[review_status_label],
                 public_candidate=public_candidate,
@@ -258,6 +331,37 @@ def render_reviewed_article(article: dict) -> None:
     if article["personal_summary"]:
         with st.expander("自分用要約", expanded=False):
             st.write(article["personal_summary"])
+    with st.expander("公開用コンテンツ", expanded=bool(article["public_tip_ja"])):
+        if article["source_credit"]:
+            st.markdown("#### 出典表記")
+            st.write(article["source_credit"])
+        if article["public_tip_ja"]:
+            st.markdown("#### 日本施設向けTips")
+            st.write(article["public_tip_ja"])
+        if article["sns_post_draft"]:
+            st.markdown("#### SNS投稿案")
+            st.write(article["sns_post_draft"])
+        if article["newsletter_lead_draft"]:
+            st.markdown("#### メルマガ用リード文")
+            st.write(article["newsletter_lead_draft"])
+        if article["internal_share_summary"]:
+            st.markdown("#### 社内共有用3行要約")
+            st.write(article["internal_share_summary"])
+        if article["manager_checklist"]:
+            st.markdown("#### 支配人・現場向けチェックリスト")
+            st.write(article["manager_checklist"])
+        if not any(
+            article[field]
+            for field in (
+                "source_credit",
+                "public_tip_ja",
+                "sns_post_draft",
+                "newsletter_lead_draft",
+                "internal_share_summary",
+                "manager_checklist",
+            )
+        ):
+            st.info("公開用コンテンツはまだありません。")
 
     with st.expander("公開導線の確認", expanded=True):
         st.write("LP 掲載時の役割: 短い紹介と独自の示唆だけを掲載し、詳細理解は原文サイトへ戻す。")
@@ -290,6 +394,37 @@ def render_reviewed_article(article: dict) -> None:
                 height=320,
                 help="公開候補 export、週次ダイジェスト、LP、X には出さない内部確認用の詳細要約です。",
             )
+            st.markdown("##### 公開用コンテンツ")
+            source_credit = st.text_area(
+                "出典表記",
+                value=article["source_credit"],
+                height=90,
+            )
+            public_tip_ja = st.text_area(
+                "日本施設向けTips",
+                value=article["public_tip_ja"],
+                height=320,
+            )
+            sns_post_draft = st.text_area(
+                "SNS投稿案",
+                value=article["sns_post_draft"],
+                height=200,
+            )
+            newsletter_lead_draft = st.text_area(
+                "メルマガ用リード文",
+                value=article["newsletter_lead_draft"],
+                height=180,
+            )
+            internal_share_summary = st.text_area(
+                "社内共有用3行要約",
+                value=article["internal_share_summary"],
+                height=140,
+            )
+            manager_checklist = st.text_area(
+                "支配人・現場向けチェックリスト",
+                value=article["manager_checklist"],
+                height=240,
+            )
             note = st.text_area("手動メモ", value=article["note"], height=140)
             public_candidate = st.checkbox(
                 "副業リポ側 LP の公開候補にする",
@@ -310,6 +445,12 @@ def render_reviewed_article(article: dict) -> None:
                 importance=importance,
                 rm_implication=rm_implication,
                 personal_summary=personal_summary,
+                public_tip_ja=public_tip_ja,
+                sns_post_draft=sns_post_draft,
+                newsletter_lead_draft=newsletter_lead_draft,
+                internal_share_summary=internal_share_summary,
+                manager_checklist=manager_checklist,
+                source_credit=source_credit,
                 note=note,
                 review_status=REVIEW_STATUS_CONFIRMED,
                 public_candidate=public_candidate,

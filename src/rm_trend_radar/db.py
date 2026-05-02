@@ -34,6 +34,12 @@ CREATE TABLE IF NOT EXISTS articles (
     importance INTEGER NOT NULL CHECK (importance BETWEEN 1 AND 5),
     rm_implication TEXT NOT NULL,
     personal_summary TEXT NOT NULL DEFAULT '',
+    public_tip_ja TEXT NOT NULL DEFAULT '',
+    sns_post_draft TEXT NOT NULL DEFAULT '',
+    newsletter_lead_draft TEXT NOT NULL DEFAULT '',
+    internal_share_summary TEXT NOT NULL DEFAULT '',
+    manager_checklist TEXT NOT NULL DEFAULT '',
+    source_credit TEXT NOT NULL DEFAULT '',
     note TEXT NOT NULL DEFAULT '',
     review_status TEXT NOT NULL DEFAULT 'unreviewed'
         CHECK (review_status IN ('unreviewed', 'confirmed')),
@@ -59,6 +65,12 @@ SAMPLE_ARTICLES = [
         "importance": 4,
         "rm_implication": "価格変更の理由を記録し、後から判断品質を振り返れる運用を作ることが重要です。",
         "personal_summary": "",
+        "public_tip_ja": "",
+        "sns_post_draft": "",
+        "newsletter_lead_draft": "",
+        "internal_share_summary": "",
+        "manager_checklist": "",
+        "source_credit": "",
         "note": "初期表示確認用のサンプルです。",
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
@@ -77,6 +89,12 @@ SAMPLE_ARTICLES = [
         "importance": 5,
         "rm_implication": "予測値だけでなく、需要増減の要因、対象日、比較基準を画面で確認できることが導入判断に影響します。",
         "personal_summary": "",
+        "public_tip_ja": "",
+        "sns_post_draft": "",
+        "newsletter_lead_draft": "",
+        "internal_share_summary": "",
+        "manager_checklist": "",
+        "source_credit": "",
         "note": "初期表示確認用のサンプルです。",
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
@@ -110,9 +128,11 @@ def init_db(seed: bool = False) -> None:
                         source_name, url, published_date, title_en,
                         title_priority, title_priority_reason, title_ja,
                         summary_ja, tags_json, importance, rm_implication,
-                        personal_summary, note,
+                        personal_summary, public_tip_ja, sns_post_draft,
+                        newsletter_lead_draft, internal_share_summary,
+                        manager_checklist, source_credit, note,
                         review_status, reviewed_at, interest_candidate, public_candidate
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)
                     """,
                     (
                         article["source_name"],
@@ -127,6 +147,12 @@ def init_db(seed: bool = False) -> None:
                         article["importance"],
                         article["rm_implication"],
                         article["personal_summary"],
+                        article["public_tip_ja"],
+                        article["sns_post_draft"],
+                        article["newsletter_lead_draft"],
+                        article["internal_share_summary"],
+                        article["manager_checklist"],
+                        article["source_credit"],
                         article["note"],
                         article["review_status"],
                         int(article["interest_candidate"]),
@@ -157,6 +183,21 @@ def _migrate_articles_table(conn: sqlite3.Connection) -> None:
             ADD COLUMN personal_summary TEXT NOT NULL DEFAULT ''
             """
         )
+    for column in (
+        "public_tip_ja",
+        "sns_post_draft",
+        "newsletter_lead_draft",
+        "internal_share_summary",
+        "manager_checklist",
+        "source_credit",
+    ):
+        if column not in columns:
+            conn.execute(
+                f"""
+                ALTER TABLE articles
+                ADD COLUMN {column} TEXT NOT NULL DEFAULT ''
+                """
+            )
     if "public_candidate" not in columns:
         conn.execute(
             """
@@ -296,6 +337,12 @@ def update_article_review(
     public_candidate: bool = False,
     interest_candidate: bool = False,
     personal_summary: str = "",
+    public_tip_ja: str = "",
+    sns_post_draft: str = "",
+    newsletter_lead_draft: str = "",
+    internal_share_summary: str = "",
+    manager_checklist: str = "",
+    source_credit: str = "",
 ) -> None:
     if review_status not in VALID_REVIEW_STATUSES:
         raise ValueError(f"Unknown review_status: {review_status}")
@@ -316,6 +363,12 @@ def update_article_review(
                 importance = ?,
                 rm_implication = ?,
                 personal_summary = ?,
+                public_tip_ja = ?,
+                sns_post_draft = ?,
+                newsletter_lead_draft = ?,
+                internal_share_summary = ?,
+                manager_checklist = ?,
+                source_credit = ?,
                 note = ?,
                 review_status = ?,
                 reviewed_at = {reviewed_at_expression},
@@ -331,6 +384,12 @@ def update_article_review(
                 importance,
                 rm_implication.strip(),
                 personal_summary.strip(),
+                public_tip_ja.strip(),
+                sns_post_draft.strip(),
+                newsletter_lead_draft.strip(),
+                internal_share_summary.strip(),
+                manager_checklist.strip(),
+                source_credit.strip(),
                 note.strip(),
                 review_status,
                 int(interest_candidate),
@@ -373,7 +432,9 @@ def get_articles(review_status: str | None = None) -> list[dict[str, Any]]:
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication,
-                   personal_summary, note,
+                   personal_summary, public_tip_ja, sns_post_draft,
+                   newsletter_lead_draft, internal_share_summary,
+                   manager_checklist, source_credit, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             {where_clause}
@@ -398,7 +459,9 @@ def get_digest_articles(
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication,
-                   personal_summary, note,
+                   personal_summary, public_tip_ja, sns_post_draft,
+                   newsletter_lead_draft, internal_share_summary,
+                   manager_checklist, source_credit, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             WHERE review_status = ?
@@ -418,7 +481,9 @@ def get_public_candidate_articles() -> list[dict[str, Any]]:
             SELECT id, source_name, url, published_date, title_en, title_ja,
                    title_priority, title_priority_reason,
                    summary_ja, tags_json, importance, rm_implication,
-                   personal_summary, note,
+                   personal_summary, public_tip_ja, sns_post_draft,
+                   newsletter_lead_draft, internal_share_summary,
+                   manager_checklist, source_credit, note,
                    review_status, reviewed_at, interest_candidate, public_candidate
             FROM articles
             WHERE review_status = ?

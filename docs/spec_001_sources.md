@@ -116,6 +116,7 @@
 - 重要度
 - レベニューマネジメント担当者向けの示唆
 - 自分用要約
+- 公開用コンテンツ
 - 手動メモ
 - 取得日時
 - 更新確認日時
@@ -158,6 +159,12 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 | `importance` | `3` |
 | `rm_implication` | `未記入。原文確認後に追記してください。` |
 | `personal_summary` | 空文字。自分用の詳細要約または読解メモは、原文確認後に画面から保存する。 |
+| `public_tip_ja` | 空文字。日本施設向けTips本文は、原文確認後に画面から保存する。 |
+| `sns_post_draft` | 空文字。SNS 投稿用の短文下書きは、原文確認後に画面から保存する。 |
+| `newsletter_lead_draft` | 空文字。メルマガ冒頭文の下書きは、原文確認後に画面から保存する。 |
+| `internal_share_summary` | 空文字。社内共有用の短い要約は、原文確認後に画面から保存する。 |
+| `manager_checklist` | 空文字。支配人または現場担当者向けの確認項目は、原文確認後に画面から保存する。 |
+| `source_credit` | 空文字。参考元記事の出典表記は、原文確認後に画面から保存する。 |
 | `note` | `RSS取得直後。要約、重要度、示唆は未確認。` |
 
 ## Duplicate and Update Rules
@@ -167,7 +174,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 - 同じ `url` が存在しない場合は、新規記事として追加する。
 - 同じ `url` が存在する場合は、既存記事として扱い、手動確認済みの項目を上書きしない。
 - 既存記事で上書きしてよい項目は、`source_name`, `published_date`, `title_en`, `title_priority`, `title_priority_reason`, `updated_at` に限定する。
-- `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
+- `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note` は、利用者が手動編集する可能性があるため RSS 再取得では上書きしない。
 - `interest_candidate` と `public_candidate` は、利用者が画面で付ける内部フラグであるため RSS 再取得では上書きしない。
 - RSS 側から item が消えても、SQLite の既存記事は削除しない。
 
@@ -247,7 +254,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 - 取得失敗 source があっても、成功した source の処理は取り消さない。
 - `--dry-run` 指定時は SQLite に書き込まない。
-- 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `note`, `interest_candidate`, `public_candidate` は RSS 再取得で上書きしない。
+- 手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note`, `interest_candidate`, `public_candidate` は RSS 再取得で上書きしない。
 - `title_priority` と `title_priority_reason` は `title_en` から機械的に再計算できる項目であり、RSS 再取得で `title_en` が変わった場合は更新してよい。
 - 記事本文全文、`description`, `content:encoded`, 画像、動画、添付資料は保存しない。
 
