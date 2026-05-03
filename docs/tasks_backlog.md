@@ -188,10 +188,18 @@
   target-spec: docs/spec_002_review_workflow.md
   完了メモ: 2026-05-04 に、気になるチェック済み 42 件すべてを対象に、原文ページの title と meta description を確認し、`summary_ja` を原文代替にならない短い紹介へ更新した。42 件すべてが公開候補 export 対象になった。
 
+- [x] `P4-16` 副業リポ側 LP の海外 RM サイト紹介を仕様化する
+  Done条件: 副業リポ側 LP に掲載する情報源紹介セクションの配置、表示項目、対象サイト、紹介文、リンク、公開前チェックが仕様化されている。
+  依存: `P4-08`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+  完了メモ: 2026-05-04 に、`Side Business LP Source Introduction Contract` を追加した。初期表示対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件である。
+
 ## Remaining Task Triage
 
 Now:
-- 副業リポ側スレッドで、`docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` を入力として、公開候補記事の一覧セクションを実装する。
+- 副業リポ側スレッドで、`docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` と `Side Business LP Source Introduction Contract` を入力として、公開候補記事の一覧セクションと海外 RM サイト紹介セクションを実装する。
 
 Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める
@@ -206,6 +214,6 @@ Later:
 
 ## Next候補
 
-1. 副業リポ側スレッドで、公開候補記事の一覧セクションを実装する
+1. 副業リポ側スレッドで、公開候補記事の一覧セクションと海外 RM サイト紹介セクションを実装する
 2. X 投稿文の作成範囲と送信しない下書き運用を決める
 3. 公開候補 42 件のうち、副業リポ側 LP 初期表示に載せる件数上限と表示順を決める

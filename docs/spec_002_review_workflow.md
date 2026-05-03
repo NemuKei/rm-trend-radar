@@ -285,6 +285,81 @@ type OverseasRmArticle = {
 
 初期一覧実装では、`public_tip_ja` を使った長い個別解説ページは作らない。個別解説ページを作る場合は、別タスクとして、原文の代替にならない独自解説の基準、ページ URL、見出し構成、引用量、公開前確認手順を改めて仕様化する。
 
+## Side Business LP Source Introduction Contract
+
+副業リポ側 LP には、海外記事一覧だけでなく、参照している海外 RM サイトの紹介も掲載してよい。初期実装では、記事一覧の直前または直後に、情報源紹介セクションを追加する。
+
+このセクションの目的は、利用者が「どのような性格の海外情報源を見ているのか」を理解できるようにすることである。各サイトの記事内容を要約することや、各サイトの公式説明文を転載することではない。
+
+副業リポ側で実装する情報源紹介セクションは、次の性質を持つ。
+
+- 配置先: 副業リポ側の既存 LP に、海外記事一覧と近い位置で追加する。
+- セクション ID: `overseas-rm-sources`。既存 LP の ID 命名規則がある場合は、その規則に合わせてよいが、役割が分かる名前にする。
+- セクション見出し: `参照している海外 RM メディア・サービス`。
+- セクションの役割: 海外ホテル Revenue Management 関連情報を確認するための情報源を紹介する。
+- 初期表示項目: サイト名、短い紹介、主に確認するテーマ、公式サイトまたは記事一覧へのリンク。
+- 初期表示対象: `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak`。
+- 初期表示しない対象: `Mews`, `Lighthouse`, `Hospitality Net`。これらは初期 MVP の取得対象ではないため、LP の情報源紹介には出さない。
+- リンク: 外部リンクとして開く。リンクテキストは「公式サイトを見る」または「記事一覧を見る」を使う。
+- 紹介文の粒度: 各サイト 1 から 2 文に留める。公式説明文の転載ではなく、このプロジェクトで確認する情報源としての役割を自分の言葉で説明する。
+
+副業リポ側で扱うデータ構造は、次の型に相当する。
+
+```ts
+type OverseasRmSource = {
+  name: string;
+  description_ja: string;
+  topics_ja: string[];
+  url: string;
+};
+```
+
+初期データは次の内容にする。
+
+```ts
+const overseasRmSources: OverseasRmSource[] = [
+  {
+    name: "IDeaS",
+    description_ja:
+      "ホテル向け Revenue Management System と収益最適化に関する知見を発信しているサービス。価格、需要予測、マーケティング投資、収益管理の考え方を確認する情報源として扱う。",
+    topics_ja: ["Revenue Management System", "需要予測", "価格最適化", "ホテル収益管理"],
+    url: "https://ideas.com/blog/",
+  },
+  {
+    name: "SiteMinder",
+    description_ja:
+      "ホテルの販売チャネル、直販、予約行動、AI 活用に関する記事を多く扱うサービス。Revenue Management と Distribution の接点を確認する情報源として扱う。",
+    topics_ja: ["Distribution", "直販", "OTA", "AI と予約行動"],
+    url: "https://www.siteminder.com/r/",
+  },
+  {
+    name: "RoomPriceGenie",
+    description_ja:
+      "中小規模ホテル向けの価格設定、動的料金、RevPAR、ADR などを実務寄りに扱うサービス。日々の料金判断や基本指標を確認する情報源として扱う。",
+    topics_ja: ["動的料金", "ADR", "RevPAR", "料金最適化"],
+    url: "https://roompricegenie.com/category/blog/",
+  },
+  {
+    name: "Revfine",
+    description_ja:
+      "ホテル Revenue Management、価格戦略、収益指標、業界専門家の見解を扱うメディア。海外の RM 論点や専門家コメントを確認する情報源として扱う。",
+    topics_ja: ["Revenue Management", "価格戦略", "収益指標", "専門家パネル"],
+    url: "https://www.revfine.com/category/hotel-blog/revenue-management/",
+  },
+  {
+    name: "Hotel Speak",
+    description_ja:
+      "ホテル業界の運営、マーケティング、収益管理に関する寄稿記事を扱うメディア。Revenue Management と経営、マーケティング、オーナー視点の接点を確認する情報源として扱う。",
+    topics_ja: ["ホテル経営", "マーケティング", "Revenue Management", "オーナー視点"],
+    url: "https://www.hotelspeak.com/category/hotel-revenue-management/",
+  },
+];
+```
+
+副業リポ側の初期実装では、上記のデータを静的配列として LP のコード内または LP が既に使っているローカルデータファイルに置いてよい。`rm-trend-radar` から情報源紹介データを export する処理は初期実装の対象外とする。
+
+公開前チェックでは、各紹介文が公式サイトの文言を転載していないこと、サイト名とリンク先が一致していること、取得対象ではないサイトを初期情報源として表示していないことを確認する。
+
 ## Public Candidate Export Preview
 
 公開候補タブは、`review_status = confirmed` かつ `public_candidate = 1` の記事だけを対象にする。
