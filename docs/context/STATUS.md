@@ -54,6 +54,7 @@ Last Updated: 2026-05-03
 - 2026-05-03 時点で、公開候補記事 `ホテルは直前料金を大幅に下げずに競争力を保てるのか` に ChatGPT Pro 出力を仕訳して保存した。元記事の読解メモは `personal_summary` に保存し、公開用本文、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリスト、出典表記は、それぞれ公開用コンテンツ項目に保存した。
 - 公開 LP と X は、記事の短い紹介、独自の示唆、原文リンクを届ける導線として扱う。詳細な内容理解は、原文サイトを開いてブラウザ翻訳も使いながら確認してもらう方針にする。
 - `P4-08` で、副業リポ側 LP の初期掲載契約を `docs/spec_002_review_workflow.md` に追加した。初期掲載は、既存 LP 内の `overseas-rm-articles` セクションとして追加し、日本語タイトル、短い要約、取得元、公開日、原文リンクだけの一覧に限定する。`public_tip_ja` などの長い公開用コンテンツは、初期一覧には使わず、個別解説ページを作る場合の後続材料として扱う。
+- 2026-05-04 時点で、気になるチェック済み 42 件すべてを公開 LP 一覧用の短い紹介にそろえた。原文ページの title と meta description を確認し、`summary_ja` を原文代替にならない短い紹介文へ更新した。42 件すべてが `review_status=confirmed`, `interest_candidate=True`, `public_candidate=True` である。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
 - 次の本線は、副業リポ側スレッドで、公開候補タブの JSON preview から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` を使い、公開候補記事の一覧セクションを実装することから始める。
@@ -168,6 +169,8 @@ Last Updated: 2026-05-03
   - Browser Use で `http://localhost:8502/` の `公開候補` タブを開き、対象記事のタイトル、公開用本文、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストが表示されることを確認
   - `P4-14` 実装直後に CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認。この後、2026-05-03 の記事仕訳で公開候補は 1 件になった。
   - `P4-08` 副業リポ側 LP の初期掲載契約を `docs/spec_002_review_workflow.md` に追加し、`docs/context/DECISIONS.md` と `docs/tasks_backlog.md` を同期した。
+  - `.venv\Scripts\python.exe` の権限付き手動確認で、気になる未確認 35 件の原文ページ title と meta description を取得できることを確認した。
+  - `.venv\Scripts\python.exe` の手動確認で、気になるチェック済み 42 件すべてが `review_status=confirmed`, `interest_candidate=True`, `public_candidate=True` になり、公開候補 export 対象が 42 件になったことを確認した。
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認
   - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認

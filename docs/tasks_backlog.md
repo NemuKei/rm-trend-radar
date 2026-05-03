@@ -180,6 +180,14 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-15` 気になる候補を公開 LP 一覧用の短い紹介にそろえる
+  Done条件: 気になるチェック済みの記事について、公開 LP 一覧で使える短い `summary_ja` が保存され、`review_status=confirmed` かつ `public_candidate=1` として公開候補 export に含まれる。
+  依存: `P4-08`
+  spec-impact: no
+  spec-checkpoint: none
+  target-spec: docs/spec_002_review_workflow.md
+  完了メモ: 2026-05-04 に、気になるチェック済み 42 件すべてを対象に、原文ページの title と meta description を確認し、`summary_ja` を原文代替にならない短い紹介へ更新した。42 件すべてが公開候補 export 対象になった。
+
 ## Remaining Task Triage
 
 Now:
@@ -187,7 +195,7 @@ Now:
 
 Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める
-- 確認済み 7 件を画面で確認し、追加で公開候補にする記事を選ぶ
+- 公開候補 42 件のうち、副業リポ側 LP 初期表示に載せる件数上限と表示順を決める
 - AI 候補生成の後続検討を行う
 
 After Next:
@@ -200,4 +208,4 @@ Later:
 
 1. 副業リポ側スレッドで、公開候補記事の一覧セクションを実装する
 2. X 投稿文の作成範囲と送信しない下書き運用を決める
-3. 確認済み 7 件を確認済みレビュー画面で確認し、追加で公開候補にする記事を選ぶ
+3. 公開候補 42 件のうち、副業リポ側 LP 初期表示に載せる件数上限と表示順を決める
