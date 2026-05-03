@@ -53,9 +53,10 @@ Last Updated: 2026-05-03
 - 2026-05-03 時点のローカル DB では、確認済み 7 件、気になる確認済み 7 件、公開候補 1 件である。公開候補は `ホテルは直前料金を大幅に下げずに競争力を保てるのか` である。
 - 2026-05-03 時点で、公開候補記事 `ホテルは直前料金を大幅に下げずに競争力を保てるのか` に ChatGPT Pro 出力を仕訳して保存した。元記事の読解メモは `personal_summary` に保存し、公開用本文、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリスト、出典表記は、それぞれ公開用コンテンツ項目に保存した。
 - 公開 LP と X は、記事の短い紹介、独自の示唆、原文リンクを届ける導線として扱う。詳細な内容理解は、原文サイトを開いてブラウザ翻訳も使いながら確認してもらう方針にする。
+- `P4-08` で、副業リポ側 LP の初期掲載契約を `docs/spec_002_review_workflow.md` に追加した。初期掲載は、既存 LP 内の `overseas-rm-articles` セクションとして追加し、日本語タイトル、短い要約、取得元、公開日、原文リンクだけの一覧に限定する。`public_tip_ja` などの長い公開用コンテンツは、初期一覧には使わず、個別解説ページを作る場合の後続材料として扱う。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
-- 次の本線は、確認済みレビュー画面で確認済み 7 件を確認し、公開候補にする記事を選ぶことから始める。
+- 次の本線は、副業リポ側スレッドで、公開候補タブの JSON preview から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` を使い、公開候補記事の一覧セクションを実装することから始める。
 
 ## Next Re-entry
 
@@ -75,10 +76,10 @@ Last Updated: 2026-05-03
   - `docs/context/DECISIONS.md`
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
-  2. `http://localhost:8502/` を更新し、記事確認タブで俯瞰テーブル、気になるチェック、取得元 filter、確認状態 filter、気になる filter、公開候補 filter、タイトル仮重要度 filter、最低重要度 filter、タグ filter、検索が使いやすいか確認する。
-  3. 必要に応じて、いくつかの記事を確認済みまたは公開候補に変更し、詳細欄と週次ダイジェストタブで表示を確認する。
-  4. UI、タグ、重要度、公開候補、ダイジェスト Markdown、公開候補 preview の調整点を整理する。
-  5. 必要な調整を `tasks_backlog.md` に追加し、Now/Next を更新する。
+  2. `docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` を確認する。
+  3. 副業リポ側スレッドで、公開候補記事の一覧セクションを実装する。初期表示項目は `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` に限定する。
+  4. `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `personal_summary`, `note` は初期一覧に使わない。
+  5. 副業リポ側で実装後、必要に応じて `rm-trend-radar` 側の export preview の見せ方を調整する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
   - 記事本文全文を転載しない。
@@ -166,6 +167,7 @@ Last Updated: 2026-05-03
   - `.venv\Scripts\python.exe` の手動確認で、article id 123 の `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit` が非空で、`review_status=confirmed`, `interest_candidate=True`, `public_candidate=True` であることを確認
   - Browser Use で `http://localhost:8502/` の `公開候補` タブを開き、対象記事のタイトル、公開用本文、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストが表示されることを確認
   - `P4-14` 実装直後に CDP `127.0.0.1:60904` 経由で `http://127.0.0.1:8502/` を確認し、俯瞰テーブル、公開候補タブ、Markdown/JSON 欄、公開候補 0 件の空状態が表示されることを確認。この後、2026-05-03 の記事仕訳で公開候補は 1 件になった。
+  - `P4-08` 副業リポ側 LP の初期掲載契約を `docs/spec_002_review_workflow.md` に追加し、`docs/context/DECISIONS.md` と `docs/tasks_backlog.md` を同期した。
   - `.venv\Scripts\python.exe` の手動 smoke で既存 schema に `public_candidate` を追加できることを確認
   - `.venv\Scripts\python.exe` の手動 smoke で公開候補フラグを保存でき、RSS 再取得で公開候補フラグが上書きされないことを確認
   - `streamlit.testing.v1.AppTest` で `app.py` が画面実行例外を出さないことを確認
@@ -188,5 +190,5 @@ Last Updated: 2026-05-03
 
 - AI 候補生成を行う場合、入力データを保存済みメタデータだけにするか、RSS `description` の一時利用まで広げるか。
 - AI 出力を候補表示だけにするか、人間が確認して保存するか。
-- 副業リポ側 LP に公開候補記事を載せる場合のドメインページ URL、見出し構成、掲載粒度、反映手順をどう定義するか。
+- 副業リポ側 LP の初期一覧実装後、個別解説ページを作るか、一覧だけを維持するか。
 - Cloudflare と独自ドメインを、紹介 LP の導線だけに使うか、将来のアプリ公開先として使うか。

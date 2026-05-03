@@ -226,7 +226,64 @@ ChatGPT Pro などの大規模言語モデルから、海外記事の解説と�
 
 公開 LP と X は、記事の存在、論点、読む理由を知らせる導線として扱う。詳細な内容理解は、原文サイトで行う。利用者は必要に応じてブラウザの翻訳機能を使って原文サイトを読む。
 
-初期実装では、`public_candidate` を保存し、画面で絞り込めるところまでを扱う。副業リポ側 LP へ直接書き込む処理、X 投稿文の作成、X への投稿または予約投稿、掲載ページ構成、公開前チェックの詳細は後続タスクで仕様化する。
+初期実装では、`public_candidate` を保存し、画面で絞り込めるところまでを扱う。副業リポ側 LP へ直接書き込む処理、X 投稿文の作成、X への投稿または予約投稿は後続タスクとする。
+
+## Side Business LP Initial Listing Contract
+
+副業リポ側 LP の初期実装では、公開候補記事を「記事を読むための一覧」として掲載する。初期掲載は、公開候補記事ごとに日本語タイトル、短い要約、取得元、公開日、原文リンクだけを表示する。日本施設向けの長い解説、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストは、初期一覧には表示しない。
+
+この初期一覧の目的は、海外のホテル Revenue Management 関連記事を見つけやすくし、利用者を原文サイトへ送ることである。原文記事の内容を公開 LP 上で代替することではない。
+
+副業リポ側で実装するページまたはセクションは、次の性質を持つ。
+
+- 配置先: 副業リポ側の既存 LP に、海外ホテル Revenue Management 記事の紹介一覧セクションとして追加する。初期実装では新規ルートや個別記事ページを作らない。
+- セクション ID: `overseas-rm-articles`。既存 LP の ID 命名規則がある場合は、その規則に合わせてよいが、役割が分かる名前にする。
+- セクション見出し: `海外ホテル Revenue Management 記事`。
+- セクションの役割: 海外ホテル Revenue Management 記事の紹介一覧。
+- 対象記事: `rm-trend-radar` の公開候補 export に含まれる記事。条件は `review_status = confirmed` かつ `public_candidate = 1` である。
+- 初期表示項目: `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`。
+- 任意表示項目: `tags`, `importance`。ただし、重要度は内部選別用の目安であるため、公開画面に出す場合は「重要度」という評価語ではなく、「注目度」など公開読者が誤解しにくい表現にする。
+- 初期表示しない項目: `rm_implication`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `personal_summary`, `note`。
+- 並び順: `published_date` の新しい順を初期値とする。同じ公開日の記事は、`importance` が高い順、次に `title_ja` の昇順とする。
+- 原文リンク: 外部リンクとして開く。リンクテキストは「原文を読む」または「Source」を使う。リンク先が原文サイトであることを明示する。
+- 出典表記: 初期一覧では `source_name` と原文リンクを表示する。`source_credit` の長い表記は、詳細記事や個別紹介ページを作る場合に使う。
+- 公開前チェック: `summary_ja` が原文記事の代替になるほど長くないこと、専門家コメントや記事構成を詳細に再現していないこと、原文 URL が表示されていることを確認する。
+
+副業リポ側の実装スレッドに渡す最小入力は、公開候補タブの JSON preview である。副業リポ側では、JSON 配列の各要素から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` だけを初期表示に使う。
+
+副業リポ側で扱うデータ構造は、次の型に相当する。
+
+```ts
+type OverseasRmArticle = {
+  title_ja: string;
+  summary_ja: string;
+  source_name: string;
+  published_date: string;
+  url: string;
+};
+```
+
+副業リポ側の初期実装では、上記のデータを静的配列として LP のコード内または LP が既に使っているローカルデータファイルに置いてよい。`rm-trend-radar` からの自動同期、API 化、定期更新、GitHub Actions 連携は初期実装の対象外とする。
+
+副業リポ側の初期実装例は、次の Markdown 構造に相当する。
+
+```md
+## 海外ホテル Revenue Management 記事
+
+海外のホテル Revenue Management、Pricing、Distribution、Hotel Tech に関する公開記事を紹介します。詳細は各原文サイトで確認してください。
+
+### ホテルは直前料金を大幅に下げずに競争力を保てるのか
+
+周辺ホテルが直前に値下げする市場で、自施設も追随すべきかを扱うRevfineの専門家パネル記事。直前値下げ自体を単純に否定するのではなく、初期価格、PACE、Booking Window、セグメント、ブランド価値を見ながら、到着直前に慌てて下げなくてもよい販売設計を早い段階から作るべきだと整理している。
+
+- Source: Revfine
+- Published: 2026-04-28
+- [原文を読む](https://www.revfine.com/hotel-pricing-strategy-last-minute-rate-drops/)
+```
+
+この例は実装時の構造を示すためのものである。実際の公開日は、公開候補 export の `published_date` を使う。
+
+初期一覧実装では、`public_tip_ja` を使った長い個別解説ページは作らない。個別解説ページを作る場合は、別タスクとして、原文の代替にならない独自解説の基準、ページ URL、見出し構成、引用量、公開前確認手順を改めて仕様化する。
 
 ## Public Candidate Export Preview
 

@@ -130,12 +130,13 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
-- [ ] `P4-08` 副業リポ側 LP のドメインページ構成を決める
-  Done条件: 公開候補記事を掲載するドメインページの URL、見出し構成、掲載粒度、掲載前チェック、`rm-trend-radar` からの反映手順が仕様化されている。
+- [x] `P4-08` 副業リポ側 LP のドメインページ構成を決める
+  Done条件: 公開候補記事を掲載する副業リポ側 LP の配置先、見出し構成、掲載粒度、掲載前チェック、`rm-trend-radar` からの反映手順が仕様化されている。
   依存: `P4-07`
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
+  完了メモ: 2026-05-04 に、初期掲載は既存 LP 内の `overseas-rm-articles` セクションとして追加し、日本語タイトル、短い要約、取得元、公開日、原文リンクの一覧に限定する方針を `docs/spec_002_review_workflow.md` に追加した。副業リポ側の実装スレッドは、公開候補タブの JSON preview から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` を使って一覧セクションを作る。
 
 - [x] `P4-09` タイトルベースの仮重要度を追加する
   Done条件: 記事タイトルから読む順番の候補を `high`, `medium`, `low` として保存し、記事確認画面の表、詳細、絞り込み条件で確認できる。人間が確定する `importance` は上書きしない。
@@ -182,11 +183,11 @@
 ## Remaining Task Triage
 
 Now:
-- 確認済み 7 件を画面で確認し、公開候補にする記事を選ぶ。
+- 副業リポ側スレッドで、`docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` を入力として、公開候補記事の一覧セクションを実装する。
 
 Next:
-- 副業リポ側 LP のドメインページ構成を決める
 - X 投稿文の作成範囲と送信しない下書き運用を決める
+- 確認済み 7 件を画面で確認し、追加で公開候補にする記事を選ぶ
 - AI 候補生成の後続検討を行う
 
 After Next:
@@ -197,6 +198,6 @@ Later:
 
 ## Next候補
 
-1. 確認済み 7 件を確認済みレビュー画面で確認し、公開候補にする記事を選ぶ
-2. 副業リポ側 LP のドメインページ構成を決める
-3. X 投稿文の作成範囲と送信しない下書き運用を決める
+1. 副業リポ側スレッドで、公開候補記事の一覧セクションを実装する
+2. X 投稿文の作成範囲と送信しない下書き運用を決める
+3. 確認済み 7 件を確認済みレビュー画面で確認し、追加で公開候補にする記事を選ぶ
