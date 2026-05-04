@@ -16,7 +16,8 @@
 - タイトルを見て気になった記事を、原文確認前の精査候補として保存する。
 - 確認済み記事だけを、要約と示唆を読みやすい形式で確認する。
 - 副業リポ側 LP に掲載する候補かどうかを保存する。
-- 記事を表形式で俯瞰し、取得元、気になるフラグ、確認状態、重要度、タグ、公開候補を比較する。
+- 副業リポ側 LP で使う公開カテゴリを保存する。
+- 記事を表形式で俯瞰し、取得元、気になるフラグ、確認状態、重要度、タグ、公開候補、公開カテゴリを比較する。
 - 記事タイトルだけから、読む順番を決めるための仮重要度を機械的に表示する。
 - 確認済み記事だけを使って週次ダイジェストを Markdown として表示する。
 
@@ -58,6 +59,7 @@
 | `reviewed_at` | `review_status` を `confirmed` として保存した日時。未確認に戻した場合は空にする。 |
 | `interest_candidate` | タイトルを見て気になった記事、あとで原文を読む候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
 | `public_candidate` | 副業リポ側 LP に掲載する候補かどうか。候補の場合は `1`、候補でない場合は `0` を保存する。 |
+| `public_category` | 副業リポ側 LP で記事をカテゴリ別に表示するための単一カテゴリ slug。公開候補ではない記事は空文字でよい。公開候補にする記事は、公開前に LP カテゴリへ対応する値を保存する。 |
 | `personal_summary` | 自分用の詳細要約または読解メモ。公開候補 export、週次ダイジェスト、副業リポ側 LP、X 投稿には含めない。 |
 | `public_tip_ja` | 日本施設向けTips本文。元記事の翻訳要約ではなく、日本の宿泊施設向けの独自解説として保存する。 |
 | `sns_post_draft` | SNS 投稿用の短文下書き。 |
@@ -75,7 +77,20 @@
 | `unreviewed` | RSS 取得直後、または人間が内容を確認していない記事。 |
 | `confirmed` | 人間が原文または必要な周辺情報を確認し、日本語要約、タグ、重要度、示唆、メモを保存してよい状態にした記事。 |
 
-既存 DB に `review_status`、`reviewed_at`、`interest_candidate`、`public_candidate`、`personal_summary`、`public_tip_ja`、`sns_post_draft`、`newsletter_lead_draft`、`internal_share_summary`、`manager_checklist`、`source_credit`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、気になる候補ではない記事、公開候補ではない記事、自分用要約と公開用項目が空の記事として扱い、`title_en` から仮重要度と理由を再計算する。
+既存 DB に `review_status`、`reviewed_at`、`interest_candidate`、`public_candidate`、`public_category`、`personal_summary`、`public_tip_ja`、`sns_post_draft`、`newsletter_lead_draft`、`internal_share_summary`、`manager_checklist`、`source_credit`、`title_priority`、`title_priority_reason` が存在しない場合、起動時に不足 column を追加する。既存記事は `unreviewed`、気になる候補ではない記事、公開候補ではない記事、公開カテゴリが未指定の記事、自分用要約と公開用項目が空の記事として扱い、`title_en` から仮重要度と理由を再計算する。
+
+公開カテゴリの値は、公開 LP 側の初期カテゴリに合わせて次の slug を使う。
+
+| Slug | 表示ラベル |
+| --- | --- |
+| `pricing_optimization` | 料金設定・価格最適化 |
+| `forecast_occupancy_controls` | 需要予測・稼働・宿泊制限 |
+| `revenue_metrics_owner_view` | 収益指標・オーナー視点 |
+| `ai_search_booking_behavior` | AI・検索・予約行動 |
+| `distribution_ota_direct` | Distribution・OTA・直販 |
+| `organization_process` | 組織・業務プロセス |
+
+`public_category` は `tags_json` から機械的に確定しない。`tags_json` は複数値であり、RSS 由来タグと手動タグが混在するため、公開 LP 上の単一カテゴリとは責務が異なる。公開カテゴリは、記事内容を確認した人間が公開候補判断と同じ作業の中で選択する。
 
 ## Title-based Provisional Priority
 
@@ -98,7 +113,7 @@
 記事確認画面は、次の操作を提供する。
 
 - 確認状態で `すべて`, `未確認`, `確認済み` を切り替える。
-- 表形式で、公開日、取得元、気になるフラグ、確認状態、タイトル仮重要度、重要度、公開候補、タイトル、タグを俯瞰する。
+- 表形式で、公開日、取得元、気になるフラグ、確認状態、タイトル仮重要度、重要度、公開候補、公開カテゴリ、タイトル、タグを俯瞰する。
 - 一覧上で、表示中の記事の気になるフラグを付け外しして保存できる。
 - 取得元、確認状態、気になるフラグ、公開候補、タイトル仮重要度、最低重要度、タグ、検索語で絞り込む。
 - 表で選択した 1 件について、詳細情報と編集フォームを表示する。
@@ -119,10 +134,11 @@
   - 確認状態
   - 気になる記事かどうか
   - 副業リポ側 LP の公開候補
+  - 副業リポ側 LP の公開カテゴリ
 
 タグは、当面は slug 形式で保存する。画面入力ではカンマ区切りを受け取り、保存時に小文字化し、空白や記号を `-` に寄せ、重複を除去する。
 
-RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note`, `review_status`, `reviewed_at`, `interest_candidate`, `public_candidate` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
+RSS 再取得では、手動確認項目である `title_ja`, `summary_ja`, `tags_json`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note`, `review_status`, `reviewed_at`, `interest_candidate`, `public_candidate`, `public_category` を上書きしない。`title_priority` と `title_priority_reason` は、`title_en` から再計算できる機械的な仮分類であるため、RSS 再取得で `title_en` が変わった場合は更新してよい。
 
 ## Manual Summary Level
 
@@ -244,7 +260,7 @@ RSS の定期取得を追加しても、掲載判断は自動化しない。定�
 - セクション見出し: `海外ホテル Revenue Management 記事`。
 - セクションの役割: 海外ホテル Revenue Management 記事の紹介一覧。
 - 対象記事: `rm-trend-radar` の公開候補 export に含まれる記事。条件は `review_status = confirmed` かつ `public_candidate = 1` である。
-- 初期表示項目: `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`。
+- 初期表示項目: `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`。
 - 任意表示項目: `tags`, `importance`。ただし、重要度は内部選別用の目安であるため、公開画面に出す場合は「重要度」という評価語ではなく、「注目度」など公開読者が誤解しにくい表現にする。
 - 初期表示しない項目: `rm_implication`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `personal_summary`, `note`。
 - 並び順: `published_date` の新しい順を初期値とする。同じ公開日の記事は、`importance` が高い順、次に `title_ja` の昇順とする。
@@ -252,12 +268,14 @@ RSS の定期取得を追加しても、掲載判断は自動化しない。定�
 - 出典表記: 初期一覧では `source_name` と原文リンクを表示する。`source_credit` の長い表記は、詳細記事や個別紹介ページを作る場合に使う。
 - 公開前チェック: `summary_ja` が原文記事の代替になるほど長くないこと、専門家コメントや記事構成を詳細に再現していないこと、原文 URL が表示されていることを確認する。
 
-副業リポ側の実装スレッドに渡す最小入力は、公開候補タブの JSON preview である。副業リポ側では、JSON 配列の各要素から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` だけを初期表示に使う。
+副業リポ側の実装スレッドに渡す最小入力は、公開候補タブの JSON preview である。副業リポ側では、JSON 配列の各要素から `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` を初期表示に使う。
 
 副業リポ側で扱うデータ構造は、次の型に相当する。
 
 ```ts
 type OverseasRmArticle = {
+  public_category: string;
+  public_category_label: string;
   title_ja: string;
   summary_ja: string;
   source_name: string;
@@ -377,6 +395,8 @@ const overseasRmSources: OverseasRmSource[] = [
 - 日本語タイトル
 - 英語タイトル
 - 日本語要約
+- 公開カテゴリ
+- 公開カテゴリ表示ラベル
 - タグ
 - 重要度
 - レベニューマネジメント担当者向けの示唆

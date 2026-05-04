@@ -13,6 +13,8 @@ ARTICLE = {
     "source_name": "IDeaS",
     "url": "https://example.com/public",
     "published_date": "2026-05-01",
+    "public_category": "pricing_optimization",
+    "public_category_label": "料金設定・価格最適化",
     "title_ja": "公開候補記事",
     "title_en": "Public Candidate",
     "summary_ja": "短い紹介",
@@ -40,6 +42,8 @@ def test_build_public_candidate_records_excludes_internal_note():
             "source_name": "IDeaS",
             "url": "https://example.com/public",
             "published_date": "2026-05-01",
+            "public_category": "pricing_optimization",
+            "public_category_label": "料金設定・価格最適化",
             "title_ja": "公開候補記事",
             "title_en": "Public Candidate",
             "summary_ja": "短い紹介",
@@ -60,6 +64,8 @@ def test_generate_public_candidate_json_is_machine_readable():
     data = json.loads(generate_public_candidate_json([ARTICLE]))
 
     assert data[0]["title_ja"] == "公開候補記事"
+    assert data[0]["public_category"] == "pricing_optimization"
+    assert data[0]["public_category_label"] == "料金設定・価格最適化"
     assert "personal_summary" not in data[0]
     assert "note" not in data[0]
 
@@ -70,6 +76,7 @@ def test_generate_public_candidate_markdown_uses_public_fields_only():
     assert "# 公開候補記事" in markdown
     assert "## 公開候補記事" in markdown
     assert "短い紹介" in markdown
+    assert "公開カテゴリ: 料金設定・価格最適化" in markdown
     assert "業務上の示唆" in markdown
     assert "日本施設向けTips" in markdown
     assert "SNS投稿案" in markdown

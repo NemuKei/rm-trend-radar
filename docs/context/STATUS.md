@@ -55,6 +55,7 @@ Last Updated: 2026-05-04
 - 公開 LP と X は、記事の短い紹介、独自の示唆、原文リンクを届ける導線として扱う。詳細な内容理解は、原文サイトを開いてブラウザ翻訳も使いながら確認してもらう方針にする。
 - `P4-08` で、副業リポ側 LP の初期掲載契約を `docs/spec_002_review_workflow.md` に追加した。初期掲載は、既存 LP 内の `overseas-rm-articles` セクションとして追加し、日本語タイトル、短い要約、取得元、公開日、原文リンクだけの一覧に限定する。`public_tip_ja` などの長い公開用コンテンツは、初期一覧には使わず、個別解説ページを作る場合の後続材料として扱う。
 - 2026-05-04 時点で、気になるチェック済み 42 件すべてを公開 LP 一覧用の短い紹介にそろえた。原文ページの title と meta description を確認し、`summary_ja` を原文代替にならない短い紹介文へ更新した。42 件すべてが `review_status=confirmed`, `interest_candidate=True`, `public_candidate=True` である。
+- 2026-05-04 に、LP 候補外だった記事から、レベニュー管理より現場サービスに近い記事 6 件を追加で公開候補にした。対象は、ゲスト体験、レセプション判断、フロントオフィス業務、従業員エンゲージメント、顧客関係管理、レピュテーション管理である。公開候補 export 対象は 48 件になり、追加 6 件の `public_category` は `organization_process` である。
 - `P4-16` で、副業リポ側 LP に掲載する海外 RM サイト紹介セクションを `docs/spec_002_review_workflow.md` に仕様化した。初期対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件で、各サイトの短い紹介、主な確認テーマ、公式サイトまたは記事一覧へのリンクを表示する。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
@@ -64,6 +65,7 @@ Last Updated: 2026-05-04
 - `P5-02` で、`fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。出力は `artifacts/rss_snapshot.json` で、GitHub Actions の `rss-snapshot` artifact として 14 日保存する。出力 JSON は `lp_ready = false`、`publish_decision = manual_review_required` を持つ確認用データであり、LP 側の直接入力ではない。
 - 初回手動実行 `Fetch RSS Snapshot #1` は、IDeaS 10 件、SiteMinder 50 件、RoomPriceGenie 40 件、Revfine 18 件を取得できたが、Hotel Speak だけ失敗したため exit 3 で失敗した。artifact upload 前に停止したため、GitHub Actions では `--allow-partial` を使い、少なくとも 1 source が成功した場合は失敗 source を JSON に記録した上で artifact を残す方針に修正した。
 - Windows タスクスケジューラに登録していた `RM Trend Radar RSS Fetch` は、GitHub Actions へ寄せるため削除済み。ローカル script は手元で再登録したい場合の任意手段として残す。
+- 2026-05-04 に、公開 LP 用の単一カテゴリ `public_category` を RTR 側の確認項目として追加した。公開候補 export preview には `public_category` と `public_category_label` を含める。既存の公開候補 42 件は、LP 側の 6 カテゴリへ分類済みである。
 - 次の本線は、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にする運用である。
 
 ## Next Re-entry
@@ -84,9 +86,9 @@ Last Updated: 2026-05-04
   - `docs/context/DECISIONS.md`
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
-  2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy` と `Side Business LP Initial Listing Contract` を確認する。
+  2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy`、公開カテゴリ定義、`Side Business LP Initial Listing Contract` を確認する。
   3. Streamlit の記事確認画面または確認済みレビュー画面で、LP に載せる候補を確認する。
-  4. 掲載する記事だけを `review_status = confirmed` と `public_candidate = 1` にする。
+  4. 掲載する記事だけを `review_status = confirmed` と `public_candidate = 1` にし、LP 側の 6 カテゴリに対応する `public_category` を保存する。
   5. 公開候補 export preview を確認し、原文記事の代替になる長文が含まれていないことを確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
@@ -98,7 +100,7 @@ Last Updated: 2026-05-04
   - AI API 実装は、入力データ、保存する出力、保存しないデータを文書化してから始める。
 - 終了条件:
   - LP に載せる記事だけが `review_status = confirmed` と `public_candidate = 1` になっている。
-  - 公開候補 export preview に、初期一覧で使う `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` がそろっている。
+  - 公開候補 export preview に、初期一覧で使う `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` がそろっている。
   - 公開候補 export preview に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
 - subagent 利用方針:
   - 委譲してよい作業: 候補記事の一覧整理、公開候補 export preview の項目確認、短い紹介文の表現点検。
@@ -214,6 +216,12 @@ Last Updated: 2026-05-04
   - GitHub plugin で run `25300296439` の artifact `rss-snapshot` を確認した。artifact id は `6776443565`、size は 8118 bytes、expires_at は 2026-05-18T03:59:06Z である。
   - artifact 内の `rss_snapshot.json` を確認し、IDeaS 10 件、SiteMinder 50 件、RoomPriceGenie 40 件、Revfine 18 件、Hotel Speak 10 件が `failed=0` で取得されていることを確認
   - artifact 内の `rss_snapshot.json` に `lp_ready=false`, `publish_decision=manual_review_required`, `review_status=unreviewed`, `public_candidate=false` が含まれ、`summary_ja`, `description`, `personal_summary`, `note`, `public_tip_ja` が含まれないことを確認
+  - `P4-17` で `public_category` を DB に追加し、記事確認画面、確認済みレビュー画面、公開候補 export preview に反映した
+  - 既存の公開候補 42 件すべてに、LP 側の 6 カテゴリに対応する `public_category` を保存した
+  - `.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_db.py tests\test_public_export.py -p no:cacheprovider --basetemp=.tmp_public_category_tests_elevated` が 12 passed になることを確認
+  - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8505 --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:8505` が HTTP 200 を返すことを確認
+  - LP 候補外から現場サービス寄りの記事 6 件を追加で確認済み公開候補にし、公開候補 export 対象が 48 件、未分類カテゴリが 0 件であることを確認
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
   - `.venv\Scripts\python.exe -m pytest` の全件実行は、pytest が作成する一時ディレクトリを列挙できず `PermissionError [WinError 5]` で終了する。`tests\test_title_priority.py`、`tests\test_digest.py`、`tests\test_public_export.py`、`tests\test_rss.py` と手動 smoke で主要処理は確認済みだが、`tmp_path` を使う DB/fetch テストの pytest 実行完了は未確認。

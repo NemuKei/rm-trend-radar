@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from .public_category import public_category_label
+
 
 def build_public_candidate_records(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
@@ -12,6 +14,11 @@ def build_public_candidate_records(articles: list[dict[str, Any]]) -> list[dict[
                 "source_name": article["source_name"],
                 "url": article["url"],
                 "published_date": article["published_date"],
+                "public_category": article["public_category"],
+                "public_category_label": article.get(
+                    "public_category_label",
+                    public_category_label(article["public_category"]),
+                ),
                 "title_ja": article["title_ja"],
                 "title_en": article["title_en"],
                 "summary_ja": article["summary_ja"],
@@ -56,6 +63,7 @@ def generate_public_candidate_markdown(articles: list[dict[str, Any]]) -> str:
                 "",
                 f"- 取得元: {article['source_name']}",
                 f"- 公開日: {article['published_date']}",
+                f"- 公開カテゴリ: {article.get('public_category_label') or public_category_label(article['public_category'])}",
                 f"- 重要度: {article['importance']}",
                 f"- タグ: {', '.join(article['tags'])}",
                 f"- 原文 URL: {article['url']}",

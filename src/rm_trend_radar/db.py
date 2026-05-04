@@ -5,6 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from .public_category import public_category_label, validate_public_category
 from .rss import ParsedRssItem, normalize_tag
 from .title_priority import classify_title_priority
 
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS articles (
     reviewed_at TEXT,
     interest_candidate INTEGER NOT NULL DEFAULT 0 CHECK (interest_candidate IN (0, 1)),
     public_candidate INTEGER NOT NULL DEFAULT 0 CHECK (public_candidate IN (0, 1)),
+    public_category TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -75,6 +77,7 @@ SAMPLE_ARTICLES = [
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
         "public_candidate": False,
+        "public_category": "",
     },
     {
         "source_name": "Sample Source",
@@ -99,6 +102,7 @@ SAMPLE_ARTICLES = [
         "review_status": REVIEW_STATUS_CONFIRMED,
         "interest_candidate": False,
         "public_candidate": False,
+        "public_category": "",
     },
 ]
 
@@ -131,8 +135,9 @@ def init_db(seed: bool = False) -> None:
                         personal_summary, public_tip_ja, sns_post_draft,
                         newsletter_lead_draft, internal_share_summary,
                         manager_checklist, source_credit, note,
-                        review_status, reviewed_at, interest_candidate, public_candidate
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)
+                        review_status, reviewed_at, interest_candidate, public_candidate,
+                        public_category
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?)
                     """,
                     (
                         article["source_name"],
@@ -157,6 +162,7 @@ def init_db(seed: bool = False) -> None:
                         article["review_status"],
                         int(article["interest_candidate"]),
                         int(article["public_candidate"]),
+                        article["public_category"],
                     ),
                 )
 
@@ -204,6 +210,13 @@ def _migrate_articles_table(conn: sqlite3.Connection) -> None:
             ALTER TABLE articles
             ADD COLUMN public_candidate INTEGER NOT NULL DEFAULT 0
             CHECK (public_candidate IN (0, 1))
+            """
+        )
+    if "public_category" not in columns:
+        conn.execute(
+            """
+            ALTER TABLE articles
+            ADD COLUMN public_category TEXT NOT NULL DEFAULT ''
             """
         )
     if "interest_candidate" not in columns:
@@ -343,12 +356,16 @@ def update_article_review(
     internal_share_summary: str = "",
     manager_checklist: str = "",
     source_credit: str = "",
+    public_category: str = "",
 ) -> None:
     if review_status not in VALID_REVIEW_STATUSES:
         raise ValueError(f"Unknown review_status: {review_status}")
     if not 1 <= importance <= 5:
         raise ValueError("importance must be between 1 and 5")
 
+    normalized_public_category = validate_public_category(public_category)
+    if public_candidate and not normalized_public_category:
+        raise ValueError("public_category is required for public candidates")
     normalized_tags = _normalize_review_tags(tags)
     reviewed_at_expression = (
         "CURRENT_TIMESTAMP" if review_status == REVIEW_STATUS_CONFIRMED else "NULL"
@@ -374,6 +391,7 @@ def update_article_review(
                 reviewed_at = {reviewed_at_expression},
                 interest_candidate = ?,
                 public_candidate = ?,
+                public_category = ?,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
             """,
@@ -394,6 +412,7 @@ def update_article_review(
                 review_status,
                 int(interest_candidate),
                 int(public_candidate),
+                normalized_public_category,
                 article_id,
             ),
         )
@@ -435,7 +454,8 @@ def get_articles(review_status: str | None = None) -> list[dict[str, Any]]:
                    personal_summary, public_tip_ja, sns_post_draft,
                    newsletter_lead_draft, internal_share_summary,
                    manager_checklist, source_credit, note,
-                   review_status, reviewed_at, interest_candidate, public_candidate
+                   review_status, reviewed_at, interest_candidate, public_candidate,
+                   public_category
             FROM articles
             {where_clause}
             ORDER BY published_date DESC, id DESC
@@ -462,7 +482,8 @@ def get_digest_articles(
                    personal_summary, public_tip_ja, sns_post_draft,
                    newsletter_lead_draft, internal_share_summary,
                    manager_checklist, source_credit, note,
-                   review_status, reviewed_at, interest_candidate, public_candidate
+                   review_status, reviewed_at, interest_candidate, public_candidate,
+                   public_category
             FROM articles
             WHERE review_status = ?
               AND published_date BETWEEN ? AND ?
@@ -484,11 +505,24 @@ def get_public_candidate_articles() -> list[dict[str, Any]]:
                    personal_summary, public_tip_ja, sns_post_draft,
                    newsletter_lead_draft, internal_share_summary,
                    manager_checklist, source_credit, note,
-                   review_status, reviewed_at, interest_candidate, public_candidate
+                   review_status, reviewed_at, interest_candidate, public_candidate,
+                   public_category
             FROM articles
             WHERE review_status = ?
               AND public_candidate = 1
-            ORDER BY importance DESC, published_date DESC, id DESC
+            ORDER BY
+                CASE public_category
+                    WHEN 'pricing_optimization' THEN 0
+                    WHEN 'forecast_occupancy_controls' THEN 1
+                    WHEN 'revenue_metrics_owner_view' THEN 2
+                    WHEN 'ai_search_booking_behavior' THEN 3
+                    WHEN 'distribution_ota_direct' THEN 4
+                    WHEN 'organization_process' THEN 5
+                    ELSE 99
+                END,
+                importance DESC,
+                published_date DESC,
+                id DESC
             """,
             (REVIEW_STATUS_CONFIRMED,),
         ).fetchall()
@@ -499,6 +533,7 @@ def _article_from_row(row: sqlite3.Row) -> dict[str, Any]:
     article = dict(row)
     article["interest_candidate"] = bool(article["interest_candidate"])
     article["public_candidate"] = bool(article["public_candidate"])
+    article["public_category_label"] = public_category_label(article["public_category"])
     return {
         **article,
         "tags": json.loads(row["tags_json"]),

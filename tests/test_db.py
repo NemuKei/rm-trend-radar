@@ -28,6 +28,7 @@ def test_init_db_seeds_articles(tmp_path, monkeypatch):
     assert all(article["reviewed_at"] is not None for article in articles)
     assert all(not article["interest_candidate"] for article in articles)
     assert all(not article["public_candidate"] for article in articles)
+    assert all(article["public_category"] == "" for article in articles)
     assert all(article["title_priority"] == "high" for article in articles)
 
 
@@ -62,6 +63,7 @@ def test_init_db_migrates_existing_articles_table(tmp_path, monkeypatch):
     assert "reviewed_at" in columns
     assert "interest_candidate" in columns
     assert "public_candidate" in columns
+    assert "public_category" in columns
     assert "title_priority" in columns
     assert "title_priority_reason" in columns
     assert "personal_summary" in columns
@@ -109,6 +111,7 @@ def test_upsert_rss_items_adds_fetched_article_with_placeholders(tmp_path, monke
     assert articles[0]["reviewed_at"] is None
     assert articles[0]["interest_candidate"] is False
     assert articles[0]["public_candidate"] is False
+    assert articles[0]["public_category"] == ""
     assert articles[0]["title_priority"] == "high"
     assert "revenue" in articles[0]["title_priority_reason"]
 
@@ -144,7 +147,8 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 review_status = ?,
                 reviewed_at = CURRENT_TIMESTAMP,
                 interest_candidate = ?,
-                public_candidate = ?
+                public_candidate = ?,
+                public_category = ?
             WHERE url = ?
             """,
             (
@@ -164,6 +168,7 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
                 "confirmed",
                 1,
                 1,
+                "pricing_optimization",
                 item.url,
             ),
         )
@@ -205,6 +210,8 @@ def test_upsert_rss_items_does_not_overwrite_review_fields(tmp_path, monkeypatch
     assert articles[0]["reviewed_at"] is not None
     assert articles[0]["interest_candidate"] is True
     assert articles[0]["public_candidate"] is True
+    assert articles[0]["public_category"] == "pricing_optimization"
+    assert articles[0]["public_category_label"] == "料金設定・価格最適化"
 
 
 def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch):
@@ -240,6 +247,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
         note="確認済みメモ",
         review_status="confirmed",
         public_candidate=True,
+        public_category="pricing_optimization",
         interest_candidate=True,
     )
 
@@ -261,6 +269,7 @@ def test_update_article_review_saves_manual_review_fields(tmp_path, monkeypatch)
     assert article["reviewed_at"] is not None
     assert article["interest_candidate"] is True
     assert article["public_candidate"] is True
+    assert article["public_category"] == "pricing_optimization"
 
 
 def test_update_article_interest_flags_saves_only_interest_candidate(
@@ -311,6 +320,7 @@ def test_get_digest_articles_includes_only_confirmed_recent_important_articles(
         note="",
         review_status="confirmed",
         public_candidate=True,
+        public_category="pricing_optimization",
     )
     update_article_review(
         article_id=articles["https://example.com/b"]["id"],
@@ -366,6 +376,7 @@ def test_get_public_candidate_articles_includes_only_confirmed_candidates(
         note="",
         review_status="confirmed",
         public_candidate=True,
+        public_category="pricing_optimization",
     )
     update_article_review(
         article_id=articles["https://example.com/b"]["id"],
@@ -388,6 +399,7 @@ def test_get_public_candidate_articles_includes_only_confirmed_candidates(
         note="",
         review_status="unreviewed",
         public_candidate=True,
+        public_category="pricing_optimization",
     )
 
     public_articles = get_public_candidate_articles()

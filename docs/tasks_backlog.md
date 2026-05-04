@@ -196,6 +196,13 @@
   target-spec: docs/spec_002_review_workflow.md
   完了メモ: 2026-05-04 に、`Side Business LP Source Introduction Contract` を追加した。初期表示対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件である。
 
+- [x] `P4-17` 公開 LP 用カテゴリを RTR 側の公開候補データへ追加する
+  Done条件: 既存 DB に `public_category` を追加でき、記事確認画面と確認済みレビュー画面から公開 LP 用カテゴリを保存でき、公開候補 export preview にカテゴリ slug と表示ラベルが含まれる。既存の公開候補 42 件には、LP 側の 6 カテゴリに対応する `public_category` が保存されている。
+  依存: `P4-15`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+
 ## Phase 5: 記事取得の運用を軽く自動化する
 
 - [x] `P5-01` 定期 RSS 取得の実行方式を実装する

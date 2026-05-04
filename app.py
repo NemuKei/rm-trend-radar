@@ -19,6 +19,10 @@ from rm_trend_radar.public_export import (
     generate_public_candidate_json,
     generate_public_candidate_markdown,
 )
+from rm_trend_radar.public_category import (
+    PUBLIC_CATEGORY_EMPTY,
+    PUBLIC_CATEGORY_OPTIONS,
+)
 from rm_trend_radar.title_priority import (
     TITLE_PRIORITY_HIGH,
     TITLE_PRIORITY_LOW,
@@ -38,6 +42,14 @@ TITLE_PRIORITY_LABELS = {
 }
 TITLE_PRIORITY_BY_LABEL = {
     label: value for value, label in TITLE_PRIORITY_LABELS.items()
+}
+PUBLIC_CATEGORY_UNSELECTED_LABEL = "未指定"
+PUBLIC_CATEGORY_BY_LABEL = {
+    PUBLIC_CATEGORY_UNSELECTED_LABEL: PUBLIC_CATEGORY_EMPTY,
+    **{label: slug for slug, label in PUBLIC_CATEGORY_OPTIONS},
+}
+PUBLIC_CATEGORY_LABEL_BY_VALUE = {
+    value: label for label, value in PUBLIC_CATEGORY_BY_LABEL.items()
 }
 
 
@@ -114,6 +126,8 @@ def _search_text(article: dict) -> str:
         article["source_credit"],
         article["source_name"],
         " ".join(article["tags"]),
+        article["public_category"],
+        article["public_category_label"],
         article["title_priority"],
         article["title_priority_reason"],
     ]
@@ -133,6 +147,7 @@ def table_rows(articles: list[dict]) -> list[dict]:
                 "仮重要度": TITLE_PRIORITY_LABELS[article["title_priority"]],
                 "重要度": article["importance"],
                 "公開候補": "候補" if article["public_candidate"] else "",
+                "公開カテゴリ": article["public_category_label"],
                 "タイトル": article["title_ja"],
                 "タグ": ", ".join(article["tags"][:4]),
             }
@@ -151,7 +166,7 @@ def render_article_detail(article: dict) -> None:
     st.divider()
     st.subheader(article["title_ja"])
 
-    meta_cols = st.columns([0.12, 0.12, 0.14, 0.14, 0.13, 0.13, 0.13, 0.09])
+    meta_cols = st.columns([0.1, 0.1, 0.12, 0.13, 0.12, 0.15, 0.12, 0.1, 0.06])
     meta_cols[0].metric("重要度", article["importance"])
     meta_cols[1].metric(
         "仮重要度",
@@ -160,9 +175,10 @@ def render_article_detail(article: dict) -> None:
     meta_cols[2].write(f"気になる: {'対象' if article['interest_candidate'] else '未指定'}")
     meta_cols[3].write(f"確認状態: {status_label}")
     meta_cols[4].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
-    meta_cols[5].write(f"取得元: {article['source_name']}")
-    meta_cols[6].write(f"公開日: {article['published_date']}")
-    meta_cols[7].markdown(f"[原文]({article['url']})")
+    meta_cols[5].write(f"公開カテゴリ: {article['public_category_label'] or '未指定'}")
+    meta_cols[6].write(f"取得元: {article['source_name']}")
+    meta_cols[7].write(f"公開日: {article['published_date']}")
+    meta_cols[8].markdown(f"[原文]({article['url']})")
 
     st.write("タグ: " + ", ".join(article["tags"]))
     st.write("タイトル仮重要度の理由: " + article["title_priority_reason"])
@@ -266,6 +282,16 @@ def render_article_detail(article: dict) -> None:
                 "副業リポ側 LP の公開候補にする",
                 value=article["public_candidate"],
             )
+            public_category_select = st.selectbox(
+                "副業リポ側 LP の公開カテゴリ",
+                list(PUBLIC_CATEGORY_BY_LABEL),
+                index=list(PUBLIC_CATEGORY_BY_LABEL).index(
+                    PUBLIC_CATEGORY_LABEL_BY_VALUE.get(
+                        article["public_category"],
+                        PUBLIC_CATEGORY_UNSELECTED_LABEL,
+                    )
+                ),
+            )
             interest_candidate = st.checkbox(
                 "気になる記事として残す",
                 value=article["interest_candidate"],
@@ -273,6 +299,10 @@ def render_article_detail(article: dict) -> None:
             submitted = st.form_submit_button("保存")
 
         if submitted:
+            public_category = PUBLIC_CATEGORY_BY_LABEL[public_category_select]
+            if public_candidate and not public_category:
+                st.error("公開候補にする記事は、公開カテゴリも選択してください。")
+                return
             update_article_review(
                 article_id=article["id"],
                 title_ja=title_ja,
@@ -290,6 +320,7 @@ def render_article_detail(article: dict) -> None:
                 note=note,
                 review_status=REVIEW_STATUS_BY_LABEL[review_status_label],
                 public_candidate=public_candidate,
+                public_category=public_category,
                 interest_candidate=interest_candidate,
             )
             st.success("保存しました。")
@@ -304,6 +335,7 @@ def reviewed_table_rows(articles: list[dict]) -> list[dict]:
             "取得元": article["source_name"],
             "重要度": article["importance"],
             "公開候補": "候補" if article["public_candidate"] else "",
+            "公開カテゴリ": article["public_category_label"],
             "タイトル": article["title_ja"],
             "タグ": ", ".join(article["tags"][:5]),
         }
@@ -315,13 +347,14 @@ def render_reviewed_article(article: dict) -> None:
     st.subheader(article["title_ja"])
     st.caption(article["title_en"])
 
-    meta_cols = st.columns([0.12, 0.16, 0.18, 0.18, 0.18, 0.18])
+    meta_cols = st.columns([0.1, 0.14, 0.14, 0.14, 0.18, 0.14, 0.16])
     meta_cols[0].metric("重要度", article["importance"])
     meta_cols[1].write(f"取得元: {article['source_name']}")
     meta_cols[2].write(f"公開日: {article['published_date']}")
     meta_cols[3].write(f"公開候補: {'候補' if article['public_candidate'] else '未指定'}")
-    meta_cols[4].write(f"気になる: {'対象' if article['interest_candidate'] else '未指定'}")
-    meta_cols[5].markdown(f"[原文で詳細を見る]({article['url']})")
+    meta_cols[4].write(f"公開カテゴリ: {article['public_category_label'] or '未指定'}")
+    meta_cols[5].write(f"気になる: {'対象' if article['interest_candidate'] else '未指定'}")
+    meta_cols[6].markdown(f"[原文で詳細を見る]({article['url']})")
 
     st.write("タグ: " + ", ".join(article["tags"]))
     st.markdown("#### 要約")
@@ -430,6 +463,17 @@ def render_reviewed_article(article: dict) -> None:
                 "副業リポ側 LP の公開候補にする",
                 value=article["public_candidate"],
             )
+            public_category_select = st.selectbox(
+                "副業リポ側 LP の公開カテゴリ",
+                list(PUBLIC_CATEGORY_BY_LABEL),
+                index=list(PUBLIC_CATEGORY_BY_LABEL).index(
+                    PUBLIC_CATEGORY_LABEL_BY_VALUE.get(
+                        article["public_category"],
+                        PUBLIC_CATEGORY_UNSELECTED_LABEL,
+                    )
+                ),
+                key=f"reviewed_public_category_{article['id']}",
+            )
             interest_candidate = st.checkbox(
                 "気になる記事として残す",
                 value=article["interest_candidate"],
@@ -437,6 +481,10 @@ def render_reviewed_article(article: dict) -> None:
             submitted = st.form_submit_button("保存")
 
         if submitted:
+            public_category = PUBLIC_CATEGORY_BY_LABEL[public_category_select]
+            if public_candidate and not public_category:
+                st.error("公開候補にする記事は、公開カテゴリも選択してください。")
+                return
             update_article_review(
                 article_id=article["id"],
                 title_ja=title_ja,
@@ -454,6 +502,7 @@ def render_reviewed_article(article: dict) -> None:
                 note=note,
                 review_status=REVIEW_STATUS_CONFIRMED,
                 public_candidate=public_candidate,
+                public_category=public_category,
                 interest_candidate=interest_candidate,
             )
             st.success("保存しました。")
@@ -564,6 +613,7 @@ with tab_articles:
                     "仮重要度": st.column_config.TextColumn(width="small"),
                     "重要度": st.column_config.NumberColumn(width="small"),
                     "公開候補": st.column_config.TextColumn(width="small"),
+                    "公開カテゴリ": st.column_config.TextColumn(width="medium"),
                     "タイトル": st.column_config.TextColumn(width="large"),
                     "タグ": st.column_config.TextColumn(width="medium"),
                 },
@@ -574,6 +624,7 @@ with tab_articles:
                     "仮重要度",
                     "重要度",
                     "公開候補",
+                    "公開カテゴリ",
                     "タイトル",
                     "タグ",
                 ],
@@ -676,6 +727,7 @@ with tab_reviewed:
                     "取得元": st.column_config.TextColumn(width="small"),
                     "重要度": st.column_config.NumberColumn(width="small"),
                     "公開候補": st.column_config.TextColumn(width="small"),
+                    "公開カテゴリ": st.column_config.TextColumn(width="medium"),
                     "タイトル": st.column_config.TextColumn(width="large"),
                     "タグ": st.column_config.TextColumn(width="medium"),
                 },
