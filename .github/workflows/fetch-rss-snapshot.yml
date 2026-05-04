@@ -1,0 +1,41 @@
+name: Fetch RSS Snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 08:00 JST. GitHub Actions schedules use UTC.
+    - cron: "0 23 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fetch-rss-snapshot
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch RSS metadata snapshot
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20
+
+      - name: Upload RSS snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: rss-snapshot
+          path: artifacts/rss_snapshot.json
+          retention-days: 14

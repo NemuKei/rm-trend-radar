@@ -36,6 +36,26 @@ python -m venv .venv
 
 ブラウザで Streamlit が表示するローカル URL を開きます。通常は `http://localhost:8501` です。
 
+## RSS 取得
+
+手動で初期対象 5 サイトの RSS を取得する場合は、次を実行します。
+
+```powershell
+.\.venv\Scripts\python.exe -m rm_trend_radar fetch
+```
+
+GitHub Actions で記事取得だけを定期実行する場合は、`.github/workflows/fetch-rss-snapshot.yml` を使います。この workflow は毎日 08:00 JST に RSS のメタデータだけを取得し、`rss_snapshot.json` を artifact として保存します。private repository のまま実行できますが、private repository の GitHub Actions 利用枠を使います。
+
+ローカル Windows で記事取得だけを定期実行する場合は、次を実行して Windows タスクスケジューラに登録できます。クラウド実行を使う場合、このローカル登録は必須ではありません。
+
+```powershell
+.\scripts\Register-ScheduledFetch.ps1 -At "08:00"
+```
+
+定期実行は RSS item の取得と SQLite への upsert だけを行います。日本語要約、重要度、公開候補フラグ、副業リポ側 LP のファイルは更新しません。実行ログは `logs/` に出力され、このディレクトリは Git 管理外です。
+
+GitHub Actions の定期実行は、SQLite を更新しません。取得結果は `artifacts/rss_snapshot.json` に出力され、GitHub Actions artifact として確認します。LP 側へ直接反映する処理は含めません。
+
 ## 現在の実装範囲
 
 - SQLite データベースを初期化する。

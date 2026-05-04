@@ -24,7 +24,7 @@
 - 記事本文全文の保存
 - 記事本文全文の転載
 - 要約、タグ、重要度、示唆を生成する AI 処理の実装
-- 定期実行基盤の実装
+- 公開 LP への自動反映
 - Cloudflare、独自ドメイン、公開アプリ化の設計
 
 ## Source Selection Criteria
@@ -227,6 +227,117 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 | `--dry-run` | no | false | RSS を取得して parser までは実行するが、SQLite へ追加または更新しない。 |
 | `--json` | no | false | 人間向けの行表示ではなく、機械可読な JSON を標準出力へ出す。 |
 | `--timeout SECONDS` | no | 20 | 1 source あたりの HTTP 取得 timeout 秒数。 |
+
+## Scheduled Fetch Policy
+
+初期 MVP の次段階では、記事取得だけを定期実行してよい。ここでいう定期実行は、既存の `fetch` CLI を決めた間隔で実行し、初期対象 5 件の RSS から新規記事メタデータを SQLite に追加し、既存記事の原文メタデータだけを軽く更新する処理である。
+
+定期実行で行ってよいことは次の通りである。
+
+- `Initial Source Config` で `use in initial MVP = yes` の source だけを取得する。
+- 実行頻度は source ごとに 1 日 1 回以下にする。
+- 保存項目、重複判定、更新判定、取得失敗時の扱いは、この文書の `RSS Item Mapping`、`Duplicate and Update Rules`、`Fetch Failure Handling` に従う。
+- `title_ja`, `summary_ja`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note`, `review_status`, `interest_candidate`, `public_candidate` は、定期実行でも上書きしない。
+- 定期実行の結果は、追加件数、更新件数、失敗 source をログまたは実行結果で確認できるようにする。
+
+定期実行で行ってはいけないことは次の通りである。
+
+- 記事本文全文を保存する。
+- RSS の `description` または `content:encoded` を日本語要約として自動保存する。
+- AI API を呼び出して日本語タイトル、要約、タグ、重要度、示唆を自動確定する。
+- `public_candidate` を自動で `1` にする。
+- 副業リポ側 LP のファイルを直接更新する。
+- X、メルマガ、その他の外部公開先へ送信する。
+
+掲載判断は、定期取得とは別の人間の確認ワークフローに残す。副業リポ側 LP に載せるかどうかは、利用者が原文または必要な周辺情報を確認し、`review_status = confirmed` と `public_candidate = 1` を明示的に保存した記事だけを対象にする。
+
+### GitHub Actions Scheduled Snapshot
+
+定期取得の主経路は GitHub Actions とする。GitHub Actions は private repository のまま利用できる。公開 repository に変更する必要はない。ただし、private repository で GitHub-hosted runner を使う場合は、GitHub Actions の利用枠または課金条件の対象になる。
+
+GitHub Actions workflow は `.github/workflows/fetch-rss-snapshot.yml` に置く。実行条件は次の通りである。
+
+- `schedule`: 毎日 23:00 UTC。これは日本時間 08:00 に相当する。
+- `workflow_dispatch`: 手動実行。
+- `permissions`: `contents: read` のみ。
+- 実行時間上限: 10 分。
+
+GitHub Actions では、次の command を実行する。
+
+```powershell
+python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20
+```
+
+`fetch-snapshot` は SQLite を更新しない。RSS から取得できるメタデータだけを JSON artifact として出力する。
+
+出力 JSON の契約は次の通りである。
+
+```json
+{
+  "generated_at_utc": "2026-05-04T00:00:00+00:00",
+  "contract": "rss-metadata-only-v1",
+  "lp_ready": false,
+  "publish_decision": "manual_review_required",
+  "sources": [
+    {
+      "source": "IDeaS",
+      "fetched": 10,
+      "failed": 0,
+      "error": null
+    }
+  ],
+  "articles": [
+    {
+      "source_name": "IDeaS",
+      "url": "https://example.com/article",
+      "published_date": "2026-05-01",
+      "title_en": "Article title",
+      "tags": ["revenue-management", "unreviewed"],
+      "review_status": "unreviewed",
+      "public_candidate": false
+    }
+  ]
+}
+```
+
+この JSON は LP 側の直接入力ではない。`lp_ready` は常に `false` とし、`publish_decision` は `manual_review_required` とする。LP 側に渡すデータは、従来通り `review_status = confirmed` かつ `public_candidate = 1` の記事だけを対象にした公開候補 export preview とする。
+
+### Local Windows Scheduled Task
+
+ローカル Windows では、次の script を使って定期実行を登録する。
+
+```powershell
+.\scripts\Register-ScheduledFetch.ps1 -At "08:00"
+```
+
+登録されたタスクは、次の script を呼び出す。
+
+```powershell
+.\scripts\Invoke-ScheduledFetch.ps1
+```
+
+`Invoke-ScheduledFetch.ps1` は、リポジトリ直下を working directory として `.venv\Scripts\python.exe -m rm_trend_radar fetch --json --timeout 20` を実行する。実行結果は標準出力にも表示し、`logs/scheduled-fetch-YYYYMMDD.jsonl` に 1 実行 1 行の JSON Lines として保存する。
+
+登録 script の引数は次の通りである。
+
+| Option | Required | Default | Meaning |
+| --- | --- | --- | --- |
+| `-TaskName NAME` | no | `RM Trend Radar RSS Fetch` | Windows タスクスケジューラに登録するタスク名。 |
+| `-At HH:MM` | no | `08:00` | 1 日 1 回の実行時刻。 |
+| `-TimeoutSeconds SECONDS` | no | `20` | 1 source あたりの HTTP 取得 timeout 秒数。 |
+| `-PythonPath PATH` | no | `.venv\Scripts\python.exe` | 使用する Python executable。 |
+| `-DryRun` | no | false | 登録したタスクで SQLite へ書き込まない試験実行を行う。 |
+| `-WhatIf` | no | false | Windows タスクスケジューラへ登録せず、登録内容だけを確認する。 |
+
+実行 script の引数は次の通りである。
+
+| Option | Required | Default | Meaning |
+| --- | --- | --- | --- |
+| `-PythonPath PATH` | no | `.venv\Scripts\python.exe` | 使用する Python executable。 |
+| `-TimeoutSeconds SECONDS` | no | `20` | 1 source あたりの HTTP 取得 timeout 秒数。 |
+| `-Source SOURCE_NAME` | no | all initial MVP sources | 指定した source だけを取得する。複数指定できる。 |
+| `-DryRun` | no | false | RSS を取得して parser までは実行するが、SQLite へ追加または更新しない。 |
+| `-LogDirectory PATH` | no | `logs` | 実行ログの保存先。 |
 
 ### Output Contract
 

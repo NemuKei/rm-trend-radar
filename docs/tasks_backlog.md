@@ -184,7 +184,7 @@
   Done条件: 気になるチェック済みの記事について、公開 LP 一覧で使える短い `summary_ja` が保存され、`review_status=confirmed` かつ `public_candidate=1` として公開候補 export に含まれる。
   依存: `P4-08`
   spec-impact: no
-  spec-checkpoint: none
+  spec-checkpoint: not-needed
   target-spec: docs/spec_002_review_workflow.md
   完了メモ: 2026-05-04 に、気になるチェック済み 42 件すべてを対象に、原文ページの title と meta description を確認し、`summary_ja` を原文代替にならない短い紹介へ更新した。42 件すべてが公開候補 export 対象になった。
 
@@ -196,17 +196,38 @@
   target-spec: docs/spec_002_review_workflow.md
   完了メモ: 2026-05-04 に、`Side Business LP Source Introduction Contract` を追加した。初期表示対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件である。
 
+## Phase 5: 記事取得の運用を軽く自動化する
+
+- [x] `P5-01` 定期 RSS 取得の実行方式を実装する
+  Done条件: 初期対象 5 件について、既存の `fetch` CLI を 1 日 1 回以下で定期実行できる。定期実行は SQLite への RSS item upsert だけを行い、`public_candidate`、日本語要約、重要度、レベニューマネジメント担当者向けの示唆、副業リポ側 LP のファイルを更新しない。実行結果として、追加件数、更新件数、失敗 source を確認できる。
+  依存: `P3-03`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_001_sources.md
+  備考: 実行場所はローカル Windows の定期実行を第一候補にする。GitHub Actions、Cloudflare、独自ドメイン、公開アプリ化はこのタスクに含めない。
+  完了メモ: 2026-05-04 に `scripts/Invoke-ScheduledFetch.ps1` と `scripts/Register-ScheduledFetch.ps1` を追加した。登録 script は Windows タスクスケジューラに 1 日 1 回の実行を登録し、実行 script は既存の `fetch` CLI を `--json` 付きで呼び出して `logs/scheduled-fetch-YYYYMMDD.jsonl` に結果を保存する。LP 反映、日本語化、公開候補フラグ更新は行わない。
+
+- [x] `P5-02` GitHub Actions で RSS snapshot artifact を作る
+  Done条件: private repository のまま、GitHub Actions が 1 日 1 回以下で RSS メタデータを取得し、SQLite、公開候補フラグ、副業リポ側 LP のファイルを更新せず、`rss_snapshot.json` を artifact として保存できる。artifact には記事本文全文、RSS `description`、日本語要約、公開用本文、内部メモを含めない。
+  依存: `P5-01`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_001_sources.md
+  完了メモ: 2026-05-04 に `fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。workflow は毎日 23:00 UTC、日本時間 08:00 に実行し、`artifacts/rss_snapshot.json` を `rss-snapshot` artifact として 14 日保存する。`permissions` は `contents: read` のみにした。
+
 ## Remaining Task Triage
 
 Now:
-- 副業リポ側スレッドで、`docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` と `Side Business LP Source Introduction Contract` を入力として、公開候補記事の一覧セクションと海外 RM サイト紹介セクションを実装する。
+- 副業リポ側 LP に載せる記事は、都度ここで確認して `review_status = confirmed` と `public_candidate = 1` を保存する
 
 Next:
+- GitHub Actions の初回手動実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
 - X 投稿文の作成範囲と送信しない下書き運用を決める
 - 公開候補 42 件のうち、副業リポ側 LP 初期表示に載せる件数上限と表示順を決める
-- AI 候補生成の後続検討を行う
+- `P4-04` AI 候補生成の後続検討を行う
 
 After Next:
+- `P4-05` 実記事を取得して確認ワークフローを画面評価する。2026-05-02 に実記事取得は済んでいるが、画面評価と調整タスク化が残っている。
 - Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
 
 Later:
@@ -214,6 +235,6 @@ Later:
 
 ## Next候補
 
-1. 副業リポ側スレッドで、公開候補記事の一覧セクションと海外 RM サイト紹介セクションを実装する
-2. X 投稿文の作成範囲と送信しない下書き運用を決める
-3. 公開候補 42 件のうち、副業リポ側 LP 初期表示に載せる件数上限と表示順を決める
+1. 副業リポ側 LP に載せる記事を、都度ここで確認して公開候補にする
+2. GitHub Actions の初回手動実行結果を確認する
+3. X 投稿文の作成範囲と送信しない下書き運用を決める

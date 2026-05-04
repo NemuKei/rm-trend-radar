@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
 from .db import UpsertResult, upsert_rss_items
-from .rss import parse_rss_items
+from .rss import ParsedRssItem, parse_rss_items
 from .sources import SourceConfig, get_initial_feed_sources
 
 UrlOpen = Callable[..., object]
@@ -73,6 +73,22 @@ def fetch_source(
         )
     except (ET.ParseError, HTTPError, URLError, TimeoutError, OSError) as exc:
         return _failed(source.source_name, str(exc))
+
+
+def fetch_source_items(
+    source: SourceConfig,
+    *,
+    timeout_seconds: float = 20,
+    opener: UrlOpen = urlopen,
+) -> tuple[list[ParsedRssItem], str | None]:
+    if source.feed_url is None:
+        return [], "feed URL is not configured"
+
+    try:
+        xml_text = _read_url(source.feed_url, timeout_seconds, opener)
+        return parse_rss_items(xml_text, source), None
+    except (ET.ParseError, HTTPError, URLError, TimeoutError, OSError) as exc:
+        return [], str(exc)
 
 
 def unknown_source_names(source_names: list[str]) -> list[str]:

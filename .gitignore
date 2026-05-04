@@ -10,6 +10,8 @@ __pycache__/
 tmp*/
 .streamlit/secrets.toml
 rm_trend_radar.db
+logs/
+artifacts/
 *.sqlite
 *.sqlite3
 .env

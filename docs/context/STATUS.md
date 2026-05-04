@@ -1,21 +1,21 @@
 # STATUS
 
-Last Updated: 2026-05-03
+Last Updated: 2026-05-04
 
 ## Current Task Bundle
 
-- 主対象: 実記事を取得して確認ワークフローを画面評価する
+- 主対象: 副業リポ側 LP に載せる記事を都度確認して公開候補にする
 - この bundle で扱う範囲:
-  - 初期対象 5 件から実記事を取得する
-  - 記事確認タブで、未確認記事の見え方、確認フォームの入力しやすさ、タグ表示、重要度表示を確認する
-  - 週次ダイジェストタブで、対象期間、最低重要度、Markdown の読みやすさを確認する
-  - 実記事で見つかった調整点を backlog に追加する
-  - 実装タスクを追加する場合の backlog triage
+  - 定期取得または手動取得で追加された記事を確認する
+  - LP に載せる価値がある記事だけを `review_status = confirmed` と `public_candidate = 1` にする
+  - 公開候補 export preview の内容を確認する
+  - 掲載判断を自動化しない運用を維持する
 - この bundle で扱わないこと:
   - AI API 実装そのもの
   - AI 候補生成の仕様確定
   - 記事本文全文の保存
-  - 定期実行
+  - 日本語化、重要度、示唆、公開候補フラグの自動確定
+  - 副業リポ側 LP への自動反映
   - Cloudflare 連携
   - 公開アプリ化
 
@@ -58,17 +58,22 @@ Last Updated: 2026-05-03
 - `P4-16` で、副業リポ側 LP に掲載する海外 RM サイト紹介セクションを `docs/spec_002_review_workflow.md` に仕様化した。初期対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件で、各サイトの短い紹介、主な確認テーマ、公式サイトまたは記事一覧へのリンクを表示する。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
-- 次の本線は、副業リポ側スレッドで、公開候補タブの JSON preview から `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` を使った公開候補記事の一覧セクションと、`Side Business LP Source Introduction Contract` に基づく海外 RM サイト紹介セクションを実装することから始める。
+- 2026-05-04 に、次段階の自動化は記事取得だけに限定する方針を決めた。RSS の定期取得は追加してよいが、日本語化、重要度確定、公開候補フラグ付け、副業リポ側 LP への反映、X 投稿は自動化しない。
+- `P5-01` で、`scripts/Invoke-ScheduledFetch.ps1` と `scripts/Register-ScheduledFetch.ps1` を追加した。ローカル Windows で 1 日 1 回以下の頻度で既存の `fetch` CLI を呼び出し、SQLite への RSS item upsert だけを行う。実行ログは `logs/scheduled-fetch-YYYYMMDD.jsonl` に保存する。
+- 2026-05-04 に、定期取得の主経路を GitHub Actions へ変更した。private repository のまま `.github/workflows/fetch-rss-snapshot.yml` で毎日 23:00 UTC、日本時間 08:00 に RSS snapshot artifact を作る。GitHub Actions では SQLite、公開候補フラグ、副業リポ側 LP のファイルを更新しない。
+- `P5-02` で、`fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。出力は `artifacts/rss_snapshot.json` で、GitHub Actions の `rss-snapshot` artifact として 14 日保存する。出力 JSON は `lp_ready = false`、`publish_decision = manual_review_required` を持つ確認用データであり、LP 側の直接入力ではない。
+- Windows タスクスケジューラに登録していた `RM Trend Radar RSS Fetch` は、GitHub Actions へ寄せるため削除済み。ローカル script は手元で再登録したい場合の任意手段として残す。
+- 次の本線は、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にする運用である。
 
 ## Next Re-entry
 
-次スレッドは、実記事を取得して確認ワークフローを画面評価することから始める。
+次スレッドは、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にすることから始める。
 
 ### Thread Contract
 
 - 今回の種別: `mainline-task`
-- 主対象: 実記事を取得して確認ワークフローを画面評価する
-- bundle に含める Task ID: `P4-05`
+- 主対象: 副業リポ側 LP に載せる記事を都度確認して公開候補にする
+- bundle に含める Task ID: なし。運用タスクとして都度判断する。
 - 最初に読む正本:
   - `AGENTS.md`
   - `docs/context/STATUS.md`
@@ -78,24 +83,26 @@ Last Updated: 2026-05-03
   - `docs/context/DECISIONS.md`
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
-  2. `docs/spec_002_review_workflow.md` の `Side Business LP Initial Listing Contract` と `Side Business LP Source Introduction Contract` を確認する。
-  3. 副業リポ側スレッドで、公開候補記事の一覧セクションを実装する。初期表示項目は `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` に限定する。
-  4. 副業リポ側スレッドで、海外 RM サイト紹介セクションを実装する。初期表示対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件に限定する。
-  5. `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `personal_summary`, `note` は初期一覧に使わない。
+  2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy` と `Side Business LP Initial Listing Contract` を確認する。
+  3. Streamlit の記事確認画面または確認済みレビュー画面で、LP に載せる候補を確認する。
+  4. 掲載する記事だけを `review_status = confirmed` と `public_candidate = 1` にする。
+  5. 公開候補 export preview を確認し、原文記事の代替になる長文が含まれていないことを確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
   - 記事本文全文を転載しない。
   - ログインが必要なページ、有料記事、会員限定記事を取得対象にしない。
-  - Cloudflare、独自ドメイン、認証、定期実行は初期 MVP の前提にしない。
+  - 日本語化、重要度、示唆、公開候補フラグを自動確定しない。
+  - 副業リポ側 LP へ自動反映しない。
+  - Cloudflare、独自ドメイン、認証は初期 MVP の前提にしない。
   - AI API 実装は、入力データ、保存する出力、保存しないデータを文書化してから始める。
 - 終了条件:
-  - 初期対象 5 件から取得した実記事が画面に表示されている。
-  - 記事確認タブと週次ダイジェストタブについて、維持する点と調整する点が分かれている。
-  - 調整が必要な場合、実装タスクが backlog に追加され、Now/Next が更新されている。
+  - LP に載せる記事だけが `review_status = confirmed` と `public_candidate = 1` になっている。
+  - 公開候補 export preview に、初期一覧で使う `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` がそろっている。
+  - 公開候補 export preview に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
 - subagent 利用方針:
-  - 委譲してよい作業: 実記事表示後の UI 調整候補、タグ整理候補、ダイジェスト文面構造の比較整理。
-  - 委譲してはいけない作業: 仕様確定前の AI API 実装、記事本文全文保存、定期実行、Cloudflare 連携。
-  - メインスレッドが担う作業: 実記事取得、画面確認、調整タスク化、backlog と STATUS の同期。
+  - 委譲してよい作業: 候補記事の一覧整理、公開候補 export preview の項目確認、短い紹介文の表現点検。
+  - 委譲してはいけない作業: 仕様確定前の AI API 実装、記事本文全文保存、LP 自動反映、Cloudflare 連携。
+  - メインスレッドが担う作業: 掲載判断、公開候補保存、backlog と STATUS の同期。
 
 ## Verify / Confirmation State
 
@@ -186,9 +193,24 @@ Last Updated: 2026-05-03
   - バンドル Python で `python -m rm_trend_radar fetch --source unknown` が exit 1 で未知 source を stderr 表示することを確認
   - ネットワーク許可後、バンドル Python で `python -m rm_trend_radar fetch --source IDeaS --dry-run --timeout 20` が exit 0 で `fetched=10` を表示することを確認
   - ネットワーク許可後、バンドル Python で `python -m rm_trend_radar fetch --dry-run --timeout 20` が exit 0 で初期対象 5 件すべてを取得できることを確認。件数は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18、Hotel Speak 10
+  - `scripts\Invoke-ScheduledFetch.ps1` と `scripts\Register-ScheduledFetch.ps1` が PowerShell parser error を出さないことを確認
+  - `scripts\Register-ScheduledFetch.ps1 -At "08:00" -WhatIf` が、タスク登録内容を表示し、実登録せず exit 0 になることを確認
+  - `scripts\Invoke-ScheduledFetch.ps1 -Source unknown -DryRun -LogDirectory .tmp_scheduled_fetch_logs` が、既存 CLI の未知 source を exit 1 として返し、JSONL log に `stderr: ["Unknown source: unknown"]` を保存することを確認
+  - `.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_rss.py tests\test_public_export.py tests\test_title_priority.py -p no:cacheprovider` が 14 passed になることを確認
+  - `scripts\Register-ScheduledFetch.ps1 -At "08:00"` で Windows タスク `RM Trend Radar RSS Fetch` の登録に成功したことを確認
+  - `schtasks.exe /Query /TN "RM Trend Radar RSS Fetch" /FO LIST /V` で、状態が `Ready`、次回実行が 2026-05-05 08:00、実行コマンドが `Invoke-ScheduledFetch.ps1 -TimeoutSeconds 20` であることを確認
+  - `fetch-snapshot` CLI が RSS メタデータだけを JSON artifact 用 payload に変換し、`lp_ready = false` と `publish_decision = manual_review_required` を含める実装になっていることを確認
+  - `.github/workflows/fetch-rss-snapshot.yml` が `schedule` と `workflow_dispatch` で実行され、`contents: read` 権限だけで `rss-snapshot` artifact を作る構成になっていることを確認
+  - `schtasks.exe /Delete /TN "RM Trend Radar RSS Fetch" /F` でローカル Windows タスクを削除したことを確認
+  - `.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - `.venv\Scripts\python.exe -m pytest tests\test_rss.py tests\test_snapshot.py tests\test_public_export.py tests\test_title_priority.py -p no:cacheprovider` が 15 passed になることを確認
+  - `.venv\Scripts\python.exe -m rm_trend_radar fetch-snapshot --source unknown --output artifacts\test_unknown.json` が exit 1 で未知 source を stderr 表示することを確認
+  - ネットワーク許可後、`.venv\Scripts\python.exe -m rm_trend_radar fetch-snapshot --source IDeaS --output artifacts\rss_snapshot_smoke.json --timeout 20` が exit 0 で `source=IDeaS fetched=10 failed=0` を表示することを確認
+  - `artifacts\rss_snapshot_smoke.json` に `lp_ready=false`, `publish_decision=manual_review_required`, `review_status=unreviewed`, `public_candidate=false` が含まれ、RSS `description` と日本語要約が含まれないことを確認
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
-  - GitHub Actions などの CI 実行
+  - GitHub Actions の初回手動実行
   - `.venv\Scripts\python.exe -m pytest` の全件実行は、pytest が作成する一時ディレクトリを列挙できず `PermissionError [WinError 5]` で終了する。`tests\test_title_priority.py`、`tests\test_digest.py`、`tests\test_public_export.py`、`tests\test_rss.py` と手動 smoke で主要処理は確認済みだが、`tmp_path` を使う DB/fetch テストの pytest 実行完了は未確認。
 
 ## Open Questions
