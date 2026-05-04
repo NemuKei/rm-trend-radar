@@ -210,9 +210,12 @@ Last Updated: 2026-05-04
   - ネットワーク許可後、`.venv\Scripts\python.exe -m rm_trend_radar fetch-snapshot --source IDeaS --output artifacts\rss_snapshot_smoke.json --timeout 20` が exit 0 で `source=IDeaS fetched=10 failed=0` を表示することを確認
   - `artifacts\rss_snapshot_smoke.json` に `lp_ready=false`, `publish_decision=manual_review_required`, `review_status=unreviewed`, `public_candidate=false` が含まれ、RSS `description` と日本語要約が含まれないことを確認
   - GitHub plugin で run `25300119228` の job log を取得し、失敗原因が `Hotel Speak fetched=0 failed=1` による `exit code 3` であることを確認
+  - GitHub plugin で run `25300296439` の job `74165950407` を確認し、`Fetch RSS metadata snapshot` と `Upload RSS snapshot` を含む全 step が success であることを確認
+  - GitHub plugin で run `25300296439` の artifact `rss-snapshot` を確認した。artifact id は `6776443565`、size は 8118 bytes、expires_at は 2026-05-18T03:59:06Z である。
+  - artifact 内の `rss_snapshot.json` を確認し、IDeaS 10 件、SiteMinder 50 件、RoomPriceGenie 40 件、Revfine 18 件、Hotel Speak 10 件が `failed=0` で取得されていることを確認
+  - artifact 内の `rss_snapshot.json` に `lp_ready=false`, `publish_decision=manual_review_required`, `review_status=unreviewed`, `public_candidate=false` が含まれ、`summary_ja`, `description`, `personal_summary`, `note`, `public_tip_ja` が含まれないことを確認
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
-  - GitHub Actions の初回手動実行
   - `.venv\Scripts\python.exe -m pytest` の全件実行は、pytest が作成する一時ディレクトリを列挙できず `PermissionError [WinError 5]` で終了する。`tests\test_title_priority.py`、`tests\test_digest.py`、`tests\test_public_export.py`、`tests\test_rss.py` と手動 smoke で主要処理は確認済みだが、`tmp_path` を使う DB/fetch テストの pytest 実行完了は未確認。
 
 ## Open Questions
