@@ -76,6 +76,15 @@ def snapshot_has_failures(snapshot: dict[str, object]) -> bool:
     return any(source.get("failed") for source in sources if isinstance(source, dict))
 
 
+def snapshot_has_successes(snapshot: dict[str, object]) -> bool:
+    sources = snapshot.get("sources", [])
+    return any(
+        source.get("failed") == 0 and source.get("fetched", 0) > 0
+        for source in sources
+        if isinstance(source, dict)
+    )
+
+
 def _filter_sources(
     sources: tuple[SourceConfig, ...], source_names: list[str] | None
 ) -> list[SourceConfig]:

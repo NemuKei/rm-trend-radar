@@ -2,6 +2,13 @@ name: Fetch RSS Snapshot
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/fetch-rss-snapshot.yml"
+      - "src/rm_trend_radar/**"
+      - "tests/test_snapshot.py"
   schedule:
     # 08:00 JST. GitHub Actions schedules use UTC.
     - cron: "0 23 * * *"
@@ -31,9 +38,10 @@ jobs:
         env:
           PYTHONPATH: src
         run: |
-          python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20
+          python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20 --allow-partial
 
       - name: Upload RSS snapshot
+        if: always() && hashFiles('artifacts/rss_snapshot.json') != ''
         uses: actions/upload-artifact@v4
         with:
           name: rss-snapshot

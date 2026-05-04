@@ -265,10 +265,12 @@ GitHub Actions workflow は `.github/workflows/fetch-rss-snapshot.yml` に置く
 GitHub Actions では、次の command を実行する。
 
 ```powershell
-python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20
+python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20 --allow-partial
 ```
 
 `fetch-snapshot` は SQLite を更新しない。RSS から取得できるメタデータだけを JSON artifact として出力する。
+
+GitHub Actions では `--allow-partial` を付ける。これは、一部 source の取得に失敗しても、少なくとも 1 source の取得に成功している場合は workflow を成功扱いにし、失敗 source を `sources[].failed` と `sources[].error` に記録した artifact を残すためである。全 source が失敗した場合、または CLI 引数が不正な場合は失敗扱いにする。
 
 出力 JSON の契約は次の通りである。
 

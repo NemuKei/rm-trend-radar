@@ -62,6 +62,7 @@ Last Updated: 2026-05-04
 - `P5-01` で、`scripts/Invoke-ScheduledFetch.ps1` と `scripts/Register-ScheduledFetch.ps1` を追加した。ローカル Windows で 1 日 1 回以下の頻度で既存の `fetch` CLI を呼び出し、SQLite への RSS item upsert だけを行う。実行ログは `logs/scheduled-fetch-YYYYMMDD.jsonl` に保存する。
 - 2026-05-04 に、定期取得の主経路を GitHub Actions へ変更した。private repository のまま `.github/workflows/fetch-rss-snapshot.yml` で毎日 23:00 UTC、日本時間 08:00 に RSS snapshot artifact を作る。GitHub Actions では SQLite、公開候補フラグ、副業リポ側 LP のファイルを更新しない。
 - `P5-02` で、`fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。出力は `artifacts/rss_snapshot.json` で、GitHub Actions の `rss-snapshot` artifact として 14 日保存する。出力 JSON は `lp_ready = false`、`publish_decision = manual_review_required` を持つ確認用データであり、LP 側の直接入力ではない。
+- 初回手動実行 `Fetch RSS Snapshot #1` は、IDeaS 10 件、SiteMinder 50 件、RoomPriceGenie 40 件、Revfine 18 件を取得できたが、Hotel Speak だけ失敗したため exit 3 で失敗した。artifact upload 前に停止したため、GitHub Actions では `--allow-partial` を使い、少なくとも 1 source が成功した場合は失敗 source を JSON に記録した上で artifact を残す方針に修正した。
 - Windows タスクスケジューラに登録していた `RM Trend Radar RSS Fetch` は、GitHub Actions へ寄せるため削除済み。ローカル script は手元で再登録したい場合の任意手段として残す。
 - 次の本線は、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にする運用である。
 
@@ -208,6 +209,7 @@ Last Updated: 2026-05-04
   - `.venv\Scripts\python.exe -m rm_trend_radar fetch-snapshot --source unknown --output artifacts\test_unknown.json` が exit 1 で未知 source を stderr 表示することを確認
   - ネットワーク許可後、`.venv\Scripts\python.exe -m rm_trend_radar fetch-snapshot --source IDeaS --output artifacts\rss_snapshot_smoke.json --timeout 20` が exit 0 で `source=IDeaS fetched=10 failed=0` を表示することを確認
   - `artifacts\rss_snapshot_smoke.json` に `lp_ready=false`, `publish_decision=manual_review_required`, `review_status=unreviewed`, `public_candidate=false` が含まれ、RSS `description` と日本語要約が含まれないことを確認
+  - GitHub plugin で run `25300119228` の job log を取得し、失敗原因が `Hotel Speak fetched=0 failed=1` による `exit code 3` であることを確認
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
   - GitHub Actions の初回手動実行

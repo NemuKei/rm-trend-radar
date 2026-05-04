@@ -12,7 +12,12 @@ from .fetch import (
     has_failures,
     unknown_source_names,
 )
-from .snapshot import build_snapshot, snapshot_has_failures, write_snapshot
+from .snapshot import (
+    build_snapshot,
+    snapshot_has_failures,
+    snapshot_has_successes,
+    write_snapshot,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -65,6 +70,11 @@ def main(argv: list[str] | None = None) -> int:
         type=float,
         default=20,
         help="HTTP timeout in seconds for each source.",
+    )
+    snapshot_parser.add_argument(
+        "--allow-partial",
+        action="store_true",
+        help="Return success when at least one source succeeds and failed sources are recorded in the snapshot.",
     )
 
     args = parser.parse_args(argv)
@@ -120,6 +130,8 @@ def main(argv: list[str] | None = None) -> int:
             )
         print(f"output={args.output}")
         if snapshot_has_failures(snapshot):
+            if args.allow_partial and snapshot_has_successes(snapshot):
+                return 0
             return 3
         return 0
 

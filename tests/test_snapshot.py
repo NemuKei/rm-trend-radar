@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from rm_trend_radar.snapshot import build_snapshot
+from rm_trend_radar.snapshot import (
+    build_snapshot,
+    snapshot_has_failures,
+    snapshot_has_successes,
+)
 
 
 RSS_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -63,3 +67,15 @@ def test_build_snapshot_exports_metadata_only():
     }
     assert "description" not in article
     assert "summary_ja" not in article
+
+
+def test_snapshot_failure_helpers_distinguish_partial_success():
+    snapshot = {
+        "sources": [
+            {"source": "OK", "fetched": 1, "failed": 0, "error": None},
+            {"source": "Broken", "fetched": 0, "failed": 1, "error": "failed"},
+        ]
+    }
+
+    assert snapshot_has_failures(snapshot) is True
+    assert snapshot_has_successes(snapshot) is True

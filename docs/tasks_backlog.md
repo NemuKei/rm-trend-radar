@@ -213,7 +213,7 @@
   spec-impact: yes
   spec-checkpoint: before-impl
   target-spec: docs/spec_001_sources.md
-  完了メモ: 2026-05-04 に `fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。workflow は毎日 23:00 UTC、日本時間 08:00 に実行し、`artifacts/rss_snapshot.json` を `rss-snapshot` artifact として 14 日保存する。`permissions` は `contents: read` のみにした。
+  完了メモ: 2026-05-04 に `fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。workflow は毎日 23:00 UTC、日本時間 08:00 に実行し、`artifacts/rss_snapshot.json` を `rss-snapshot` artifact として 14 日保存する。`permissions` は `contents: read` のみにした。初回手動実行で Hotel Speak だけ取得失敗し exit 3 になったため、Actions では `--allow-partial` を付け、少なくとも 1 source が成功した場合は artifact を残して成功扱いにする。
 
 ## Remaining Task Triage
 
