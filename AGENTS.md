@@ -37,6 +37,58 @@
 - 外部挙動、入出力、保存データ、受け入れ条件は `docs/spec_*.md` に置く。
 - 会話内容だけを正本にしない。正本化する場合は、対象文書を更新して確定する。
 
+## Obsidian SecondBrain Capture
+
+### Purpose
+
+この repo での Codex 作業のうち、次回以降も参照する価値がある情報は、Obsidian SecondBrain vault へ記録する。
+
+Obsidian vault:
+
+```text
+C:\Users\n-kei\Documents\Obsidian\SecondBrain
+```
+
+### Source Of Truth
+
+この repo の仕様、進捗、決定、タスクの正本は repo 内ドキュメントである。
+
+Obsidian は、repo をまたいで検索、比較、再利用するための横断索引と、Codex の作業文脈を維持するための補助情報である。
+
+repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先する。
+
+### Capture Triggers
+
+次の作業を行った場合、終了前に Obsidian への記録対象を判断する。
+
+- 非自明な実装、調査、設計判断、docs handoff
+- 次スレッドの再開地点が重要な作業
+- repo をまたいで再利用できる判断、検証方法、失敗知識
+- ユーザーの説明粒度、確認頻度、委任範囲に関する作業認識の更新
+- `AGENTS.md`、Skill、handoff、automation、Obsidian vault 運用の変更
+
+### Capture Rules
+
+- 新規作業記録は `00_Inbox/Codex Captures/` に作成する。
+- note には `audience`、`update_mode`、`confidence` を入れる。
+- `audience: codex` の note は、Codex が次回以降の作業文脈として使う。
+- `audience: user` の note は、ユーザー本人が後で読む知識体系として扱う。
+- `audience: shared` の note は、Codex とユーザーの両方が参照する運用ルールや判断基準として扱う。
+- Codex 側の作業プロファイルは `update_mode: automatic` として自動更新してよい。
+- 誤りが後続のやり取りで見つかった場合は、必要に応じて `Revision Notes` に修正理由を残す。
+
+### Do Not Capture
+
+- API key、Cookie、token、認証情報
+- 不必要な個人情報
+- 一時ログ全文
+- repo 内正本と矛盾する未確認情報
+- 人格評価、感情の断定、開発支援に不要な推測
+
+### Skill
+
+Obsidian capture を作成または更新する場合は、`second-brain-capture` Skill を使う。
+
 ## Engineering Rules
 
 - 変更前に既存ファイルの責務を確認し、同じ情報を複数文書へ重複記載しない。
