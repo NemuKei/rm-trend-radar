@@ -256,19 +256,20 @@
   target-spec: docs/spec_002_review_workflow.md
   完了メモ: 2026-05-11 に SideBiz 側の `refresh_overseas_rm_articles.py` と `styles.css` を更新した。カテゴリごとの日本語タイトル一覧は先頭 8 件を常時表示し、超過分は `<details class="article-title-more">` に入れて「さらにN件を表示」で展開できる。60 件反映後は 5 カテゴリで折りたたみが生成され、超過件数は 2, 2, 2, 2, 6 件である。
 
-- [ ] `P5-06` Codex automation の初回実行結果を確認する
+- [x] `P5-06` Codex automation の初回実行結果を確認する
   Done条件: `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加または更新された記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、検証結果、commit hash、push 先 branch を `docs/context/STATUS.md` に記録する。LP 用 JSON に許可項目以外が含まれていないこと、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長文公開コンテンツが含まれていないことを確認する。
   依存: `P5-04`
   spec-impact: no
   spec-checkpoint: not-needed
+  完了メモ: 2026-05-11 に初回実行を完了し、結果を `docs/context/STATUS.md` に記録した。新規に公開候補へ 5 件追加し、副業リポ側 LP の公開候補記事数は 60 → 65 になった。SideBiz 側では `02_Service/web_lp/data/overseas_rm_articles.json` と `02_Service/web_lp/overseas_rm_articles.html` を更新した。LP 用 JSON の `articles` は許可 7 項目（`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`）のみであることを確認した。検証として、`rm-trend-radar` の `compileall` と `pytest tests`、SideBiz 側 script の `py_compile` と JSON/HTML 構造チェック、`git diff --check` を通過した。commit/push は `rm-trend-radar` main `89d0da3`、`SideBiz_HotelRM` main `4fe4f80` である。
 
 ## Remaining Task Triage
 
 Now:
-- `P5-06` Codex automation の初回実行結果を確認する
+- GitHub Actions の次回実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
 
 Next:
-- GitHub Actions の次回実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
+- 次回 snapshot 後に、未反映記事から公開候補へ最大 5 件追加する
 
 After Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める
@@ -279,6 +280,6 @@ Later:
 
 ## Next候補
 
-1. Codex automation の初回実行結果を確認する
-2. GitHub Actions の次回実行結果を確認する
+1. GitHub Actions の次回実行結果を確認する
+2. 次回 snapshot 後に公開候補へ最大 5 件追加する
 3. X 投稿文の作成範囲と送信しない下書き運用を決める
