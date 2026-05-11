@@ -116,6 +116,11 @@ repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先す
 - `audience: shared` の note は、Codex とユーザーの両方が参照する運用ルールや判断基準として扱う。
 - Codex 側の作業プロファイルは `update_mode: automatic` として自動更新してよい。
 - 誤りが後続のやり取りで見つかった場合は、必要に応じて `Revision Notes` に修正理由を残す。
+- ユーザー向け知識 note は日本語で噛み砕き、英語の正式名称、略語、検索語、論文タイトル、API 名、ライブラリ名は保持する。
+- 専門用語、略語、モデル名、評価指標、データ概念、設計概念、業務概念は glossary note または candidate queue へ接続する。
+- ユーザー向け note に書くと冗長だが今後の開発に応用できる補助メモは、Codex Application Memos へ分ける。
+- Glossary note と論文 note は、Obsidian Bases の一覧に出るように必要な frontmatter property を埋める。
+- 未確認、出典確認、開発応用の棚卸しは Knowledge Dashboard と review 系 Base から辿れるようにする。
 
 ### Do Not Capture
 
@@ -124,6 +129,42 @@ repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先す
 - 一時ログ全文
 - repo 内正本と矛盾する未確認情報
 - 人格評価、感情の断定、開発支援に不要な推測
+
+### Skill
+### Subagent Orchestration
+
+SecondBrain 更新が非自明な場合は、subagent 利用を標準候補にする。
+
+メインスレッドが担うこと:
+
+- 保存先、`audience`、`update_mode`、`confidence` の最終判断
+- repo 内正本と Obsidian note の境界判断
+- subagent 結果の統合
+- 最終差分、verify、commit、最終報告
+
+subagent に委譲してよいこと:
+
+- 既存 note の探索
+- 関連 glossary 候補の抽出
+- 論文や外部資料の source、DOI、Open Access 状態の確認
+- ユーザー向け説明と Codex 向けメモの分離案作成
+- frontmatter、wikilink、秘密情報、repo 正本混同のレビュー
+
+同じファイルを複数 agent が同時に編集する作業、repo 正本か Obsidian note かの最終判断、commit、push、最終報告はメインスレッドが担う。
+
+### Knowledge Note Rules
+
+ユーザー向け知識体系は、日本語で読める説明を基本にする。
+
+英語の正式名称、略語、検索語、論文タイトル、API 名、ライブラリ名、モデル名、評価指標は、後から公式資料、論文、実装へ接続するために残す。
+
+Glossary note は `99_System/Bases/Glossary.base`、論文 note は `99_System/Bases/Academic Papers.base` に表示される property を埋める。未確認、出典確認、開発応用は `20_Areas/Knowledge Dashboard.md`、`99_System/Bases/Knowledge Review Queue.base`、`99_System/Bases/Source Access Review.base`、`99_System/Bases/Development Application.base` から辿れるようにする。Base file は一覧の定義であり、知識の本体は個別 Markdown note に残す。
+
+初出では、可能な限り次の形を使う。
+
+```text
+日本語での理解（English formal name、略語）
+```
 
 ### Skill
 
