@@ -38,8 +38,7 @@
 - 会話内容だけを正本にしない。正本化する場合は、対象文書を更新して確定する。
 
 ## Obsidian SecondBrain Capture
-
-### Purpose
+## Purpose
 
 この repo での Codex 作業のうち、次回以降も参照する価値がある情報は、Obsidian SecondBrain vault へ記録する。
 
@@ -49,7 +48,7 @@ Obsidian vault:
 C:\Users\n-kei\Documents\Obsidian\SecondBrain
 ```
 
-### Source Of Truth
+## Source Of Truth
 
 この repo の仕様、進捗、決定、タスクの正本は repo 内ドキュメントである。
 
@@ -57,7 +56,7 @@ Obsidian は、repo をまたいで検索、比較、再利用するための横
 
 repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先する。
 
-### Capture Triggers
+## Capture Triggers
 
 次の作業を行った場合、終了前に Obsidian への記録対象を判断する。
 
@@ -65,9 +64,26 @@ repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先す
 - 次スレッドの再開地点が重要な作業
 - repo をまたいで再利用できる判断、検証方法、失敗知識
 - ユーザーの説明粒度、確認頻度、委任範囲に関する作業認識の更新
-- `AGENTS.md`、Skill、handoff、automation、Obsidian vault 運用の変更
+- AGENTS.md、Skill、handoff、automation、Obsidian vault 運用の変更
+- ユーザー向けに噛み砕いて残す価値がある論文、外部知識、開発概念、専門用語
+- 今後の開発判断に使えそうな補助メモ
 
-### Capture Rules
+## Completion Checkpoint
+
+次のいずれかを行った場合、最終回答の前に `capture-needed: yes | no` を明示的に判定する。
+
+- 非自明な実装、調査、設計判断、docs 更新、handoff
+- AGENTS.md、Skill、automation、Obsidian vault 運用の変更
+- 論文、外部知識、開発概念、専門用語に関する整理
+- repo をまたいで再利用できる判断、検証方法、失敗知識の発見
+
+`capture-needed: yes` の場合は、`second-brain-capture` Skill を使い、repo 内正本と Obsidian note の境界を分けて記録する。
+
+`capture-needed: no` の場合は、保存しない理由を短く示す。例: 単発回答、repo 内正本に十分記録済み、再利用価値がない、秘密情報を含むため保存しない。
+
+この判定を省略したまま、非自明な作業を完了扱いにしない。
+
+## Capture Rules
 
 - 新規作業記録は `00_Inbox/Codex Captures/` に作成する。
 - note には `audience`、`update_mode`、`confidence` を入れる。
@@ -76,8 +92,12 @@ repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先す
 - `audience: shared` の note は、Codex とユーザーの両方が参照する運用ルールや判断基準として扱う。
 - Codex 側の作業プロファイルは `update_mode: automatic` として自動更新してよい。
 - 誤りが後続のやり取りで見つかった場合は、必要に応じて `Revision Notes` に修正理由を残す。
+- ユーザー向け知識 note は日本語で噛み砕き、英語の正式名称、略語、検索語、論文タイトル、API 名、ライブラリ名は保持する。
+- 専門用語、略語、モデル名、評価指標、データ概念、設計概念、業務概念は glossary note または candidate queue へ接続する。
+- ユーザー向け note に書くと冗長だが今後の開発に応用できる補助メモは、Codex Application Memos へ分ける。
+- 未確認、出典確認、開発応用の棚卸しは Knowledge Dashboard と review 系 Base から辿れるようにする。
 
-### Do Not Capture
+## Do Not Capture
 
 - API key、Cookie、token、認証情報
 - 不必要な個人情報
@@ -85,7 +105,7 @@ repo 内正本と Obsidian が矛盾する場合は、repo 内正本を優先す
 - repo 内正本と矛盾する未確認情報
 - 人格評価、感情の断定、開発支援に不要な推測
 
-### Skill
+## Skill
 
 Obsidian capture を作成または更新する場合は、`second-brain-capture` Skill を使う。
 
