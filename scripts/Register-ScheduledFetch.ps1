@@ -2,6 +2,8 @@
 param(
     [string]$TaskName = "RM Trend Radar RSS Fetch",
     [string]$At = "14:37",
+    [ValidateRange(1, 365)]
+    [int]$IntervalDays = 3,
     [double]$TimeoutSeconds = 20,
     [string]$PythonPath,
     [switch]$DryRun
@@ -38,12 +40,12 @@ if ($DryRun) {
 $TaskRun = "powershell.exe " + ($ArgumentParts -join " ")
 
 if ($PSCmdlet.ShouldProcess($TaskName, "Register scheduled fetch task")) {
-    & schtasks.exe /Create /TN $TaskName /TR $TaskRun /SC DAILY /ST $At /F
+    & schtasks.exe /Create /TN $TaskName /TR $TaskRun /SC DAILY /MO $IntervalDays /ST $At /F
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
 }
 
 Write-Output "Scheduled task: $TaskName"
-Write-Output "Daily time: $At"
+Write-Output ("Schedule: every {0} day(s) at {1}" -f $IntervalDays, $At)
 Write-Output "Action: $TaskRun"
