@@ -10,8 +10,8 @@ on:
       - "src/rm_trend_radar/**"
       - "tests/test_snapshot.py"
   schedule:
-    # 08:00 JST. GitHub Actions schedules use UTC.
-    - cron: "0 23 * * *"
+    # Roughly every 3 days at 14:37 JST. GitHub Actions schedules use UTC.
+    - cron: "37 5 */3 * *"
 
 permissions:
   contents: read

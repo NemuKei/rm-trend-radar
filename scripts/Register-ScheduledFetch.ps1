@@ -1,7 +1,7 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [string]$TaskName = "RM Trend Radar RSS Fetch",
-    [string]$At = "08:00",
+    [string]$At = "14:37",
     [double]$TimeoutSeconds = 20,
     [string]$PythonPath,
     [switch]$DryRun

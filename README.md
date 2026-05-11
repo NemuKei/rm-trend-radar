@@ -44,17 +44,19 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m rm_trend_radar fetch
 ```
 
-GitHub Actions で記事取得だけを定期実行する場合は、`.github/workflows/fetch-rss-snapshot.yml` を使います。この workflow は毎日 08:00 JST に RSS のメタデータだけを取得し、`rss_snapshot.json` を artifact として保存します。private repository のまま実行できますが、private repository の GitHub Actions 利用枠を使います。
+GitHub Actions で記事取得を定期実行する場合は、`.github/workflows/fetch-rss-snapshot.yml` を使います。この workflow は 3 日に 1 回程度、14:37 JST に RSS のメタデータだけを取得し、`rss_snapshot.json` を artifact として保存します。private repository のまま実行できますが、private repository の GitHub Actions 利用枠を使います。
+
+翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートは Codex アプリ automation `rm-trend-radar-lp-reflection` が担当します。この automation は 3 日に 1 回程度、15:10 JST に実行します。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push します。
 
 ローカル Windows で記事取得だけを定期実行する場合は、次を実行して Windows タスクスケジューラに登録できます。クラウド実行を使う場合、このローカル登録は必須ではありません。
 
 ```powershell
-.\scripts\Register-ScheduledFetch.ps1 -At "08:00"
+.\scripts\Register-ScheduledFetch.ps1 -At "14:37"
 ```
 
-定期実行は RSS item の取得と SQLite への upsert だけを行います。日本語要約、重要度、公開候補フラグ、副業リポ側 LP のファイルは更新しません。実行ログは `logs/` に出力され、このディレクトリは Git 管理外です。
+ローカル Windows の定期実行は RSS item の取得と SQLite への upsert だけを行います。日本語要約、重要度、公開候補フラグ、副業リポ側 LP のファイルは更新しません。実行ログは `logs/` に出力され、このディレクトリは Git 管理外です。
 
-GitHub Actions の定期実行は、SQLite を更新しません。取得結果は `artifacts/rss_snapshot.json` に出力され、GitHub Actions artifact として確認します。LP 側へ直接反映する処理は含めません。
+GitHub Actions の snapshot 取得は、SQLite を更新しません。取得結果は `artifacts/rss_snapshot.json` に出力され、GitHub Actions artifact として確認します。副業リポ側 LP への自動反映は、Codex アプリ automation が短い記事一覧データだけを対象に実行します。
 
 ## 現在の実装範囲
 

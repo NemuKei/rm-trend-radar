@@ -1,21 +1,19 @@
 # STATUS
 
-Last Updated: 2026-05-04
+Last Updated: 2026-05-11
 
 ## Current Task Bundle
 
-- 主対象: 副業リポ側 LP に載せる記事を都度確認して公開候補にする
+- 主対象: 最新記事取得と副業リポ側 LP の短い記事一覧データ更新を自動化する
 - この bundle で扱う範囲:
-  - 定期取得または手動取得で追加された記事を確認する
-  - LP に載せる価値がある記事だけを `review_status = confirmed` と `public_candidate = 1` にする
-  - 公開候補 export preview の内容を確認する
-  - 掲載判断を自動化しない運用を維持する
+  - GitHub Actions で、取得対象 5 件の RSS メタデータを 3 日に 1 回程度で取得する
+  - Codex アプリ automation で、翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートを実行する
 - この bundle で扱わないこと:
   - AI API 実装そのもの
   - AI 候補生成の仕様確定
   - 記事本文全文の保存
-  - 日本語化、重要度、示唆、公開候補フラグの自動確定
-  - 副業リポ側 LP への自動反映
+  - 原文記事の構成を再現する長文要約の自動公開
+  - 詳細な重要度、示唆、個別解説ページの自動確定
   - Cloudflare 連携
   - 公開アプリ化
 
@@ -59,24 +57,31 @@ Last Updated: 2026-05-04
 - `P4-16` で、副業リポ側 LP に掲載する海外 RM サイト紹介セクションを `docs/spec_002_review_workflow.md` に仕様化した。初期対象は `IDeaS`, `SiteMinder`, `RoomPriceGenie`, `Revfine`, `Hotel Speak` の 5 件で、各サイトの短い紹介、主な確認テーマ、公式サイトまたは記事一覧へのリンクを表示する。
 - IDeaS の live dry-run では `fetched=10`, `added=0`, `updated=0`, `unchanged=0`, `failed=0` を確認した。
 - `.venv\Scripts\python.exe` は、`pyvenv.cfg` の参照先を現在の端末で利用できる Python 3.12.13 に合わせて復旧済み。`.venv` は git 管理外のため、この復旧内容はリポジトリ差分には含めない。
-- 2026-05-04 に、次段階の自動化は記事取得だけに限定する方針を決めた。RSS の定期取得は追加してよいが、日本語化、重要度確定、公開候補フラグ付け、副業リポ側 LP への反映、X 投稿は自動化しない。
+- 2026-05-04 に、次段階の自動化は記事取得だけに限定する方針を決めた。RSS の定期取得は追加してよいが、日本語化、重要度確定、公開候補フラグ付け、副業リポ側 LP への反映、X 投稿は自動化しない方針だった。この判断は 2026-05-11 の `D-20260511-014` で改定済みである。
 - `P5-01` で、`scripts/Invoke-ScheduledFetch.ps1` と `scripts/Register-ScheduledFetch.ps1` を追加した。ローカル Windows で 1 日 1 回以下の頻度で既存の `fetch` CLI を呼び出し、SQLite への RSS item upsert だけを行う。実行ログは `logs/scheduled-fetch-YYYYMMDD.jsonl` に保存する。
-- 2026-05-04 に、定期取得の主経路を GitHub Actions へ変更した。private repository のまま `.github/workflows/fetch-rss-snapshot.yml` で毎日 23:00 UTC、日本時間 08:00 に RSS snapshot artifact を作る。GitHub Actions では SQLite、公開候補フラグ、副業リポ側 LP のファイルを更新しない。
+- 2026-05-04 に、定期取得の主経路を GitHub Actions へ変更した。当時は private repository のまま `.github/workflows/fetch-rss-snapshot.yml` で毎日 23:00 UTC、日本時間 08:00 に RSS snapshot artifact を作り、GitHub Actions では SQLite、公開候補フラグ、副業リポ側 LP のファイルを更新しない方針だった。この頻度と LP 反映範囲は 2026-05-11 に改定済みである。
 - `P5-02` で、`fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。出力は `artifacts/rss_snapshot.json` で、GitHub Actions の `rss-snapshot` artifact として 14 日保存する。出力 JSON は `lp_ready = false`、`publish_decision = manual_review_required` を持つ確認用データであり、LP 側の直接入力ではない。
 - 初回手動実行 `Fetch RSS Snapshot #1` は、IDeaS 10 件、SiteMinder 50 件、RoomPriceGenie 40 件、Revfine 18 件を取得できたが、Hotel Speak だけ失敗したため exit 3 で失敗した。artifact upload 前に停止したため、GitHub Actions では `--allow-partial` を使い、少なくとも 1 source が成功した場合は失敗 source を JSON に記録した上で artifact を残す方針に修正した。
 - Windows タスクスケジューラに登録していた `RM Trend Radar RSS Fetch` は、GitHub Actions へ寄せるため削除済み。ローカル script は手元で再登録したい場合の任意手段として残す。
 - 2026-05-04 に、公開 LP 用の単一カテゴリ `public_category` を RTR 側の確認項目として追加した。公開候補 export preview には `public_category` と `public_category_label` を含める。既存の公開候補 42 件は、LP 側の 6 カテゴリへ分類済みである。
-- 次の本線は、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にする運用である。
+- 2026-05-11 に、次段階の自動化方針を変更した。最新記事取得から副業リポ側 LP の短い記事一覧データ更新までを自動化してよい。実行頻度は 3 日に 1 回程度を初期値にする。自動更新で公開 LP に出してよい項目は、日本語タイトル、原文記事の代替にならない短い紹介、取得元、公開日、原文 URL、公開カテゴリに限定する。
+- 2026-05-11 に、`.github/workflows/fetch-rss-snapshot.yml` の schedule を毎日 08:00 JST 相当から、3 日に 1 回程度の 14:37 JST 相当に変更した。14:37 は、PC を開いていない朝 8 時を避け、他の自動化と競合しにくいように正時ではない時刻として選んだ。GitHub Actions の cron では月末から月初にかけて厳密な 72 時間周期にならない場合があるため、仕様では「3 日に 1 回程度」として扱う。
+- 2026-05-11 に、副業リポ側 LP の日本語タイトル一覧は、カテゴリごとに初期表示件数を制限し、一定件数を超える場合は折りたたみまたは追加表示で確認する方針にした。
+- 2026-05-11 に、取得済みで副業リポ側 LP にまだ載っていない記事のうち、`title_priority=high` で LP 読者に有用なものを 12 件追加反映した。追加記事は、短い `summary_ja`、`public_category`、`importance=4`、`review_status=confirmed`、`public_candidate=1` を保存済みである。
+- 2026-05-11 に、SideBiz 側の `02_Service/web_lp/scripts/refresh_overseas_rm_articles.py` を使って LP 用データを再生成した。副業リポ側 LP の公開候補記事は 48 件から 60 件になった。カテゴリ別件数は、料金設定・価格最適化 10、需要予測・稼働・宿泊制限 10、収益指標・オーナー視点 10、AI・検索・予約行動 10、Distribution・OTA・直販 6、組織・業務プロセス 14 である。
+- 2026-05-11 に、SideBiz 側の日本語タイトル一覧を、カテゴリごとに先頭 8 件だけ初期表示し、超過分を `さらにN件を表示` で展開する構成にした。60 件反映後は 5 カテゴリで折りたたみが生成され、超過件数は 2、2、2、2、6 件である。
+- 2026-05-11 に、Codex アプリ automation `rm-trend-radar-lp-reflection` を作成した。実行頻度は 3 日に 1 回程度、15:10 JST である。GitHub Actions は RSS メタデータ取得だけを担当し、Codex automation は翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートを担当する。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。
+- 次の本線は、Codex automation `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加記事数、保留記事、LP 用 JSON の項目制限、SideBiz 側 HTML 生成結果、検証結果を確認することである。
 
 ## Next Re-entry
 
-次スレッドは、取得済み記事を都度確認し、副業リポ側 LP に載せる記事だけを公開候補にすることから始める。
+次スレッドは、Codex automation `rm-trend-radar-lp-reflection` の初回実行結果確認から始める。
 
 ### Thread Contract
 
 - 今回の種別: `mainline-task`
-- 主対象: 副業リポ側 LP に載せる記事を都度確認して公開候補にする
-- bundle に含める Task ID: なし。運用タスクとして都度判断する。
+- 主対象: Codex automation による翻訳から副業リポ側 LP 反映までの自動化を運用確認する
+- bundle に含める Task ID: `P5-06`
 - 最初に読む正本:
   - `AGENTS.md`
   - `docs/context/STATUS.md`
@@ -87,25 +92,29 @@ Last Updated: 2026-05-04
 - 次スレッドで最初にやること:
   1. `docs/context/INTENT.md` の判断原則を確認する。
   2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy`、公開カテゴリ定義、`Side Business LP Initial Listing Contract` を確認する。
-  3. Streamlit の記事確認画面または確認済みレビュー画面で、LP に載せる候補を確認する。
-  4. 掲載する記事だけを `review_status = confirmed` と `public_candidate = 1` にし、LP 側の 6 カテゴリに対応する `public_category` を保存する。
-  5. 公開候補 export preview を確認し、原文記事の代替になる長文が含まれていないことを確認する。
+  3. `docs/spec_001_sources.md` の `GitHub Actions Scheduled Snapshot` と `Codex App LP Reflection Automation` を確認する。
+  4. Codex automation `rm-trend-radar-lp-reflection` の初回実行結果を確認する。
+  5. 追加/更新記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、commit hash、push 先 branch を確認する。
+  6. LP 用 JSON に、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` 以外の項目が含まれないことを確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
   - 記事本文全文を転載しない。
   - ログインが必要なページ、有料記事、会員限定記事を取得対象にしない。
-  - 日本語化、重要度、示唆、公開候補フラグを自動確定しない。
-  - 副業リポ側 LP へ自動反映しない。
+  - 記事本文全文を LP 側へ渡さない。
+  - 原文記事の構成を再現する長文要約を自動公開しない。
+  - 詳細な重要度、示唆、個別解説ページを自動確定しない。
   - Cloudflare、独自ドメイン、認証は初期 MVP の前提にしない。
   - AI API 実装は、入力データ、保存する出力、保存しないデータを文書化してから始める。
 - 終了条件:
-  - LP に載せる記事だけが `review_status = confirmed` と `public_candidate = 1` になっている。
-  - 公開候補 export preview に、初期一覧で使う `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` がそろっている。
-  - 公開候補 export preview に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
+  - GitHub Actions が 3 日に 1 回程度で RSS snapshot を作る。
+  - Codex automation が 3 日に 1 回程度、15:10 JST に実行される。
+  - 副業リポ側 LP の記事一覧データが、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` だけで更新される。
+  - LP 自動更新対象に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
+  - 検証が通過した場合は、変更がある repository ごとに commit / push され、commit hash と push 先 branch が報告される。
 - subagent 利用方針:
-  - 委譲してよい作業: 候補記事の一覧整理、公開候補 export preview の項目確認、短い紹介文の表現点検。
-  - 委譲してはいけない作業: 仕様確定前の AI API 実装、記事本文全文保存、LP 自動反映、Cloudflare 連携。
-  - メインスレッドが担う作業: 掲載判断、公開候補保存、backlog と STATUS の同期。
+  - 委譲してよい作業: LP データ更新先の調査、既存 LP 表示構造の確認、日本語タイトル一覧の表示制限実装。
+  - 委譲してはいけない作業: 仕様確定前の AI API 実装、記事本文全文保存、長文解説の自動公開、X 投稿またはメルマガ送信。
+  - メインスレッドが担う作業: 自動化範囲の最終判断、正本 docs の同期、検証結果の確認。
 
 ## Verify / Confirmation State
 
@@ -222,9 +231,15 @@ Last Updated: 2026-05-04
   - `.venv\Scripts\python.exe -m pytest tests\test_db.py tests\test_public_export.py -p no:cacheprovider --basetemp=.tmp_public_category_tests_elevated` が 12 passed になることを確認
   - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8505 --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:8505` が HTTP 200 を返すことを確認
   - LP 候補外から現場サービス寄りの記事 6 件を追加で確認済み公開候補にし、公開候補 export 対象が 48 件、未分類カテゴリが 0 件であることを確認
+  - `P4-18` で、未掲載かつ `title_priority=high` の記事から 12 件を追加で確認済み公開候補にしたことを確認
+  - `P4-18` 反映後の公開候補 export 対象が 60 件、カテゴリ別件数が 10、10、10、10、6、14 件であることを確認
+  - `P5-05` で、SideBiz 側の日本語タイトル一覧がカテゴリごとに先頭 8 件を初期表示し、超過分を `さらにN件を表示` で展開できる構造になったことを確認
+  - 2026-05-11 の最終確認で、`.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
+  - 2026-05-11 の最終確認で、`.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=.tmp_pytest_final_20260511_tests` が 30 passed になることを確認
+  - 2026-05-11 の最終確認で、`git diff --check` が whitespace error なしで終了することを確認。警告は Git の改行コード変換予定のみである。
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
-  - `.venv\Scripts\python.exe -m pytest` の全件実行は、pytest が作成する一時ディレクトリを列挙できず `PermissionError [WinError 5]` で終了する。`tests\test_title_priority.py`、`tests\test_digest.py`、`tests\test_public_export.py`、`tests\test_rss.py` と手動 smoke で主要処理は確認済みだが、`tmp_path` を使う DB/fetch テストの pytest 実行完了は未確認。
+  - `.venv\Scripts\python.exe -m pytest` のリポジトリ全体探索は、リポジトリ直下の一時ディレクトリ `tmpiws6w9_m` を pytest が収集しようとして `PermissionError [WinError 5]` で終了する。`tests` ディレクトリを明示した実行では 30 passed を確認済みである。
 
 ## Open Questions
 

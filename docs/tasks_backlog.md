@@ -204,6 +204,15 @@
   spec-checkpoint: before-impl
   target-spec: docs/spec_002_review_workflow.md
 
+- [x] `P4-18` 取得済み未掲載記事から重要度高めのものを LP へ追加反映する
+  Done条件: 取得済み記事のうち、副業リポ側 LP にまだ載っていない記事を確認し、重要度が高め、またはタイトル仮重要度が高く LP の読者に有用なものを抽出する。掲載対象にする記事は、原文記事の代替にならない短い `summary_ja`、`public_category`、`title_ja`、`source_name`、`published_date`、`url` がそろっている。副業リポ側 LP の記事一覧データへ反映し、反映後に掲載件数、カテゴリ別件数、原文リンク、長文項目が含まれていないことを確認できる。
+  依存: `P4-17`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+  備考: これは初回または移行時の掲載漏れ解消タスクである。3 日に 1 回程度の継続自動更新で扱う新着記事とは別に、既に取得済みの未掲載記事を対象にする。
+  完了メモ: 2026-05-11 に、未掲載かつ `title_priority=high` の記事から 12 件を選び、短い `summary_ja`、`public_category`、`importance=4`、`review_status=confirmed`、`public_candidate=1` を保存した。SideBiz 側の `refresh_overseas_rm_articles.py` で LP データを再生成し、公開候補記事は 48 件から 60 件になった。カテゴリ別件数は、料金設定・価格最適化 10、需要予測・稼働・宿泊制限 10、収益指標・オーナー視点 10、AI・検索・予約行動 10、Distribution・OTA・直販 6、組織・業務プロセス 14 である。
+
 ## Phase 5: 記事取得の運用を軽く自動化する
 
 - [x] `P5-01` 定期 RSS 取得の実行方式を実装する
@@ -223,23 +232,53 @@
   target-spec: docs/spec_001_sources.md
   完了メモ: 2026-05-04 に `fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。workflow は毎日 23:00 UTC、日本時間 08:00 に実行し、`artifacts/rss_snapshot.json` を `rss-snapshot` artifact として 14 日保存する。`permissions` は `contents: read` のみにした。初回手動実行で Hotel Speak だけ取得失敗し exit 3 になったため、Actions では `--allow-partial` を付け、少なくとも 1 source が成功した場合は artifact を残して成功扱いにする。
 
+- [x] `P5-03` RSS snapshot の実行頻度を 3 日に 1 回程度へ変更する
+  Done条件: `.github/workflows/fetch-rss-snapshot.yml` の schedule が 3 日に 1 回程度の 14:37 JST 相当に変更され、`README.md`、`docs/spec_001_sources.md`、`docs/context/STATUS.md` に頻度、時刻、GitHub Actions cron の制約が記録されている。
+  依存: `P5-02`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_001_sources.md
+  完了メモ: 2026-05-11 に workflow schedule を `37 5 */3 * *` に変更した。14:37 JST 相当で 3 日に 1 回程度の実行になる。PC を開いていない朝 8 時を避け、他の自動化と競合しにくいように正時ではない時刻を選んだ。GitHub Actions cron の日付指定は月末から月初にかけて厳密な 72 時間周期にならないため、仕様では「3 日に 1 回程度」と明記した。
+
+- [x] `P5-04` 副業リポ側 LP の短い記事一覧データ更新を自動化する
+  Done条件: 最新記事取得後、LP に出してよい項目だけを使って副業リポ側 LP の記事一覧データを更新できる。自動更新対象は `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` に限定する。記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長い公開用コンテンツは LP 更新対象に含まれない。更新後に必要な検証を実行できる。
+  依存: `P5-03`
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+  完了メモ: 2026-05-11 に Codex アプリ automation `rm-trend-radar-lp-reflection` を作成した。GitHub Actions は RSS メタデータ取得だけを担当し、Codex automation は翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートを担当する。実行頻度は 3 日に 1 回程度、15:10 JST である。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。
+
+- [x] `P5-05` 副業リポ側 LP の日本語タイトル一覧を折りたたみ可能にする
+  Done条件: 日本語タイトル一覧は、カテゴリごとの初期表示件数を最大 8 件程度に制限する。カテゴリ内の記事数が初期表示件数を超える場合、超過分は初期表示では隠し、追加表示操作、折りたたみ解除、または詳細記事一覧へのリンクで確認できる。カテゴリごとの総件数は表示する。
+  依存: `P4-18` または `P5-04`。既存ストックを手動反映する場合も、継続自動更新 pipeline で反映する場合も、日本語タイトル一覧の件数増加に備えて必要になる。
+  spec-impact: yes
+  spec-checkpoint: before-impl
+  target-spec: docs/spec_002_review_workflow.md
+  完了メモ: 2026-05-11 に SideBiz 側の `refresh_overseas_rm_articles.py` と `styles.css` を更新した。カテゴリごとの日本語タイトル一覧は先頭 8 件を常時表示し、超過分は `<details class="article-title-more">` に入れて「さらにN件を表示」で展開できる。60 件反映後は 5 カテゴリで折りたたみが生成され、超過件数は 2, 2, 2, 2, 6 件である。
+
+- [ ] `P5-06` Codex automation の初回実行結果を確認する
+  Done条件: `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加または更新された記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、検証結果、commit hash、push 先 branch を `docs/context/STATUS.md` に記録する。LP 用 JSON に許可項目以外が含まれていないこと、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長文公開コンテンツが含まれていないことを確認する。
+  依存: `P5-04`
+  spec-impact: no
+  spec-checkpoint: not-needed
+
 ## Remaining Task Triage
 
 Now:
-- 副業リポ側 LP に載せる記事は、都度ここで確認して `review_status = confirmed` と `public_candidate = 1` を保存する
+- `P5-06` Codex automation の初回実行結果を確認する
 
 Next:
-- GitHub Actions の初回手動実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
-- X 投稿文の作成範囲と送信しない下書き運用を決める
+- GitHub Actions の次回実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
 
 After Next:
+- X 投稿文の作成範囲と送信しない下書き運用を決める
 - Cloudflare 連携、独自ドメイン導線、公開用認証を検討する
 
 Later:
-- `P4-04` AI 候補生成の後続検討を行う。現行方針では記事取得だけを軽く自動化し、日本語化、重要度確定、公開候補フラグ付けは自動化しないため、必要性を再確認した時点でだけ再開する。
+- `P4-04` AI 候補生成の後続検討を行う。現行方針では LP 自動更新に出す項目を短い記事一覧データに限定するため、長文要約、詳細な重要度、示唆の自動確定は必要性を再確認した時点でだけ再開する。
 
 ## Next候補
 
-1. 副業リポ側 LP に載せる記事を、都度ここで確認して公開候補にする
-2. GitHub Actions の初回手動実行結果を確認する
+1. Codex automation の初回実行結果を確認する
+2. GitHub Actions の次回実行結果を確認する
 3. X 投稿文の作成範囲と送信しない下書き運用を決める

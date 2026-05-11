@@ -24,7 +24,7 @@
 - 記事本文全文の保存
 - 記事本文全文の転載
 - 要約、タグ、重要度、示唆を生成する AI 処理の実装
-- 公開 LP への自動反映
+- 副業リポ側 LP への無制限な自動反映。LP 自動反映を行う場合は、公開する項目、保存しない項目、実行頻度、停止条件を `docs/spec_002_review_workflow.md` とこの文書で定義してから実装する。
 - Cloudflare、独自ドメイン、公開アプリ化の設計
 
 ## Source Selection Criteria
@@ -230,26 +230,31 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 ## Scheduled Fetch Policy
 
-初期 MVP の次段階では、記事取得だけを定期実行してよい。ここでいう定期実行は、既存の `fetch` CLI を決めた間隔で実行し、初期対象 5 件の RSS から新規記事メタデータを SQLite に追加し、既存記事の原文メタデータだけを軽く更新する処理である。
+初期 MVP の次段階では、記事取得を定期実行してよい。2026-05-11 以降は、取得した記事を副業リポ側 LP の短い記事一覧データへ反映する処理も自動化してよい。ここでいう定期実行は、初期対象 5 件の RSS から新規記事メタデータを取得し、LP に出してよい項目だけを後続処理へ渡す処理である。
+
+記事取得と LP 反映は、実行場所と責務を分ける。
+
+- GitHub Actions: RSS メタデータ取得だけを担当する。SQLite、公開候補フラグ、副業リポ側 LP ファイルは更新しない。
+- Codex アプリ automation: 翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP ファイル更新、検証、実行結果レポートを担当する。
 
 定期実行で行ってよいことは次の通りである。
 
 - `Initial Source Config` で `use in initial MVP = yes` の source だけを取得する。
-- 実行頻度は source ごとに 1 日 1 回以下にする。
+- 実行頻度は source ごとに 1 日 1 回以下にする。通常運用の初期値は 3 日に 1 回程度とする。
 - 保存項目、重複判定、更新判定、取得失敗時の扱いは、この文書の `RSS Item Mapping`、`Duplicate and Update Rules`、`Fetch Failure Handling` に従う。
 - `title_ja`, `summary_ja`, `importance`, `rm_implication`, `personal_summary`, `public_tip_ja`, `sns_post_draft`, `newsletter_lead_draft`, `internal_share_summary`, `manager_checklist`, `source_credit`, `note`, `review_status`, `interest_candidate`, `public_candidate` は、定期実行でも上書きしない。
-- 定期実行の結果は、追加件数、更新件数、失敗 source をログまたは実行結果で確認できるようにする。
+- 定期実行の結果は、追加件数、更新件数、失敗 source、LP 更新対象件数をログまたは実行結果で確認できるようにする。
 
 定期実行で行ってはいけないことは次の通りである。
 
 - 記事本文全文を保存する。
 - RSS の `description` または `content:encoded` を日本語要約として自動保存する。
-- AI API を呼び出して日本語タイトル、要約、タグ、重要度、示唆を自動確定する。
-- `public_candidate` を自動で `1` にする。
-- 副業リポ側 LP のファイルを直接更新する。
+- AI API を呼び出して、記事本文の代替になる長文要約、詳細な独自解説、重要度、示唆を自動確定する。
+- 記事本文全文、RSS `description`、RSS `content:encoded` を LP 表示本文として保存または転記する。
+- 副業リポ側 LP に、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストを自動反映する。
 - X、メルマガ、その他の外部公開先へ送信する。
 
-掲載判断は、定期取得とは別の人間の確認ワークフローに残す。副業リポ側 LP に載せるかどうかは、利用者が原文または必要な周辺情報を確認し、`review_status = confirmed` と `public_candidate = 1` を明示的に保存した記事だけを対象にする。
+副業リポ側 LP へ自動反映してよい項目は、日本語タイトル、原文記事の代替にならない短い紹介、取得元、公開日、原文 URL、公開カテゴリに限定する。詳細な重要度、業務上の示唆、個別解説ページの掲載判断は、定期取得とは別の人間の確認ワークフローに残す。
 
 ### GitHub Actions Scheduled Snapshot
 
@@ -257,7 +262,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 GitHub Actions workflow は `.github/workflows/fetch-rss-snapshot.yml` に置く。実行条件は次の通りである。
 
-- `schedule`: 毎日 23:00 UTC。これは日本時間 08:00 に相当する。
+- `schedule`: 3 日に 1 回程度、05:37 UTC。これは日本時間 14:37 に相当する。
 - `workflow_dispatch`: 手動実行。
 - `permissions`: `contents: read` のみ。
 - 実行時間上限: 10 分。
@@ -302,14 +307,41 @@ GitHub Actions では `--allow-partial` を付ける。これは、一部 source
 }
 ```
 
-この JSON は LP 側の直接入力ではない。`lp_ready` は常に `false` とし、`publish_decision` は `manual_review_required` とする。LP 側に渡すデータは、従来通り `review_status = confirmed` かつ `public_candidate = 1` の記事だけを対象にした公開候補 export preview とする。
+この JSON は LP 側の直接入力ではない。`lp_ready` は常に `false` とし、`publish_decision` は `manual_review_required` とする。LP 側に渡すデータは、LP 自動反映用に別途生成する短い記事一覧データとする。LP 自動反映用データには、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長い公開用コンテンツを含めない。
+
+### Codex App LP Reflection Automation
+
+GitHub Actions の取得結果を確認した後、翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映は Codex アプリの automation で実行する。
+
+- automation ID: `rm-trend-radar-lp-reflection`
+- schedule: 3 日に 1 回程度、15:10 JST。
+- 対象 workspace:
+  - `C:\Users\n-kei\dev\github\rm-trend-radar`
+  - `C:\Users\n-kei\dev\SideBiz_HotelRM`
+- 入力: GitHub Actions の RSS snapshot、または `rm-trend-radar` のローカル SQLite に保存された取得済みメタデータ。
+- 出力: `SideBiz_HotelRM` の `02_Service\web_lp\data\overseas_rm_articles.json` と `02_Service\web_lp\overseas_rm_articles.html`。
+- 1 回の実行で新規に LP へ追加する記事数の目安: 最大 5 件。判断に迷う記事は公開候補にせず、実行結果に保留理由を残す。
+- commit / push: 検証が通過した場合、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。検証失敗、公開対象外項目の混入、原文記事の代替になる長文、判断に迷う差分がある場合は commit / push しない。
+
+Codex automation が LP 用データへ含めてよい項目は、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` に限定する。記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリスト、原文記事の代替になる長文は含めない。
+
+Codex automation の実行後は、少なくとも次を検証する。
+
+- `rm-trend-radar`: `.venv\Scripts\python.exe -m compileall src app.py`
+- `rm-trend-radar`: `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=<run-specific-dir>`
+- `SideBiz_HotelRM`: `02_Service\web_lp\scripts\refresh_overseas_rm_articles.py` の `py_compile`
+- `SideBiz_HotelRM`: `data\overseas_rm_articles.json` に許可項目以外が含まれていないこと
+- `SideBiz_HotelRM`: `overseas_rm_articles.html` の記事件数、カテゴリ件数、日本語タイトル一覧の折りたたみ件数
+- 両 repository: `git diff --check`
+
+検証が通過し commit / push した場合は、実行結果に repository ごとの commit hash と push 先 branch を含める。
 
 ### Local Windows Scheduled Task
 
-ローカル Windows では、次の script を使って定期実行を登録する。
+ローカル Windows では、必要な場合だけ次の script を使って RSS 取得を登録できる。通常運用の主経路は GitHub Actions の RSS snapshot と Codex アプリ automation であり、この Windows タスクは手元で追加確認したい場合の任意手段である。
 
 ```powershell
-.\scripts\Register-ScheduledFetch.ps1 -At "08:00"
+.\scripts\Register-ScheduledFetch.ps1 -At "14:37"
 ```
 
 登録されたタスクは、次の script を呼び出す。
@@ -325,7 +357,7 @@ GitHub Actions では `--allow-partial` を付ける。これは、一部 source
 | Option | Required | Default | Meaning |
 | --- | --- | --- | --- |
 | `-TaskName NAME` | no | `RM Trend Radar RSS Fetch` | Windows タスクスケジューラに登録するタスク名。 |
-| `-At HH:MM` | no | `08:00` | 1 日 1 回の実行時刻。 |
+| `-At HH:MM` | no | `14:37` | 1 日 1 回の実行時刻。 |
 | `-TimeoutSeconds SECONDS` | no | `20` | 1 source あたりの HTTP 取得 timeout 秒数。 |
 | `-PythonPath PATH` | no | `.venv\Scripts\python.exe` | 使用する Python executable。 |
 | `-DryRun` | no | false | 登録したタスクで SQLite へ書き込まない試験実行を行う。 |
@@ -389,7 +421,7 @@ GitHub Actions では `--allow-partial` を付ける。これは、一部 source
 - 更新頻度が低いサイトでは、週 1 回で十分か。
 - 取得失敗時に即時再試行せず、次回実行まで待つ設計でよいか。
 
-実装前の初期案は、取得先サイトへの負荷を下げるため、日次以下の頻度を上限とする。
+実装前の初期案は、取得先サイトへの負荷を下げるため、日次以下の頻度を上限とする。2026-05-11 以降の通常運用では、3 日に 1 回程度を初期値にする。GitHub Actions の cron で日付の `*/3` 指定を使う場合、月末から月初にかけて実行間隔が厳密な 72 時間にならない場合がある。この仕様では、厳密な 72 時間周期ではなく、月内でおおむね 3 日間隔の実行を許容する。
 
 ## Stop Conditions
 
