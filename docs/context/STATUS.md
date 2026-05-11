@@ -71,11 +71,33 @@ Last Updated: 2026-05-11
 - 2026-05-11 に、SideBiz 側の `02_Service/web_lp/scripts/refresh_overseas_rm_articles.py` を使って LP 用データを再生成した。副業リポ側 LP の公開候補記事は 48 件から 60 件になった。カテゴリ別件数は、料金設定・価格最適化 10、需要予測・稼働・宿泊制限 10、収益指標・オーナー視点 10、AI・検索・予約行動 10、Distribution・OTA・直販 6、組織・業務プロセス 14 である。
 - 2026-05-11 に、SideBiz 側の日本語タイトル一覧を、カテゴリごとに先頭 8 件だけ初期表示し、超過分を `さらにN件を表示` で展開する構成にした。60 件反映後は 5 カテゴリで折りたたみが生成され、超過件数は 2、2、2、2、6 件である。
 - 2026-05-11 に、Codex アプリ automation `rm-trend-radar-lp-reflection` を作成した。実行頻度は 3 日に 1 回程度、15:10 JST である。GitHub Actions は RSS メタデータ取得だけを担当し、Codex automation は翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートを担当する。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。
-- 次の本線は、Codex automation `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加記事数、保留記事、LP 用 JSON の項目制限、SideBiz 側 HTML 生成結果、検証結果を確認することである。
+- 2026-05-11 に、Codex automation `rm-trend-radar-lp-reflection` の初回実行で、副業リポ側 LP の短い記事一覧データを更新した。
+  - 新規に公開候補へ追加した記事数: 5
+  - 副業リポ側 LP の公開候補記事数: 60 → 65
+  - カテゴリ別件数:
+    - 料金設定・価格最適化: 10 → 12
+    - 需要予測・稼働・宿泊制限: 10（変更なし）
+    - 収益指標・オーナー視点: 10（変更なし）
+    - AI・検索・予約行動: 10 → 11
+    - Distribution・OTA・直販: 6（変更なし）
+    - 組織・業務プロセス: 14 → 16
+  - 追加した 5 件:
+    - 2026-05-07 RoomPriceGenie: https://roompricegenie.com/resort-hotel-seasonal-pricing-strategy/
+    - 2026-05-07 RoomPriceGenie: https://roompricegenie.com/hotel-pricing-strategy-planner/
+    - 2026-05-07 RoomPriceGenie: https://roompricegenie.com/casablanca-hotelsoftware-roompricegenie-integration/
+    - 2026-04-20 Revfine: https://www.revfine.com/pms-integration/
+    - 2026-03-25 Revfine: https://www.revfine.com/choose-to-be-chosen-how-hoteliers-use-ai-to-stay-ahead-of-hospitality-trends/
+  - LP 用 JSON の公開項目制限:
+    - `SideBiz_HotelRM/02_Service/web_lp/data/overseas_rm_articles.json` の `articles` は、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目だけであることを確認した。
+  - 検証結果:
+    - `rm-trend-radar`: `.venv\Scripts\python.exe -m compileall src app.py` 通過
+    - `rm-trend-radar`: `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider` が 30 passed
+    - `SideBiz_HotelRM`: `refresh_overseas_rm_articles.py` の `py_compile` 通過
+    - `SideBiz_HotelRM`: HTML の生成ブロックが 65 記事で生成されることを確認
 
 ## Next Re-entry
 
-次スレッドは、Codex automation `rm-trend-radar-lp-reflection` の初回実行結果確認から始める。
+次スレッドは、次回の GitHub Actions RSS snapshot 実行後に、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。
 
 ### Thread Contract
 
