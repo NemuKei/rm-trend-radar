@@ -194,8 +194,8 @@ Glossary note は `99_System/Bases/Glossary.base`、論文 note は `99_System/B
 
 - 実装変更後は、少なくとも次を確認する。
   - `.venv\Scripts\python.exe -m compileall src app.py`
-  - `.venv\Scripts\python.exe -m pytest`（テストが存在する場合）
-  - `.venv\Scripts\python.exe -m streamlit run app.py` で起動できること
+  - `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=<run-specific-dir>`
+  - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=<port> --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:<port>` が HTTP 200 を返すこと
 
 ## Delivery Rule
 
