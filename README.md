@@ -36,6 +36,24 @@ python -m venv .venv
 
 ブラウザで Streamlit が表示するローカル URL を開きます。通常は `http://localhost:8501` です。
 
+## Verification
+
+```powershell
+# Python package と app entrypoint の syntax check
+.\.venv\Scripts\python.exe -m compileall src app.py
+
+# automated test suite
+.\.venv\Scripts\python.exe -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
+
+# headless app smoke check: HTTP 200 を確認したら停止する
+.\.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
+
+# commit 前の whitespace error check
+git diff --check
+```
+
+headless smoke check では、別ターミナルから `http://127.0.0.1:8511` が HTTP 200 を返すことを確認してから停止します。`8511` が使用中の場合は、未使用ポートへ置き換えます。
+
 ## RSS 取得
 
 手動で初期対象 5 サイトの RSS を取得する場合は、次を実行します。
