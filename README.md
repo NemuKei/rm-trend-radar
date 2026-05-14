@@ -82,7 +82,7 @@ GitHub Actions で記事取得を定期実行する場合は、`.github/workflow
 ローカル Windows で記事取得だけを定期実行する場合は、次を実行して Windows タスクスケジューラに登録できます。クラウド実行を使う場合、このローカル登録は必須ではありません。
 
 ```powershell
-.\scripts\Register-ScheduledFetch.ps1 -At "14:37"
+.\scripts\Register-ScheduledFetch.ps1 -At "14:37" -IntervalDays 3
 ```
 
 ローカル Windows の定期実行は RSS item の取得と SQLite への upsert だけを行います。日本語要約、重要度、公開候補フラグ、副業リポ側 LP のファイルは更新しません。実行ログは `logs/` に出力され、このディレクトリは Git 管理外です。

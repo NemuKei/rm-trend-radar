@@ -341,7 +341,7 @@ Codex automation の実行後は、少なくとも次を検証する。
 ローカル Windows では、必要な場合だけ次の script を使って RSS 取得を登録できる。通常運用の主経路は GitHub Actions の RSS snapshot と Codex アプリ automation であり、この Windows タスクは手元で追加確認したい場合の任意手段である。
 
 ```powershell
-.\scripts\Register-ScheduledFetch.ps1 -At "14:37"
+.\scripts\Register-ScheduledFetch.ps1 -At "14:37" -IntervalDays 3
 ```
 
 登録されたタスクは、次の script を呼び出す。
@@ -357,7 +357,8 @@ Codex automation の実行後は、少なくとも次を検証する。
 | Option | Required | Default | Meaning |
 | --- | --- | --- | --- |
 | `-TaskName NAME` | no | `RM Trend Radar RSS Fetch` | Windows タスクスケジューラに登録するタスク名。 |
-| `-At HH:MM` | no | `14:37` | 1 日 1 回の実行時刻。 |
+| `-At HH:MM` | no | `14:37` | 実行時刻。 |
+| `-IntervalDays DAYS` | no | `3` | 何日ごとに実行するか。`1` は毎日、`3` は 3 日ごと。 |
 | `-TimeoutSeconds SECONDS` | no | `20` | 1 source あたりの HTTP 取得 timeout 秒数。 |
 | `-PythonPath PATH` | no | `.venv\Scripts\python.exe` | 使用する Python executable。 |
 | `-DryRun` | no | false | 登録したタスクで SQLite へ書き込まない試験実行を行う。 |
