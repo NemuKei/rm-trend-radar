@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-05-11
+Last Updated: 2026-05-14
 
 ## Current Task Bundle
 
@@ -94,10 +94,12 @@ Last Updated: 2026-05-11
     - `rm-trend-radar`: `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider` が 30 passed
     - `SideBiz_HotelRM`: `refresh_overseas_rm_articles.py` の `py_compile` 通過
     - `SideBiz_HotelRM`: HTML の生成ブロックが 65 記事で生成されることを確認
+- 2026-05-13 の GitHub Actions `Fetch RSS Snapshot` 定期実行は success で終了し、`rss_snapshot.json` の source 件数と記事件数は前回基準と同じ 5 source / 128 articles であった。source 別件数は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18、Hotel Speak 10 で、失敗 source はなかった。
+- 2026-05-14 の watchdog 確認では、`rm-trend-radar` の live `fetch-snapshot` を再実行して同じ 5 source / 128 articles を確認した。その後、`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-11` を再実行し、JSON / HTML ともに diff なしの no-op であることを確認した。LP 用 JSON は引き続き 65 articles、6 categories、許可 7 項目のみである。HTML の詳細記事は 65 件で、日本語タイトル一覧の折りたたみ件数は 4、2、2、3、8 である。
 
 ## Next Re-entry
 
-次スレッドは、次回の GitHub Actions RSS snapshot 実行後に、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。
+次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
 
 ### Thread Contract
 
@@ -115,8 +117,8 @@ Last Updated: 2026-05-11
   1. `docs/context/INTENT.md` の判断原則を確認する。
   2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy`、公開カテゴリ定義、`Side Business LP Initial Listing Contract` を確認する。
   3. `docs/spec_001_sources.md` の `GitHub Actions Scheduled Snapshot` と `Codex App LP Reflection Automation` を確認する。
-  4. Codex automation `rm-trend-radar-lp-reflection` の初回実行結果を確認する。
-  5. 追加/更新記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、commit hash、push 先 branch を確認する。
+  4. 最新の GitHub Actions `Fetch RSS Snapshot` 実行結果と、必要なら live `fetch-snapshot` の再確認結果を確認する。
+  5. source 件数、記事件数、記事 URL 集合、SideBiz 側の JSON / HTML diff 有無、カテゴリ別件数、折りたたみ件数を確認する。
   6. LP 用 JSON に、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` 以外の項目が含まれないことを確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。

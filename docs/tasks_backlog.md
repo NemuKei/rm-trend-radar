@@ -266,10 +266,10 @@
 ## Remaining Task Triage
 
 Now:
-- GitHub Actions の次回実行結果を確認し、`rss_snapshot.json` の source 件数と記事件数を見る
+- 最新の GitHub Actions RSS snapshot と必要時の live `fetch-snapshot` を確認し、source 件数、記事件数、記事 URL 集合、LP 再生成結果に差分があるかを見る
 
 Next:
-- 次回 snapshot 後に、未反映記事から公開候補へ最大 5 件追加する
+- source 件数、記事件数、または記事 URL 集合に変化が出た snapshot の後に、未反映記事から公開候補へ最大 5 件追加する
 
 After Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める
@@ -280,6 +280,6 @@ Later:
 
 ## Next候補
 
-1. GitHub Actions の次回実行結果を確認する
-2. 次回 snapshot 後に公開候補へ最大 5 件追加する
+1. 最新の GitHub Actions RSS snapshot 結果を確認する
+2. source 件数、記事件数、または記事 URL 集合に変化が出た snapshot の後に公開候補へ最大 5 件追加する
 3. X 投稿文の作成範囲と送信しない下書き運用を決める
