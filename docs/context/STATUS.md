@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-05-11
+Last Updated: 2026-05-14
 
 ## Current Task Bundle
 
@@ -92,8 +92,9 @@ Last Updated: 2026-05-11
   - 検証結果:
     - `rm-trend-radar`: `.venv\Scripts\python.exe -m compileall src app.py` 通過
     - `rm-trend-radar`: `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider` が 30 passed
-    - `SideBiz_HotelRM`: `refresh_overseas_rm_articles.py` の `py_compile` 通過
-    - `SideBiz_HotelRM`: HTML の生成ブロックが 65 記事で生成されることを確認
+- `SideBiz_HotelRM`: `refresh_overseas_rm_articles.py` の `py_compile` 通過
+- `SideBiz_HotelRM`: HTML の生成ブロックが 65 記事で生成されることを確認
+- 2026-05-13 の GitHub Actions `Fetch RSS Snapshot` は成功し、128 件の RSS メタデータを取得した。`rm_trend_radar.db` の `review_status=confirmed` かつ `public_candidate=1` の 65 件は、SideBiz 側 `overseas_rm_articles.json` の 65 件と引き続き一致したため、今回の LP 再生成は不要だった。
 
 ## Next Re-entry
 
