@@ -39,14 +39,27 @@ python -m venv .venv
 ## Verification
 
 ```powershell
+# `git worktree` で `.venv` がない checkout でも同じ手順を使えるように、
+# 現在 checkout と common-dir 側の両方から Python 実行ファイルを探索する。
+$repoRoot = (git rev-parse --show-toplevel).Trim()
+$commonDir = (git rev-parse --git-common-dir).Trim()
+$pythonExeCandidates = @(
+  (Join-Path $repoRoot ".venv\\Scripts\\python.exe"),
+  (Join-Path (Split-Path -Parent $commonDir) ".venv\\Scripts\\python.exe")
+)
+$pythonExe = $pythonExeCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if (-not $pythonExe) {
+  throw "python executable was not found. Create .venv in this checkout, or in the common repository root."
+}
+
 # Python package と app entrypoint の syntax check
-.\.venv\Scripts\python.exe -m compileall src app.py
+& $pythonExe -m compileall src app.py
 
 # automated test suite
-.\.venv\Scripts\python.exe -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
+& $pythonExe -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
 
 # headless app smoke check: HTTP 200 を確認したら停止する
-.\.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
+& $pythonExe -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
 
 # commit 前の whitespace error check
 git diff --check
