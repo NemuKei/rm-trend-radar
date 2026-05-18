@@ -71,7 +71,8 @@
 Obsidian vault:
 
 ```text
-C:\Users\n-kei\Documents\Obsidian\SecondBrain
+Windows canonical vault: C:\Users\n-kei\Documents\Obsidian\SecondBrain
+WSL access path: /mnt/c/Users/n-kei/Documents/Obsidian/SecondBrain
 ```
 
 ## Source Of Truth
@@ -176,8 +177,8 @@ Glossary note は `99_System/Bases/Glossary.base`、論文 note は `99_System/B
 - 変更前に既存ファイルの責務を確認し、同じ情報を複数文書へ重複記載しない。
 - データ取得、要約、タグ付け、画面表示、永続化は責務を分ける。
 - 外部サイト取得を追加する場合は、対象サイト、取得方法、保存項目、取得頻度、停止条件を先に文書化する。
-- Python 実行は `.venv\Scripts\python.exe` を優先する。
-- Streamlit 起動は `.venv\Scripts\python.exe -m streamlit run app.py` を使う。
+- Python 実行は WSL では `.venv/bin/python`、Windows では `.venv\Scripts\python.exe` を優先する。
+- Streamlit 起動は WSL では `.venv/bin/python -m streamlit run app.py`、Windows では `.venv\Scripts\python.exe -m streamlit run app.py` を使う。
 
 ## Subagent Policy
 
@@ -193,9 +194,9 @@ Glossary note は `99_System/Bases/Glossary.base`、論文 note は `99_System/B
 ## Verification
 
 - 実装変更後は、少なくとも次を確認する。
-  - `.venv\Scripts\python.exe -m compileall src app.py`
-  - `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=<run-specific-dir>`
-  - `.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=<port> --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:<port>` が HTTP 200 を返すこと
+  - WSL: `.venv/bin/python -m compileall src app.py`
+  - WSL: `.venv/bin/python -m pytest tests -p no:cacheprovider --basetemp=<run-specific-dir>`
+  - WSL: `.venv/bin/python -m streamlit run app.py --server.headless=true --server.port=<port> --browser.gatherUsageStats=false` を一時起動し、`http://127.0.0.1:<port>` が HTTP 200 を返すこと
 
 ## Delivery Rule
 
