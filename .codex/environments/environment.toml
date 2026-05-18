@@ -8,4 +8,4 @@ script = ""
 [[actions]]
 name = "実行する"
 icon = "run"
-command = ".venv\\Scripts\\python.exe -m streamlit run app.py"
+command = ".venv/bin/python -m streamlit run app.py"
