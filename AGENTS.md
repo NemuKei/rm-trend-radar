@@ -55,6 +55,7 @@
 ## Skill Rules
 
 - Skill は task-specific procedure だけを持つ。repo-wide の常時ルールや設計原則は root `AGENTS.md` に置く。
+- Codex lifecycle hooks は Skill の代替ではない。hooks は secret guard、repo context guide、completion gate のような反復確認を lifecycle event に差し込む補助層として扱い、repo 固有判断は `AGENTS.md`、`docs/spec_*.md`、`DECISIONS.md`、`STATUS.md` などの正本 docs に置く。
 - 依頼を実行または verify しようとして、未導入のツール、ライブラリ、Skill、preset が不足能力の原因になっている場合は、短く導入提案してよい。提案すべきか迷う場合は、提案を抑えるより、不足内容と候補を短く示す方を優先する。
 - 新しい外部ツールや依存ライブラリを提案する前に、既存手段で代替できないか確認する。外部導入を候補に残す場合は、供給網、過剰権限、install script、version 固定の観点を確認する。
 - 導入提案を見送られた場合は、少なくとも `not-now`、`policy-reject`、`security-reject`、`cost-reject` のいずれかで理由を整理する。`policy-reject` と `security-reject` は、明示的な再検討があるまで再提案しない。
