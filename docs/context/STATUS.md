@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-05-15
+Last Updated: 2026-05-18
 
 ## Current Task Bundle
 
@@ -97,10 +97,11 @@ Last Updated: 2026-05-15
 - 2026-05-13 の GitHub Actions `Fetch RSS Snapshot` 定期実行は success で終了し、`rss_snapshot.json` の source 件数と記事件数は前回基準と同じ 5 source / 128 articles であった。source 別件数は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18、Hotel Speak 10 で、失敗 source はなかった。
 - 2026-05-14 の watchdog 確認では、`rm-trend-radar` の live `fetch-snapshot` を再実行して同じ 5 source / 128 articles を確認した。その後、`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-11` を再実行し、JSON / HTML ともに diff なしの no-op であることを確認した。LP 用 JSON は引き続き 65 articles、6 categories、許可 7 項目のみである。HTML の詳細記事は 65 件で、日本語タイトル一覧の折りたたみ件数は 4、2、2、3、8 である。
 - 2026-05-15 の live `fetch-snapshot` でも同じ 5 source / 128 articles を確認した。LP には 5 件の未反映公開候補を追加し、`SideBiz_HotelRM` の LP 用 JSON / HTML を再生成して 65 articles から 70 articles へ増やした。追加した 5 件は、IDeaS の `How to Choose the Best Revenue Management System for Your Hotel`、RoomPriceGenie の `Revenue Intelligence Is Here: Real-Time Pricing Insights, Right Inside Your PMS`、Revfine の `How Can Connected Hotel Systems Enable Data-Driven Revenue?`、SiteMinder の `Hotel business intelligence: A practical guide for hotel owners`、Hotel Speak の `How real-time personalisation turns guest insight into revenue` である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、カテゴリ別件数は pricing_optimization 13、forecast_occupancy_controls 10、revenue_metrics_owner_view 11、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 19 である。既存 LP の `https://roompricegenie.com/hotel-revenue-estimator/` は今回の snapshot から外れたが、削除対象にはしていない。
+- 2026-05-18 の live `fetch-snapshot` でも同じ 5 source / 128 articles を確認した。LP には 5 件の未反映公開候補を追加し、`SideBiz_HotelRM` の LP 用 JSON / HTML を再生成して 70 articles から 75 articles へ増やした。追加した 5 件は、IDeaS の `Fast, Confident, Ready: Setting a New Standard in Accelerating RMS Time to Value`、Hotel Speak の `From Data Chaos to Intelligent Strategy: How AI & Human Insight Are Redefining Revenue Leadership`、Revfine の `The Myth of “Full = Profitable” in Hotels`、RoomPriceGenie の `Something is changing in hotel tech and pricing is at the center of it`、SiteMinder の `How to choose hotel revenue management software` である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、カテゴリ別件数は pricing_optimization 14、forecast_occupancy_controls 10、revenue_metrics_owner_view 13、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 21 である。`SideBiz_HotelRM/02_Service/web_lp/data/overseas_rm_articles.json` に余計な項目が混入していないこと、`overseas_rm_articles.html` の記事件数とカテゴリ件数が一致すること、`git diff --check` が通過することを確認した。`https://roompricegenie.com/hotel-revenue-estimator/` は今回の snapshot から外れたが、削除対象にはしていない。
 
 ## Next Re-entry
 
-次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
+次スレッドは、GitHub Actions RSS snapshot と SideBiz 側の現在の LP データを突き合わせ、未反映の公開候補が残っている場合だけ、最大 5 件まで追加して LP 用データを更新する。source 件数や総記事件数が同じでも、URL 集合に未反映候補が残っていれば追加反映を行う。未反映候補がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、監視結果だけを確認する。
 
 ### Thread Contract
 
