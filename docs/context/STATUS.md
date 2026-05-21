@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-05-20
+Last Updated: 2026-05-21
 
 ## Current Task Bundle
 
@@ -100,10 +100,11 @@ Last Updated: 2026-05-20
 - 2026-05-18 の live `fetch-snapshot` でも同じ 5 source / 128 articles を確認した。LP には 5 件の未反映公開候補を追加し、`SideBiz_HotelRM` の LP 用 JSON / HTML を再生成して 70 articles から 75 articles へ増やした。追加した 5 件は、IDeaS の `Fast, Confident, Ready: Setting a New Standard in Accelerating RMS Time to Value`、Hotel Speak の `From Data Chaos to Intelligent Strategy: How AI & Human Insight Are Redefining Revenue Leadership`、Revfine の `The Myth of “Full = Profitable” in Hotels`、RoomPriceGenie の `Something is changing in hotel tech and pricing is at the center of it`、SiteMinder の `How to choose hotel revenue management software` である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、カテゴリ別件数は pricing_optimization 14、forecast_occupancy_controls 10、revenue_metrics_owner_view 13、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 21 である。`SideBiz_HotelRM/02_Service/web_lp/data/overseas_rm_articles.json` に余計な項目が混入していないこと、`overseas_rm_articles.html` の記事件数とカテゴリ件数が一致すること、`git diff --check` が通過することを確認した。`https://roompricegenie.com/hotel-revenue-estimator/` は今回の snapshot から外れたが、削除対象にはしていない。
 
 - 2026-05-19 の GitHub Actions `Fetch RSS Snapshot` は success で終了し、5 source / 128 articles を維持した。`RoomPriceGenie` を中心に 5 件を追加候補にし、`SideBiz_HotelRM` の LP へ反映した。追加候補は、`Revenue Intelligence in hospitality: an interview with RoomPriceGenie and RMS`、`Hotel Revenue Management Foundations 2026`、`Hotel Revenue Strategy for 2026: Plan Early, Stay Agile`、`RoomPriceGenie & HotelNetSolutions: More Direct Bookings, Priced Right`、`Seasonal Trends in Hospitality: What Competitors Reveal` である。
+- 2026-05-21 の live `fetch-snapshot` は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18 を取得できたが、Hotel Speak は失敗して exit 3 だった。`RoomPriceGenie` の `How Competitor Rate Monitoring Boosts Hotel Revenue` と `How to Fill Shoulder Nights in Your Hotel: 4 Revenue Strategies` が DB に未反映だったため、`fetch --source RoomPriceGenie` で 2 件を追加し、確認済みかつ公開候補として LP へ反映した。`SideBiz_HotelRM` の LP 用 JSON / HTML は 76 articles から 78 articles へ増え、カテゴリ別件数は pricing_optimization 15、forecast_occupancy_controls 11、revenue_metrics_owner_view 13、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 22 になった。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみであることを確認した。HTML の日本語タイトル一覧の折りたたみ件数は 7、3、5、3、14 である。
 
 ## Next Re-entry
 
-次スレッドは、GitHub Actions RSS snapshot と SideBiz 側の現在の LP データを突き合わせ、未反映の公開候補が残っている場合だけ、最大 5 件まで追加して LP 用データを更新する。source 件数や総記事件数が同じでも、URL 集合に未反映候補が残っていれば追加反映を行う。未反映候補がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、監視結果だけを確認する。
+次スレッドは、次回の GitHub Actions RSS snapshot と SideBiz 側の現在の LP データを突き合わせる。source 件数や総記事件数が同じでも、URL 集合に未反映候補が残っていれば追加反映を行う。未反映候補がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、監視結果だけを確認する。Hotel Speak が連続して失敗する場合は、取得失敗 source として監視だけを継続し、LP 反映対象からは外す。
 
 ### Thread Contract
 
@@ -265,6 +266,9 @@ Last Updated: 2026-05-20
   - 2026-05-11 の最終確認で、`.venv\Scripts\python.exe -m compileall src app.py` が通過することを確認
   - 2026-05-11 の最終確認で、`.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=.tmp_pytest_final_20260511_tests` が 30 passed になることを確認
   - 2026-05-11 の最終確認で、`git diff --check` が whitespace error なしで終了することを確認。警告は Git の改行コード変換予定のみである。
+- 2026-05-21 の確認で、`rm-trend-radar` の live `fetch-snapshot` は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18 を取得し、Hotel Speak は失敗して exit 3 だった。RoomPriceGenie の `How Competitor Rate Monitoring Boosts Hotel Revenue` と `How to Fill Shoulder Nights in Your Hotel: 4 Revenue Strategies` を `fetch --source RoomPriceGenie` で追加し、2 件とも確認済みかつ公開候補として保存した。
+- 2026-05-21 の確認で、`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-21` が `articles=78`, `categories=6` で完了し、LP 用 JSON は `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみであることを確認した。HTML の日本語タイトル一覧の折りたたみ件数は 7、3、5、3、14 である。
+- 2026-05-21 の確認で、`rm-trend-radar` の `.venv\Scripts\python.exe -m compileall src app.py` と `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=.tmp_pytest_rm_trend_radar_lp_reflection_20260521` が通過し、`SideBiz_HotelRM` の `python -m py_compile 02_Service\\web_lp\\scripts\\refresh_overseas_rm_articles.py` と両 repository の `git diff --check` が通過した。
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
   - `.venv\Scripts\python.exe -m pytest` のリポジトリ全体探索は、リポジトリ直下の一時ディレクトリ `tmpiws6w9_m` を pytest が収集しようとして `PermissionError [WinError 5]` で終了する。`tests` ディレクトリを明示した実行では 30 passed を確認済みである。
