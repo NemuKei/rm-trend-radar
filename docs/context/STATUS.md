@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-05-21
+Last Updated: 2026-05-22
 
 ## Current Task Bundle
 
@@ -269,6 +269,7 @@ Last Updated: 2026-05-21
 - 2026-05-21 の確認で、`rm-trend-radar` の live `fetch-snapshot` は IDeaS 10、SiteMinder 50、RoomPriceGenie 40、Revfine 18 を取得し、Hotel Speak は失敗して exit 3 だった。RoomPriceGenie の `How Competitor Rate Monitoring Boosts Hotel Revenue` と `How to Fill Shoulder Nights in Your Hotel: 4 Revenue Strategies` を `fetch --source RoomPriceGenie` で追加し、2 件とも確認済みかつ公開候補として保存した。
 - 2026-05-21 の確認で、`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-21` が `articles=78`, `categories=6` で完了し、LP 用 JSON は `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみであることを確認した。HTML の日本語タイトル一覧の折りたたみ件数は 7、3、5、3、14 である。
 - 2026-05-21 の確認で、`rm-trend-radar` の `.venv\Scripts\python.exe -m compileall src app.py` と `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=.tmp_pytest_rm_trend_radar_lp_reflection_20260521` が通過し、`SideBiz_HotelRM` の `python -m py_compile 02_Service\\web_lp\\scripts\\refresh_overseas_rm_articles.py` と両 repository の `git diff --check` が通過した。
+- 2026-05-22 の確認で、live `fetch-snapshot` と `fetch` により IDeaS の `Revenue Reactions: Why the 2026 World Cup Hasn’t Yet Delivered the Hotel Boom Many Expected` を 1 件追加し、`rm-trend-radar` の公開候補は 78 件から 79 件になった。`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-22` で LP 用 JSON / HTML を再生成し、記事数は 79 件、カテゴリ別件数は 料金設定・価格最適化 15、需要予測・稼働・宿泊制限 12、収益指標・オーナー視点 13、AI・検索・予約行動 11、Distribution・OTA・直販 6、組織・業務プロセス 22 になった。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、JSON / HTML 構造検証と `compileall`、`tests` 30 passed、`py_compile` が通過した。
 - 未確認:
   - タイトル仮重要度追加後の実サイト再取得
   - `.venv\Scripts\python.exe -m pytest` のリポジトリ全体探索は、リポジトリ直下の一時ディレクトリ `tmpiws6w9_m` を pytest が収集しようとして `PermissionError [WinError 5]` で終了する。`tests` ディレクトリを明示した実行では 30 passed を確認済みである。
