@@ -1,14 +1,16 @@
 # STATUS
 
-Last Updated: 2026-05-20
+Last Updated: 2026-06-04
 
 ## Current Task Bundle
 
-- 主対象: 最新記事取得と副業リポ側 LP の短い記事一覧データ更新を自動化する
+- 主対象: GitHub Actions RSS snapshot と Codex automation の運用結果を監視し、差分が出たときだけ副業リポ側 LP の短い記事一覧データ更新を確認する
 - この bundle で扱う範囲:
-  - GitHub Actions で、取得対象 5 件の RSS メタデータを 3 日に 1 回程度で取得する
-  - Codex アプリ automation で、翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートを実行する
+  - 最新の GitHub Actions RSS snapshot について、source 件数、記事件数、記事 URL 集合、失敗 source の有無を確認する
+  - 差分が出た場合だけ、Codex アプリ automation の LP 反映結果、カテゴリ別件数、許可 7 項目制約、保留記事の有無を確認する
+  - 差分が出ない場合は、LP 再生成が no-op であることを確認し、監視結果だけを記録する
 - この bundle で扱わないこと:
+  - 新しい自動化経路の追加
   - AI API 実装そのもの
   - AI 候補生成の仕様確定
   - 記事本文全文の保存
@@ -98,6 +100,7 @@ Last Updated: 2026-05-20
 - 2026-05-14 の watchdog 確認では、`rm-trend-radar` の live `fetch-snapshot` を再実行して同じ 5 source / 128 articles を確認した。その後、`SideBiz_HotelRM` の `refresh_overseas_rm_articles.py --updated-on 2026-05-11` を再実行し、JSON / HTML ともに diff なしの no-op であることを確認した。LP 用 JSON は引き続き 65 articles、6 categories、許可 7 項目のみである。HTML の詳細記事は 65 件で、日本語タイトル一覧の折りたたみ件数は 4、2、2、3、8 である。
 - 2026-05-15 の live `fetch-snapshot` でも同じ 5 source / 128 articles を確認した。LP には 5 件の未反映公開候補を追加し、`SideBiz_HotelRM` の LP 用 JSON / HTML を再生成して 65 articles から 70 articles へ増やした。追加した 5 件は、IDeaS の `How to Choose the Best Revenue Management System for Your Hotel`、RoomPriceGenie の `Revenue Intelligence Is Here: Real-Time Pricing Insights, Right Inside Your PMS`、Revfine の `How Can Connected Hotel Systems Enable Data-Driven Revenue?`、SiteMinder の `Hotel business intelligence: A practical guide for hotel owners`、Hotel Speak の `How real-time personalisation turns guest insight into revenue` である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、カテゴリ別件数は pricing_optimization 13、forecast_occupancy_controls 10、revenue_metrics_owner_view 11、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 19 である。既存 LP の `https://roompricegenie.com/hotel-revenue-estimator/` は今回の snapshot から外れたが、削除対象にはしていない。
 - 2026-05-20 の automation 実行では、2026-05-19 の GitHub Actions RSS snapshot と前回 snapshot を比較し、RoomPriceGenie の `RoomPriceGenie と RMS の対談: PMS 内で収益インテリジェンスを使う` を新規公開候補に追加した。SideBiz_HotelRM の LP 用 JSON / HTML を再生成して 75 articles から 76 articles へ増やし、カテゴリ別件数は pricing_optimization 14、forecast_occupancy_controls 10、revenue_metrics_owner_view 13、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 22 である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、保留記事はなかった。
+- `P5-06` は完了済みであり、現在は新規実装フェーズではなく、3 日に 1 回程度の RSS snapshot と LP 反映結果を監視する運用フェーズとして扱う。
 
 ## Next Re-entry
 
@@ -106,8 +109,8 @@ Last Updated: 2026-05-20
 ### Thread Contract
 
 - 今回の種別: `mainline-task`
-- 主対象: Codex automation による翻訳から副業リポ側 LP 反映までの自動化を運用確認する
-- bundle に含める Task ID: `P5-06`
+- 主対象: GitHub Actions RSS snapshot と Codex automation の運用監視を行い、差分が出たときだけ LP 反映結果を確認する
+- bundle に含める Task ID: なし。`P5-06` は完了済みのため、以後は運用監視として扱う
 - 最初に読む正本:
   - `AGENTS.md`
   - `docs/context/STATUS.md`
