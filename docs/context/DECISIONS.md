@@ -96,3 +96,9 @@
 - 決定日: 2026-05-11
 - 決定: 副業リポ側 LP の日本語タイトル一覧は、公開候補記事が増え続ける前提で設計する。カテゴリごとの初期表示件数を制限し、一定件数を超えたタイトルは折りたたみ、詳細記事一覧またはカテゴリ内の追加表示操作で確認できるようにする。
 - 理由: 日本語タイトル一覧は、公開候補記事が増えるほどページ上の占有面積が大きくなる。すべてのタイトルを常時表示すると、ページ冒頭で読者が確認すべき概要、カテゴリ、最新記事への到達が妨げられる。タイトル確認機能は維持しつつ、初期表示の情報量を制御する必要がある。
+
+## D-20260614-016: Codex parallel worktree orchestration は明示依頼時だけ使う
+
+- 決定日: 2026-06-14
+- 決定: Codex の既定作業は `main` 上の linear workflow とし、parallel worktree orchestration は利用者が `並列で進めて`、`別で進めて`、`裏で進めて` など同等の意図を明示した場合だけ使う。詳細な運用ルールは root `AGENTS.md` の `Codex Orchestration Modes` を正とする。
+- 理由: 通常作業では 1 つの parent thread が task / Goal Bundle を順に調整するほうが、`STATUS.md`、`tasks_backlog.md`、`DECISIONS.md`、spec などの shared / high-conflict files を安全に同期しやすい。parallel worktree orchestration を使う場合も、parent thread が分割、owned files、検証、統合、`main` への Git sync を担い、child thread は専用 worktree / task branch の owned scope と local verify / evidence 報告に留める。parent または repo policy が明示しない限り、child thread は `main` へ push / merge しない。

@@ -70,6 +70,20 @@
 - Codex は Goal Bundle 内の小 task ごとに利用者確認で止まらない。止まるのは、外部契約、公開挙動、削除、migration、依存追加または更新、認証・secret・権限、実データ操作、release / publish、または利用者判断が必要な仕様判断が出た場合だけにする。
 - 影響が局所的で戻せる判断は、前提を明示して進め、最終報告で確認結果を書く。Goal Bundle 外の論点は別管理にし、現在の Goal Bundle 完了に必要なものだけ扱う。
 
+## Codex Orchestration Modes
+
+- 既定の Codex 作業は linear workflow とし、通常は `main` 上で 1 つずつ Goal Bundle を進める。parallel worktree orchestration を既定にしない。
+- 利用者が `並列で進めて`、`これも並列で進めて`、`別で進めて`、`裏で進めて`、または同等の意図を明示した場合だけ parallel worktree orchestration を使う。
+- Lite orchestration は、1 repo の 1 parent thread が複数 task / Goal Bundle を順に調整する通常形であり、原則として `main` 上で進める。
+- Parallel worktree orchestration では、parent thread が orchestration owner のまま、child Codex thread を専用 worktree / task branch に分けて実行する。
+- Parent thread は、task 分割、依存順、child thread / worktree dispatch、branch 名、owned files、out-of-scope、推奨 `thinking`、done definition、local verify、shared / high-conflict file coordination、integration、final verify、docs / status / backlog / DECISIONS / spec sync、repo ルールに沿った `main` への Git sync を担う。
+- Child thread は、専用 worktree / task branch 内で owned scope に留まり、local verify と evidence 報告までを担う。parent または repo policy が明示しない限り、`main` への push / merge は行わない。
+- Branch 名は、Task ID がある場合は `codex/<task-id>-<short-slug>`、ない場合は `codex/<short-goal-slug>` を優先する。
+- `STATUS.md`、`tasks_backlog.md`、`DECISIONS.md`、release notes、central specs、lockfiles、migrations、generated manifests などの shared / high-conflict files は原則 parent-owned とし、child は明示的に割り当てられた場合だけ編集する。
+- Integration 前には、child verify が通過しているか失敗が明確に報告されていること、secret / credential / PII / raw trace / generated cache / unrelated artifact が混入していないこと、parent が diff、conflict risk、docs consistency、merge order を確認していることを条件にする。
+- 推奨 `thinking` は、status / verify / commit checks では low、通常の docs / task execution では medium、specification、safety、source boundary、public claim、legal / policy-adjacent、cross-repo responsibility、shared-file ownership、merge / release decision では high 以上を目安にする。混在 bundle は reasoning requirement ごとに分ける。
+- 長時間の parent handoff では、current goal、repos / branches / thread IDs、completed bundles、next bundle、推奨 `thinking`、pending verification、sync / capture expectations、source-of-truth docs を残す。
+
 ## Obsidian SecondBrain Capture
 ## Purpose
 
