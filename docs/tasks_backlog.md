@@ -266,10 +266,10 @@
 ## Remaining Task Triage
 
 Now:
-- 専用 automation `rm-trend-radar-lp-reflection` の復帰後初回 catch-up で、最新の GitHub Actions RSS snapshot と必要時の live `fetch-snapshot` を確認し、公開 LP 最新日より新しい記事と SideBiz JSON 未掲載の公開候補を一括で確認する
+- 専用 automation `rm-trend-radar-lp-reflection` の通常運用として、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、未反映記事から公開候補へ最大 5 件追加する
 
 Next:
-- 初回 catch-up 完了後は、source 件数、記事件数、または記事 URL 集合に変化が出た snapshot の後に、未反映記事から公開候補へ最大 5 件追加する
+- SideBiz 側の LP 用 JSON / HTML が no-op の場合は、追加反映せず監視結果だけを残す
 
 After Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める

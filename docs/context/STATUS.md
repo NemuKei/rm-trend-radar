@@ -104,10 +104,11 @@ Last Updated: 2026-06-30
 - 2026-06-30 に、海外 RM 記事の SideBiz 側 LP 反映を専用 Codex automation `rm-trend-radar-lp-reflection` へ戻す方針にした。`market-events-lp-publish` は market/event 公開 lane の監視と海外記事 JSON の鮮度報告に留め、海外記事 JSON/HTML の実更新は行わない。
 - 復帰後初回 catch-up では、公開 LP 最新日より新しい snapshot 記事と SideBiz JSON 未掲載の公開候補を一括で確認してよい。ただし公開判断、短い紹介文、公開カテゴリ、著作権/原文代替境界が曖昧な記事は掲載せず、保留理由を残す。通常運用では、1 回の新規 LP 追加は最大 5 件を目安に戻す。
 - 2026-06-30 の確認では、本番 `https://deltahelmlab.com/data/overseas_rm_articles.json` は `updated_on=2026-06-05`、79 articles である。初回 catch-up はこの状態を起点に未反映候補を確認する。ただし SideBiz 側の未追跡 `01_SNS_X/assets/article/generated/major_domestic_ota_sales_power_header.png` が残る間、catch-up 実行は blocker として止める。
+- 2026-06-30 の復帰後初回 catch-up では、GitHub Actions `Fetch RSS Snapshot` run `28316639559`（2026-06-28T08:34Z、5 sources / 128 articles、失敗 source なし）を入力にした。SideBiz JSON の最新掲載記事日 `2026-05-21` より新しい 17 件を `rm-trend-radar` のローカル DB へ確認済み公開候補として追加し、SideBiz の `overseas_rm_articles.json` / HTML を 79 articles から 96 articles へ再生成した。カテゴリ別件数は pricing_optimization 17、forecast_occupancy_controls 15、revenue_metrics_owner_view 16、ai_search_booking_behavior 15、distribution_ota_direct 8、organization_process 25 である。公開項目は引き続き 7 項目のみで、保留記事はなかった。初回 catch-up は完了済みのため、次回以降は通常運用として最大 5 件目安へ戻す。
 
 ## Next Re-entry
 
-次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、専用 automation `rm-trend-radar-lp-reflection` の実行結果を確認する。復帰後初回 catch-up が未完了なら、未反映記事を一括で確認してよい。初回 catch-up 完了後は、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
+次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、専用 automation `rm-trend-radar-lp-reflection` の実行結果を確認する。復帰後初回 catch-up は完了済みのため、次回以降は未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
 
 ### Thread Contract
 
