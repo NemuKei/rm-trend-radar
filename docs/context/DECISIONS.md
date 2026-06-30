@@ -102,3 +102,10 @@
 - 決定日: 2026-06-14
 - 決定: Codex の既定作業は `main` 上の linear workflow とし、parallel worktree orchestration は利用者が `並列で進めて`、`別で進めて`、`裏で進めて` など同等の意図を明示した場合だけ使う。詳細な運用ルールは root `AGENTS.md` の `Codex Orchestration Modes` を正とする。
 - 理由: 通常作業では 1 つの parent thread が task / Goal Bundle を順に調整するほうが、`STATUS.md`、`tasks_backlog.md`、`DECISIONS.md`、spec などの shared / high-conflict files を安全に同期しやすい。parallel worktree orchestration を使う場合も、parent thread が分割、owned files、検証、統合、`main` への Git sync を担い、child thread は専用 worktree / task branch の owned scope と local verify / evidence 報告に留める。parent または repo policy が明示しない限り、child thread は `main` へ push / merge しない。
+
+## D-20260630-017: 海外 RM 記事 LP 反映は専用 Codex automation に戻す
+
+- 決定日: 2026-06-30
+- 決定: 海外 RM 記事の SideBiz 側 LP 反映は、専用 Codex automation `rm-trend-radar-lp-reflection` が担当する。`market-events-lp-publish` は market/event 公開 lane の監視と本番海外記事 JSON の鮮度報告に寄せ、海外記事 JSON/HTML の実更新は行わない。
+- 初回復帰時: 未反映分は上限 5 件ではなく一括で確認してよい。ただし公開判断、短い紹介文、公開カテゴリ、著作権/原文代替境界が曖昧な記事は掲載せず、保留理由を実行結果に残す。
+- 理由: market/event は GitHub Actions 中心の決定論的な公開 pipeline であり、海外記事は翻訳、短い紹介文、公開候補判断を含む Codex-assisted curation である。両者を同じ automation に寄せると、market/event 側の dirty gate や stale 判定で海外記事反映まで止まりやすいため、責務を分ける。

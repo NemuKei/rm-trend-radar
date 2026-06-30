@@ -323,6 +323,10 @@ GitHub Actions の取得結果を確認した後、翻訳、短い紹介文作�
 - 1 回の実行で新規に LP へ追加する記事数の目安: 最大 5 件。判断に迷う記事は公開候補にせず、実行結果に保留理由を残す。
 - commit / push: 検証が通過した場合、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。検証失敗、公開対象外項目の混入、原文記事の代替になる長文、判断に迷う差分がある場合は commit / push しない。
 
+2026-06-30 以降、海外 RM 記事の SideBiz 側 LP 反映は専用 automation `rm-trend-radar-lp-reflection` の責務とする。`market-events-lp-publish` は market/event 公開 lane の監視と本番 `overseas_rm_articles.json` の鮮度報告に留め、海外記事 JSON/HTML の実更新は行わない。
+
+専用 automation の復帰後初回 catch-up では、公開 LP 最新日より新しい snapshot 記事と SideBiz JSON 未掲載の公開候補を一括で確認してよい。この初回 catch-up には最大 5 件の目安を適用しない。ただし公開判断、短い紹介文、公開カテゴリ、著作権または原文代替境界が曖昧な記事は掲載せず、保留理由を実行結果に残す。初回 catch-up 完了後の通常運用では、最大 5 件の目安へ戻す。
+
 Codex automation が LP 用データへ含めてよい項目は、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` に限定する。記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリスト、原文記事の代替になる長文は含めない。
 
 Codex automation の実行後は、少なくとも次を検証する。

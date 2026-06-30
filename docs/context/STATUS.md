@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-06-05
+Last Updated: 2026-06-30
 
 ## Current Task Bundle
 
@@ -101,10 +101,13 @@ Last Updated: 2026-06-05
 - 2026-05-15 の live `fetch-snapshot` でも同じ 5 source / 128 articles を確認した。LP には 5 件の未反映公開候補を追加し、`SideBiz_HotelRM` の LP 用 JSON / HTML を再生成して 65 articles から 70 articles へ増やした。追加した 5 件は、IDeaS の `How to Choose the Best Revenue Management System for Your Hotel`、RoomPriceGenie の `Revenue Intelligence Is Here: Real-Time Pricing Insights, Right Inside Your PMS`、Revfine の `How Can Connected Hotel Systems Enable Data-Driven Revenue?`、SiteMinder の `Hotel business intelligence: A practical guide for hotel owners`、Hotel Speak の `How real-time personalisation turns guest insight into revenue` である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、カテゴリ別件数は pricing_optimization 13、forecast_occupancy_controls 10、revenue_metrics_owner_view 11、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 19 である。既存 LP の `https://roompricegenie.com/hotel-revenue-estimator/` は今回の snapshot から外れたが、削除対象にはしていない。
 - 2026-05-20 の automation 実行では、2026-05-19 の GitHub Actions RSS snapshot と前回 snapshot を比較し、RoomPriceGenie の `RoomPriceGenie と RMS の対談: PMS 内で収益インテリジェンスを使う` を新規公開候補に追加した。SideBiz_HotelRM の LP 用 JSON / HTML を再生成して 75 articles から 76 articles へ増やし、カテゴリ別件数は pricing_optimization 14、forecast_occupancy_controls 10、revenue_metrics_owner_view 13、ai_search_booking_behavior 11、distribution_ota_direct 6、organization_process 22 である。LP 用 JSON は引き続き `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目のみで、保留記事はなかった。
 - `P5-06` は完了済みであり、現在は新規実装フェーズではなく、3 日に 1 回程度の RSS snapshot と LP 反映結果を監視する運用フェーズとして扱う。
+- 2026-06-30 に、海外 RM 記事の SideBiz 側 LP 反映を専用 Codex automation `rm-trend-radar-lp-reflection` へ戻す方針にした。`market-events-lp-publish` は market/event 公開 lane の監視と海外記事 JSON の鮮度報告に留め、海外記事 JSON/HTML の実更新は行わない。
+- 復帰後初回 catch-up では、公開 LP 最新日より新しい snapshot 記事と SideBiz JSON 未掲載の公開候補を一括で確認してよい。ただし公開判断、短い紹介文、公開カテゴリ、著作権/原文代替境界が曖昧な記事は掲載せず、保留理由を残す。通常運用では、1 回の新規 LP 追加は最大 5 件を目安に戻す。
+- 2026-06-30 の確認では、本番 `https://deltahelmlab.com/data/overseas_rm_articles.json` は `updated_on=2026-06-05`、79 articles である。初回 catch-up はこの状態を起点に未反映候補を確認する。ただし SideBiz 側の未追跡 `01_SNS_X/assets/article/generated/major_domestic_ota_sales_power_header.png` が残る間、catch-up 実行は blocker として止める。
 
 ## Next Re-entry
 
-次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
+次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、専用 automation `rm-trend-radar-lp-reflection` の実行結果を確認する。復帰後初回 catch-up が未完了なら、未反映記事を一括で確認してよい。初回 catch-up 完了後は、未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
 
 ### Thread Contract
 

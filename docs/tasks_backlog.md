@@ -266,10 +266,10 @@
 ## Remaining Task Triage
 
 Now:
-- 最新の GitHub Actions RSS snapshot と必要時の live `fetch-snapshot` を確認し、source 件数、記事件数、記事 URL 集合、LP 再生成結果に差分があるかを見る
+- 専用 automation `rm-trend-radar-lp-reflection` の復帰後初回 catch-up で、最新の GitHub Actions RSS snapshot と必要時の live `fetch-snapshot` を確認し、公開 LP 最新日より新しい記事と SideBiz JSON 未掲載の公開候補を一括で確認する
 
 Next:
-- source 件数、記事件数、または記事 URL 集合に変化が出た snapshot の後に、未反映記事から公開候補へ最大 5 件追加する
+- 初回 catch-up 完了後は、source 件数、記事件数、または記事 URL 集合に変化が出た snapshot の後に、未反映記事から公開候補へ最大 5 件追加する
 
 After Next:
 - X 投稿文の作成範囲と送信しない下書き運用を決める
