@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-07-04
+Last Updated: 2026-07-13
 
 ## Current Task Bundle
 
@@ -106,6 +106,9 @@ Last Updated: 2026-07-04
 - 2026-06-30 の確認では、本番 `https://deltahelmlab.com/data/overseas_rm_articles.json` は `updated_on=2026-06-05`、79 articles である。初回 catch-up はこの状態を起点に未反映候補を確認する。ただし SideBiz 側の未追跡 `01_SNS_X/assets/article/generated/major_domestic_ota_sales_power_header.png` が残る間、catch-up 実行は blocker として止める。
 - 2026-06-30 の復帰後初回 catch-up では、GitHub Actions `Fetch RSS Snapshot` run `28316639559`（2026-06-28T08:34Z、5 sources / 128 articles、失敗 source なし）を入力にした。SideBiz JSON の最新掲載記事日 `2026-05-21` より新しい 17 件を `rm-trend-radar` のローカル DB へ確認済み公開候補として追加し、SideBiz の `overseas_rm_articles.json` / HTML を 79 articles から 96 articles へ再生成した。カテゴリ別件数は pricing_optimization 17、forecast_occupancy_controls 15、revenue_metrics_owner_view 16、ai_search_booking_behavior 15、distribution_ota_direct 8、organization_process 25 である。公開項目は引き続き 7 項目のみで、保留記事はなかった。初回 catch-up は完了済みのため、次回以降は通常運用として最大 5 件目安へ戻す。
 - 2026-07-04 の通常 automation run では、GitHub Actions `Fetch RSS Snapshot` run `28506202102`（2026-07-01T09:04Z、5 sources / 128 articles、失敗 source なし）を入力にした。2026-07-04 08:15 JST 時点では当日 14:37 JST の scheduled run 前だったため、2026-07-01 run を最新 snapshot として扱った。未反映記事から最大 5 件の目安に従い、RoomPriceGenie 4 件、Revfine 1 件を確認済み公開候補として反映し、SideBiz の `overseas_rm_articles.json` / HTML を 96 articles から 101 articles へ再生成した。カテゴリ別件数は pricing_optimization 19、forecast_occupancy_controls 15、revenue_metrics_owner_view 17、ai_search_booking_behavior 16、distribution_ota_direct 8、organization_process 26 である。公開項目は引き続き 7 項目のみである。
+- 2026-07-13 の通常 automation run では、GitHub Actions `Fetch RSS Snapshot` run `29081034122`（2026-07-10T08:50Z、5 sources / 128 articles、失敗 source なし）を入力にした。SideBiz の LP 用 JSON / HTML は、Revfine の新規記事 1 件追加と、同カテゴリの既存記事 1 件の公開日更新により 102 articles から 103 articles へ再生成した。カテゴリ別件数は pricing_optimization 19、forecast_occupancy_controls 15、revenue_metrics_owner_view 17、ai_search_booking_behavior 16、distribution_ota_direct 8、organization_process 28 である。公開項目は引き続き 7 項目のみである。
+- 2026-07-09 の IDeaS `How Global Recharge Days Help Power Our People` は、従業員の休養・社内ウェルビーイング施策が中心で、ホテル RM / 宿泊運営との関連が弱いため保留とした。原文代替にならない短い紹介の契約を満たす候補として無理に追加していない。
+- 2026-07-13 の検証では、`compileall`、`pytest tests` 30 passed、SideBiz script の `py_compile`、LP 用 JSON / HTML 契約、ローカル HTTP 200 と Playwright DOM 表示、`git diff --check` を確認した。
 
 ## Next Re-entry
 
