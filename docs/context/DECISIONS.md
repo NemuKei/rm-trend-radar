@@ -109,3 +109,11 @@
 - 決定: 海外 RM 記事の SideBiz 側 LP 反映は、専用 Codex automation `rm-trend-radar-lp-reflection` が担当する。`market-events-lp-publish` は market/event 公開 lane の監視と本番海外記事 JSON の鮮度報告に寄せ、海外記事 JSON/HTML の実更新は行わない。
 - 初回復帰時: 未反映分は上限 5 件ではなく一括で確認してよい。ただし公開判断、短い紹介文、公開カテゴリ、著作権/原文代替境界が曖昧な記事は掲載せず、保留理由を実行結果に残す。
 - 理由: market/event は GitHub Actions 中心の決定論的な公開 pipeline であり、海外記事は翻訳、短い紹介文、公開候補判断を含む Codex-assisted curation である。両者を同じ automation に寄せると、market/event 側の dirty gate や stale 判定で海外記事反映まで止まりやすいため、責務を分ける。
+
+## D-20260806-018: root AGENTS を catalog profile の薄い入口へ更新する
+
+- 決定日: 2026-08-06
+- 決定: root `AGENTS.md` は `repo-template-codex@8877297d` の `solo-product` を基礎に、`data-contract-and-migration`、`architecture-and-dependencies`、`second-brain-capture` を採用する。user-scope global policy と同じ戦略、autonomy、collaboration、Git closeout rule は複製せず、この repo 固有の目的、正本、取得・著作権・公開境界、data contract、検証入口だけを保持する。
+- `D-20260614-016` の扱い: `main` 上の linear workflow を既定とし、parallel worktree orchestration は利用者の明示時だけ使う判断は維持する。root `AGENTS.md`にはこのtriggerだけを残し、parent / childの詳細手順やmodel routingは固定文面として複製せず、実行時のuser-scope policyとtool contractへ従う。
+- SecondBrain: repo内正本だけで閉じるroutine taskでは検索せず、vaultへのwriteは利用者が明示した場合だけ行う。従来のroutineな`capture-needed`判定は廃止する。
+- 理由: 推論modelや共通policyの更新時に再評価する共通部分と、記事収集・保存・公開分離という長期に残るrepo固有境界を分けるため。rootを短くすることで初期context負荷とrule重複を減らしつつ、戦略的なproduct / data判断の基準を維持する。
