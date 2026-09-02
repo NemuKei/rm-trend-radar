@@ -57,8 +57,10 @@ optional docsは存在するだけで毎回全文を読まない。sourceが衝�
 
 - docs-onlyでは`git diff --check`、参照path、BOM、secret / credential / PII marker、`git status --short --branch`を確認する。
 - implementation変更では、影響に応じて次を実行する。
+  - macOS: `.venv/bin/python -m compileall src app.py`
+  - macOS: `.venv/bin/python -m pytest tests -q -p no:cacheprovider --basetemp=<run-specific-dir>`
   - `.venv\Scripts\python.exe -m compileall src app.py`
   - `.venv\Scripts\python.exe -m pytest tests -q -p no:cacheprovider --basetemp=<run-specific-dir>`
-  - UI変更時は`.venv\Scripts\python.exe -m streamlit run app.py --server.headless=true --server.port=<port> --browser.gatherUsageStats=false`を一時起動し、HTTP 200と対象flowを確認する。
+  - UI変更時は対象OSの同じPythonで`-m streamlit run app.py --server.headless=true --server.port=<port> --browser.gatherUsageStats=false`を一時起動し、HTTP 200と対象flowを確認する。
 - 外部sourceのlive取得、SideBiz連携、automationは、taskが明示的に対象とする場合だけ個別のnetwork / cross-repo checkを追加する。
 - 完了時は、変更、実行済み・未実行の検証、GUI確認要否、data / copyright / publication境界、SideBizへの`sync-needed`、残存riskを報告する。

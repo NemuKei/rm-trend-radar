@@ -21,6 +21,17 @@
 
 ## セットアップ
 
+macOS:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m rm_trend_radar
+```
+
+Windows:
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
@@ -30,6 +41,14 @@ python -m venv .venv
 
 ## 起動
 
+macOS:
+
+```bash
+.venv/bin/python -m streamlit run app.py
+```
+
+Windows:
+
 ```powershell
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
@@ -37,6 +56,17 @@ python -m venv .venv
 ブラウザで Streamlit が表示するローカル URL を開きます。通常は `http://localhost:8501` です。
 
 ## Verification
+
+macOS:
+
+```bash
+.venv/bin/python -m compileall src app.py
+.venv/bin/python -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
+.venv/bin/python -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
+git diff --check
+```
+
+Windows:
 
 ```powershell
 # `git worktree` で `.venv` がない checkout でも同じ手順を使えるように、
@@ -77,7 +107,7 @@ headless smoke check では、別ターミナルから `http://127.0.0.1:8511` �
 
 GitHub Actions で記事取得を定期実行する場合は、`.github/workflows/fetch-rss-snapshot.yml` を使います。この workflow は 3 日に 1 回程度、14:37 JST に RSS のメタデータだけを取得し、`rss_snapshot.json` を artifact として保存します。private repository のまま実行できますが、private repository の GitHub Actions 利用枠を使います。
 
-翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートは Codex アプリ automation `rm-trend-radar-lp-reflection` が担当します。この automation は 3 日に 1 回程度、15:10 JST に実行します。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push します。
+翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートは Codex アプリ automation `rm-trend-radar-lp-reflection` が担当します。この automation は macOS の Codex デスクトップアプリで 3 日に 1 回程度、15:10 JST に実行します。ローカルファイルを使うため、実行時は Mac の電源を入れ、アプリを起動しておく必要があります。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push します。
 
 ローカル Windows で記事取得だけを定期実行する場合は、次を実行して Windows タスクスケジューラに登録できます。クラウド実行を使う場合、このローカル登録は必須ではありません。
 

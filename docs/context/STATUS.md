@@ -1,6 +1,6 @@
 # STATUS
 
-Last Updated: 2026-07-20
+Last Updated: 2026-09-02
 
 ## Current Task Bundle
 
@@ -110,10 +110,12 @@ Last Updated: 2026-07-20
 - 2026-07-20 の通常 automation run では、GitHub Actions `Fetch RSS Snapshot` run `29678685869`（2026-07-19T07:47Z、5 sources / 128 articles、失敗 source なし）と直前 run `29480533801` を比較した。URL 集合に新規差分はなく、新規 LP 追加は 0 件。既存の Revfine `https://www.revfine.com/how-hotel-leaders-can-protect-goppar-in-a-high-cost-market/` の公開日だけを `2026-06-29` から `2026-07-15` へ更新し、SideBiz の JSON / HTML は 103 articles のまま `updated_on=2026-07-20` へ再生成した。カテゴリ別件数は pricing_optimization 19、forecast_occupancy_controls 15、revenue_metrics_owner_view 17、ai_search_booking_behavior 16、distribution_ota_direct 8、organization_process 28 である。snapshot にある LP 未反映 49 件は `review_status=unreviewed` かつ `public_candidate=false` のため保留し、公開項目は引き続き 7 項目のみである。
 - 2026-07-09 の IDeaS `How Global Recharge Days Help Power Our People` は、従業員の休養・社内ウェルビーイング施策が中心で、ホテル RM / 宿泊運営との関連が弱いため保留とした。原文代替にならない短い紹介の契約を満たす候補として無理に追加していない。
 - 2026-07-20 の検証では、`compileall`、`pytest tests` 30 passed、SideBiz script の `py_compile`、LP 用 JSON / HTML 契約、ローカル HTTP 200 と Chrome DOM 表示、`git diff --check` を確認した。
+- 2026-09-02 に、Codex automation `rm-trend-radar-lp-reflection` を同じ ID のまま macOS の Codex デスクトップアプリへ移設した。起点は保存済みの `SideBiz_HotelRM` project、併用 repo は `/Users/nakamurakeiichi/Developer/rm-trend-radar`、execution environment は `local`、model / reasoning effort は `gpt-5.6-luna` / `high` である。automation file と Codex の SQLite の双方で `ACTIVE` を確認し、次回実行は 2026-09-04 15:10:45 JST である。ローカル実行のため、実行時は Mac の電源と Codex アプリの起動が必要である。
+- 2026-09-02 の移設確認では、最新の成功した GitHub Actions `Fetch RSS Snapshot` run `33497251802`（2026-09-01T10:24Z、5 sources / 128 articles、失敗 source なし）を確認した。SideBiz の現行 131 articles を入力にした生成 smoke は JSON、HTML、`content_freshness.json` のすべてで byte-identical の no-op となったため、公開記事や更新日を追加変更していない。
 
 ## Next Re-entry
 
-次スレッドは、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ、専用 automation `rm-trend-radar-lp-reflection` の実行結果を確認する。復帰後初回 catch-up は完了済みのため、次回以降は未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
+次スレッドは、macOS で稼働する専用 automation `rm-trend-radar-lp-reflection` の実行結果を、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ確認する。復帰後初回 catch-up は完了済みのため、次回以降は未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
 
 ### Thread Contract
 

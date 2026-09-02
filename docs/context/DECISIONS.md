@@ -117,3 +117,11 @@
 - `D-20260614-016` の扱い: `main` 上の linear workflow を既定とし、parallel worktree orchestration は利用者の明示時だけ使う判断は維持する。root `AGENTS.md`にはこのtriggerだけを残し、parent / childの詳細手順やmodel routingは固定文面として複製せず、実行時のuser-scope policyとtool contractへ従う。
 - SecondBrain: repo内正本だけで閉じるroutine taskでは検索せず、vaultへのwriteは利用者が明示した場合だけ行う。従来のroutineな`capture-needed`判定は廃止する。
 - 理由: 推論modelや共通policyの更新時に再評価する共通部分と、記事収集・保存・公開分離という長期に残るrepo固有境界を分けるため。rootを短くすることで初期context負荷とrule重複を減らしつつ、戦略的なproduct / data判断の基準を維持する。
+
+## D-20260902-019: LP reflection automation を macOS の既存 checkout へ移設する
+
+- 決定日: 2026-09-02
+- 決定: `rm-trend-radar-lp-reflection` は同じ automation ID を維持したまま、macOS の Codex デスクトップアプリで `SideBiz_HotelRM` project を起点に実行する。収集確認 repo は同じ Mac の `/Users/nakamurakeiichi/Developer/rm-trend-radar` を明示参照し、旧 Windows path を実行対象から外す。Mac用の重複 automation は作らない。
+- 実行方式: 2つの既存 checkout を扱うため `local` を使い、対象ファイルと競合する未 commit 差分がある場合は停止する。公開データに意味のある差分がない場合は更新日だけを進めず、commit / push しない。
+- model: 退役済みの `gpt-5.4-mini` から公式後継の `gpt-5.6-luna` へ更新し、reasoning effort は `high` を維持する。
+- 理由: Windows側のローカルautomationに依存したままでは、Macを日常端末にした後の定期反映が止まる。取得自体はGitHub Actionsで継続できているため、公開判断とSideBiz反映を行う既存責務だけをMacへ移し、automationの二重実行と公開データ競合を避ける。

@@ -315,13 +315,17 @@ GitHub Actions の取得結果を確認した後、翻訳、短い紹介文作�
 
 - automation ID: `rm-trend-radar-lp-reflection`
 - schedule: 3 日に 1 回程度、15:10 JST。
-- 対象 workspace:
-  - `C:\Users\n-kei\dev\github\rm-trend-radar`
-  - `C:\Users\n-kei\dev\SideBiz_HotelRM`
+- 実行 host: macOS の Codex デスクトップアプリ。ローカルファイルを使うため、実行時は Mac の電源が入り、アプリが起動しており、対象 checkout が同じ path に存在することを前提にする。
+- 対象 project: `/Users/nakamurakeiichi/Developer/SideBiz_HotelRM`。公開ファイルを所有する SideBiz の保存済み project を automation の起点にする。
+- 併用する収集確認 repo: `/Users/nakamurakeiichi/Developer/rm-trend-radar`。同じ automation prompt から明示 path で参照する。
+- execution environment: `local`。1つの automation ID で2つの既存 checkout を更新し、実行前に両 repo の dirty / tracking 状態を確認する。対象ファイルと競合する未 commit 差分がある場合は変更せず停止する。
+- model / reasoning effort: `gpt-5.6-luna` / `high`。旧 `gpt-5.4-mini` は 2026-08-31 の退役後に使わない。
+- migration: 同じ automation ID を更新し、旧 Windows path を実行対象から外す。Mac用の重複 automation は作成しない。
 - 入力: GitHub Actions の RSS snapshot、または `rm-trend-radar` のローカル SQLite に保存された取得済みメタデータ。
 - 出力: `SideBiz_HotelRM` の `02_Service\web_lp\data\overseas_rm_articles.json` と `02_Service\web_lp\overseas_rm_articles.html`。
 - 1 回の実行で新規に LP へ追加する記事数の目安: 最大 5 件。判断に迷う記事は公開候補にせず、実行結果に保留理由を残す。
 - commit / push: 検証が通過した場合、変更がある repository ごとに commit し、現在の追跡先 branch へ push する。検証失敗、公開対象外項目の混入、原文記事の代替になる長文、判断に迷う差分がある場合は commit / push しない。
+- no-op: snapshot の source 件数、記事件数、記事 URL 集合、または既存公開データに意味のある差分がない場合は、公開ファイルの日付だけを進めず、commit / push しない。
 
 2026-06-30 以降、海外 RM 記事の SideBiz 側 LP 反映は専用 automation `rm-trend-radar-lp-reflection` の責務とする。`market-events-lp-publish` は market/event 公開 lane の監視と本番 `overseas_rm_articles.json` の鮮度報告に留め、海外記事 JSON/HTML の実更新は行わない。
 
@@ -331,9 +335,12 @@ Codex automation が LP 用データへ含めてよい項目は、`public_catego
 
 Codex automation の実行後は、少なくとも次を検証する。
 
-- `rm-trend-radar`: `.venv\Scripts\python.exe -m compileall src app.py`
-- `rm-trend-radar`: `.venv\Scripts\python.exe -m pytest tests -p no:cacheprovider --basetemp=<run-specific-dir>`
-- `SideBiz_HotelRM`: `02_Service\web_lp\scripts\refresh_overseas_rm_articles.py` の `py_compile`
+- `rm-trend-radar` macOS: `.venv/bin/python -m compileall src app.py`
+- `rm-trend-radar` macOS: `.venv/bin/python -m pytest tests -q -p no:cacheprovider --basetemp=<run-specific-dir>`
+- `rm-trend-radar` Windows: `.venv\Scripts\python.exe -m compileall src app.py`
+- `rm-trend-radar` Windows: `.venv\Scripts\python.exe -m pytest tests -q -p no:cacheprovider --basetemp=<run-specific-dir>`
+- `SideBiz_HotelRM` macOS: `python3 -m py_compile 02_Service/web_lp/scripts/refresh_overseas_rm_articles.py`
+- `SideBiz_HotelRM` Windows: `python -m py_compile 02_Service\web_lp\scripts\refresh_overseas_rm_articles.py`
 - `SideBiz_HotelRM`: `data\overseas_rm_articles.json` に許可項目以外が含まれていないこと
 - `SideBiz_HotelRM`: `overseas_rm_articles.html` の記事件数、カテゴリ件数、日本語タイトル一覧の折りたたみ件数
 - 両 repository: `git diff --check`
