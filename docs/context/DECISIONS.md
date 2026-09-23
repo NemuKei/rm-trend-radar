@@ -109,6 +109,7 @@
 - 決定: 海外 RM 記事の SideBiz 側 LP 反映は、専用 Codex automation `rm-trend-radar-lp-reflection` が担当する。`market-events-lp-publish` は market/event 公開 lane の監視と本番海外記事 JSON の鮮度報告に寄せ、海外記事 JSON/HTML の実更新は行わない。
 - 初回復帰時: 未反映分は上限 5 件ではなく一括で確認してよい。ただし公開判断、短い紹介文、公開カテゴリ、著作権/原文代替境界が曖昧な記事は掲載せず、保留理由を実行結果に残す。
 - 理由: market/event は GitHub Actions 中心の決定論的な公開 pipeline であり、海外記事は翻訳、短い紹介文、公開候補判断を含む Codex-assisted curation である。両者を同じ automation に寄せると、market/event 側の dirty gate や stale 判定で海外記事反映まで止まりやすいため、責務を分ける。
+- 後続決定: SideBiz 側 LP への直接反映を automation が担う部分は、`D-20260923-020` により置き換えた。専用 automation による記事判断は継続する。
 
 ## D-20260806-018: root AGENTS を catalog profile の薄い入口へ更新する
 
@@ -125,3 +126,12 @@
 - 実行方式: 2つの既存 checkout を扱うため `local` を使い、対象ファイルと競合する未 commit 差分がある場合は停止する。公開データに意味のある差分がない場合は更新日だけを進めず、commit / push しない。
 - model: 退役済みの `gpt-5.4-mini` から公式後継の `gpt-5.6-luna` へ更新し、reasoning effort は `high` を維持する。
 - 理由: Windows側のローカルautomationに依存したままでは、Macを日常端末にした後の定期反映が止まる。取得自体はGitHub Actionsで継続できているため、公開判断とSideBiz反映を行う既存責務だけをMacへ移し、automationの二重実行と公開データ競合を避ける。
+- 後続決定: SideBiz を起点に 2 repo を書き換える方式は、`D-20260923-020` により置き換えた。Mac での local 実行は継続する。
+
+## D-20260923-020: 公開 export を SideBiz への受け渡し正本にする
+
+- 決定日: 2026-09-23
+- 決定: `exports/public_rm_articles.json` を公開記事の受け渡し正本とする。Codex アプリ automation `rm-trend-radar-lp-reflection` は `rm-trend-radar` のこのファイルだけを更新し、SideBiz のファイルには触れない。SideBiz は GitHub Actions が読み取り専用 PAT で export を pull し、公開用 JSON / HTML に反映する。
+- 実行方式: Codex Cloud には定期実行がないため、利用者の MacBook Pro 上の Codex アプリで local automation として実行する。model は `gpt-6-luna` とする。
+- 置き換える範囲: `D-20260902-019` と `D-20260630-017` のうち、automation が SideBiz のファイルを直接書き換える部分を置き換える。
+- 理由: 記事の判断と公開面への反映を repo ごとの責務に分け、automation の書き込み先を 1 ファイルに限定するため。

@@ -62,6 +62,7 @@ macOS:
 ```bash
 .venv/bin/python -m compileall src app.py
 .venv/bin/python -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
+.venv/bin/python -m rm_trend_radar validate-public-export exports/public_rm_articles.json
 .venv/bin/python -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
 git diff --check
 ```
@@ -88,6 +89,9 @@ if (-not $pythonExe) {
 # automated test suite
 & $pythonExe -m pytest tests -q -p no:cacheprovider --basetemp=.pytest_basetemp_verifypattern
 
+# 公開記事 export の契約確認
+& $pythonExe -m rm_trend_radar validate-public-export exports/public_rm_articles.json
+
 # headless app smoke check: HTTP 200 を確認したら停止する
 & $pythonExe -m streamlit run app.py --server.headless=true --server.port=8511 --browser.gatherUsageStats=false
 
@@ -107,7 +111,7 @@ headless smoke check では、別ターミナルから `http://127.0.0.1:8511` �
 
 GitHub Actions で記事取得を定期実行する場合は、`.github/workflows/fetch-rss-snapshot.yml` を使います。この workflow は 3 日に 1 回程度、14:37 JST に RSS のメタデータだけを取得し、`rss_snapshot.json` を artifact として保存します。private repository のまま実行できますが、private repository の GitHub Actions 利用枠を使います。
 
-翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートは Codex アプリ automation `rm-trend-radar-lp-reflection` が担当します。この automation は macOS の Codex デスクトップアプリで 3 日に 1 回程度、15:10 JST に実行します。ローカルファイルを使うため、実行時は Mac の電源を入れ、アプリを起動しておく必要があります。検証が通過した場合は、変更がある repository ごとに commit し、現在の追跡先 branch へ push します。
+切り替え後の Codex アプリ automation `rm-trend-radar-lp-reflection` は、翻訳、短い紹介文作成、公開カテゴリ付与を行い、`exports/public_rm_articles.json` だけを更新します。MacBook Pro の Codex アプリで local 実行し、記事が 0 件でも実行日時を更新します。export の検証が通過した場合は、このファイルだけを commit / push します。SideBiz の記事一覧への反映は、SideBiz Actions が export を pull して行います。
 
 ローカル Windows で記事取得だけを定期実行する場合は、次を実行して Windows タスクスケジューラに登録できます。クラウド実行を使う場合、このローカル登録は必須ではありません。
 
@@ -117,7 +121,7 @@ GitHub Actions で記事取得を定期実行する場合は、`.github/workflow
 
 ローカル Windows の定期実行は RSS item の取得と SQLite への upsert だけを行います。日本語要約、重要度、公開候補フラグ、副業リポ側 LP のファイルは更新しません。実行ログは `logs/` に出力され、このディレクトリは Git 管理外です。
 
-GitHub Actions の snapshot 取得は、SQLite を更新しません。取得結果は `artifacts/rss_snapshot.json` に出力され、GitHub Actions artifact として確認します。副業リポ側 LP への自動反映は、Codex アプリ automation が短い記事一覧データだけを対象に実行します。
+GitHub Actions の snapshot 取得は、SQLite を更新しません。取得結果は `artifacts/rss_snapshot.json` に出力され、GitHub Actions artifact として確認します。公開記事 export は `validate_public_export.yml` で検証し、`watch_export_freshness.yml` で実行日時の鮮度を監視します。SideBiz 側の `sync_overseas_rm_articles.yml` が毎日 export を取り込みます。
 
 ## 現在の実装範囲
 

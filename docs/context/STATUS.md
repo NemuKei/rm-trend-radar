@@ -1,16 +1,15 @@
 # STATUS
 
-Last Updated: 2026-09-02
+Last Updated: 2026-09-23
 
 ## Current Task Bundle
 
-- 主対象: GitHub Actions RSS snapshot と Codex automation の運用結果を監視し、差分が出たときだけ副業リポ側 LP の短い記事一覧データ更新を確認する
+- 主対象: 公開記事の受け渡しを `exports/public_rm_articles.json` に切り替え、SideBiz Actions が取り込む運用へ移す
 - この bundle で扱う範囲:
-  - 最新の GitHub Actions RSS snapshot について、source 件数、記事件数、記事 URL 集合、失敗 source の有無を確認する
-  - 差分が出た場合だけ、Codex アプリ automation の LP 反映結果、カテゴリ別件数、許可 7 項目制約、保留記事の有無を確認する
-  - 差分が出ない場合は、LP 再生成が no-op であることを確認し、監視結果だけを記録する
+  - Codex アプリ automation の書き込み先を公開 export の 1 ファイルに限定し、1 回の新規追加を最大 5 件にする
+  - 新規 0 件でも `run_at_utc` を更新し、export の検証と 7 日の鮮度監視を行う
+  - SideBiz Actions の日次 pull と、公開用 JSON / HTML への反映結果を確認する
 - この bundle で扱わないこと:
-  - 新しい自動化経路の追加
   - AI API 実装そのもの
   - AI 候補生成の仕様確定
   - 記事本文全文の保存
@@ -112,16 +111,17 @@ Last Updated: 2026-09-02
 - 2026-07-20 の検証では、`compileall`、`pytest tests` 30 passed、SideBiz script の `py_compile`、LP 用 JSON / HTML 契約、ローカル HTTP 200 と Chrome DOM 表示、`git diff --check` を確認した。
 - 2026-09-02 に、Codex automation `rm-trend-radar-lp-reflection` を同じ ID のまま macOS の Codex デスクトップアプリへ移設した。起点は保存済みの `SideBiz_HotelRM` project、併用 repo は `/Users/nakamurakeiichi/Developer/rm-trend-radar`、execution environment は `local`、model / reasoning effort は `gpt-5.6-luna` / `high` である。automation file と Codex の SQLite の双方で `ACTIVE` を確認し、次回実行は 2026-09-04 15:10:45 JST である。ローカル実行のため、実行時は Mac の電源と Codex アプリの起動が必要である。
 - 2026-09-02 の移設確認では、最新の成功した GitHub Actions `Fetch RSS Snapshot` run `33497251802`（2026-09-01T10:24Z、5 sources / 128 articles、失敗 source なし）を確認した。SideBiz の現行 131 articles を入力にした生成 smoke は JSON、HTML、`content_freshness.json` のすべてで byte-identical の no-op となったため、公開記事や更新日を追加変更していない。
+- 2026-09-23 に公開記事の受け渡しを `exports/public_rm_articles.json` へ変更する方針を決めた。初期 export、`validate-public-export` CLI、export 検証 workflow、7 日の鮮度監視 workflow は Task 8 で commit 済み。SideBiz の日次 pull workflow と Codex アプリ automation の切り替えは未完了である。
 
 ## Next Re-entry
 
-次スレッドは、macOS で稼働する専用 automation `rm-trend-radar-lp-reflection` の実行結果を、GitHub Actions RSS snapshot の source 件数、記事件数、または記事 URL 集合に変化が出たときだけ確認する。復帰後初回 catch-up は完了済みのため、次回以降は未反映記事のうち公開候補にしてよい記事を最大 5 件まで追加し、同じ手順で LP 用データ更新を行う。件数差分がなく、`refresh_overseas_rm_articles.py` が no-op の場合は、追加反映を行わず監視結果だけを確認する。
+次スレッドは、Task 10 の SideBiz 日次取込 workflow を確認し、利用者による読み取り専用 PAT の発行と SideBiz secret `RTR_READ_TOKEN` の登録、Codex アプリでの旧 automation 停止と新しい RTR 限定 automation への切り替えを待つ。切り替え後は、export の `run_at_utc`、7 項目の検証、最大 5 件の追加、SideBiz 取込結果をそれぞれ確認する。
 
 ### Thread Contract
 
 - 今回の種別: `mainline-task`
-- 主対象: GitHub Actions RSS snapshot と Codex automation の運用監視を行い、差分が出たときだけ LP 反映結果を確認する
-- bundle に含める Task ID: なし。`P5-06` は完了済みのため、以後は運用監視として扱う
+- 主対象: 公開 export を境界とする automation と SideBiz 取込の切り替え、検証
+- bundle に含める Task ID: 自動化再構成計画 Task 9 以降
 - 最初に読む正本:
   - `AGENTS.md`
   - `docs/context/STATUS.md`
@@ -133,9 +133,9 @@ Last Updated: 2026-09-02
   1. `docs/context/INTENT.md` の判断原則を確認する。
   2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy`、公開カテゴリ定義、`Side Business LP Initial Listing Contract` を確認する。
   3. `docs/spec_001_sources.md` の `GitHub Actions Scheduled Snapshot` と `Codex App LP Reflection Automation` を確認する。
-  4. 最新の GitHub Actions `Fetch RSS Snapshot` 実行結果と、必要なら live `fetch-snapshot` の再確認結果を確認する。
-  5. source 件数、記事件数、記事 URL 集合、SideBiz 側の JSON / HTML diff 有無、カテゴリ別件数、折りたたみ件数を確認する。
-  6. LP 用 JSON に、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` 以外の項目が含まれないことを確認する。
+  4. `exports/public_rm_articles.json` と `validate-public-export` の結果を確認する。
+  5. SideBiz の `sync_overseas_rm_articles.yml` 実装、読み取り専用 PAT と secret `RTR_READ_TOKEN` の登録状態を確認する。
+  6. 旧 automation の停止、新 automation の RTR 限定設定、SideBiz 側の JSON / HTML 取込結果を確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
   - 記事本文全文を転載しない。
@@ -147,10 +147,11 @@ Last Updated: 2026-09-02
   - AI API 実装は、入力データ、保存する出力、保存しないデータを文書化してから始める。
 - 終了条件:
   - GitHub Actions が 3 日に 1 回程度で RSS snapshot を作る。
-  - Codex automation が 3 日に 1 回程度、15:10 JST に実行される。
-  - 副業リポ側 LP の記事一覧データが、`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` だけで更新される。
+  - Codex automation が MacBook Pro 上で `gpt-6-luna` を使い、RTR の export だけを更新する。
+  - 新規 0 件でも `run_at_utc` を更新し、7 日超の停止を監視できる。
+  - SideBiz Actions が読み取り専用 PAT で export を日次 pull し、7 項目だけで記事一覧を更新する。
   - LP 自動更新対象に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
-  - 検証が通過した場合は、変更がある repository ごとに commit / push され、commit hash と push 先 branch が報告される。
+  - 検証が通過した場合は、automation が RTR の export だけを commit / push し、SideBiz 側の反映は Actions で確認する。
 - subagent 利用方針:
   - 委譲してよい作業: LP データ更新先の調査、既存 LP 表示構造の確認、日本語タイトル一覧の表示制限実装。
   - 委譲してはいけない作業: 仕様確定前の AI API 実装、記事本文全文保存、長文解説の自動公開、X 投稿またはメルマガ送信。

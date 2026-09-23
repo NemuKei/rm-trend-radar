@@ -243,11 +243,11 @@ ChatGPT Pro などの大規模言語モデルから、海外記事の解説と�
 
 公開 LP と X は、記事の存在、論点、読む理由を知らせる導線として扱う。詳細な内容理解は、原文サイトで行う。利用者は必要に応じてブラウザの翻訳機能を使って原文サイトを読む。
 
-初期実装では、`public_candidate` を保存し、画面で絞り込めるところまでを扱った。2026-05-11 以降の自動化では、公開 LP に出す情報量を限定したうえで、副業リポ側 LP の記事一覧データ更新までを自動化してよい。記事取得は GitHub Actions の RSS snapshot が担当し、翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映、検証レポートは Codex アプリ automation が担当する。X 投稿文の作成、X への投稿または予約投稿は後続タスクとする。
+初期実装では、`public_candidate` を保存し、画面で絞り込めるところまでを扱った。記事取得は GitHub Actions の RSS snapshot が担当する。Codex アプリ automation `rm-trend-radar-lp-reflection` は、新着記事の判断、日本語タイトル・短い紹介文・公開カテゴリの作成と `exports/public_rm_articles.json` の更新までを担当する。副業リポ側 LP への反映は SideBiz Actions が担当する。X 投稿文の作成、X への投稿または予約投稿は後続タスクとする。
 
 自動化で公開 LP に出してよい項目は、日本語タイトル、原文記事の代替にならない短い紹介、取得元、公開日、原文 URL、公開カテゴリに限定する。記事本文全文、原文記事の構成を再現する長文要約、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストは、LP の自動更新対象にしない。
 
-定期取得で追加された記事を自動的に `public_candidate = 1` にする場合は、公開 LP に出す文章が短い紹介に限定され、原文 URL が必ず表示され、記事本文全文または RSS `content:encoded` を保存、転載、再構成していないことを検証条件にする。初期運用では、1 回の Codex automation で新規に LP へ追加する記事数は最大 5 件を目安にし、判断に迷う記事は公開候補にせず保留理由を実行結果に残す。詳細な重要度、業務上の示唆、独自解説の最終判断は、引き続き人間が必要に応じて確認する。
+定期取得で追加された記事を自動的に公開 export へ追加する場合は、公開 LP に出す文章が短い紹介に限定され、原文 URL が必ず表示され、記事本文全文または RSS `content:encoded` を保存、転載、再構成していないことを検証条件にする。1 回の Codex automation で export へ新規追加する記事は最大 5 件とし、判断に迷う記事は追加せず保留理由を実行結果に残す。詳細な重要度、業務上の示唆、独自解説の最終判断は、引き続き人間が必要に応じて確認する。
 
 ## Side Business LP Initial Listing Contract
 
@@ -286,11 +286,19 @@ type OverseasRmArticle = {
 };
 ```
 
-副業リポ側の初期実装では、上記のデータを静的配列として LP のコード内または LP が既に使っているローカルデータファイルに置いてよい。2026-05-11 以降の自動化では、`rm-trend-radar` から副業リポ側 LP の記事一覧データを更新してよい。ただし、自動更新対象は上記の `OverseasRmArticle` 型に含まれる項目に限定し、長い公開用コンテンツ、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストは副業リポ側 LP の自動更新へ渡さない。
+副業リポ側の初期実装では、上記のデータを静的配列として LP のコード内または LP が既に使っているローカルデータファイルに置いてよい。新しい自動更新経路では、`rm-trend-radar` の公開 export を SideBiz Actions が取り込む。公開面へ渡す記事データは上記の `OverseasRmArticle` 型の 7 項目に限定し、長い公開用コンテンツ、自分用要約、手動メモ、SNS 投稿案、メルマガ用リード文、社内共有用 3 行要約、支配人・現場向けチェックリストは渡さない。
 
 自動更新の初期頻度は、3 日に 1 回程度とする。毎日実行は、取得対象サイトの更新頻度に対して過剰であり、確認または修正が必要な差分を増やしやすい。週 1 回では新着記事の反映が遅くなるため、初期値は 3 日に 1 回程度とする。GitHub Actions の RSS snapshot は 14:37 JST 相当で実行し、Codex アプリ automation は取得後の確認時間を少し置いて 15:10 JST に実行する。
 
 GitHub Actions の cron で `*/3` 日指定を使う場合、月末から月初にかけて実行間隔が厳密な 72 時間にならない場合がある。この仕様でいう「3 日に 1 回程度」は、厳密な 72 時間周期ではなく、月内でおおむね 3 日間隔で実行する運用を指す。
+
+### Automation Public Export
+
+`exports/public_rm_articles.json` は公開記事の受け渡しファイルであり、Codex アプリ automation がこの repo 内で書き込む唯一のファイルである。最上位は `schema_version`（`1`）、`run_at_utc`（UTC の実行日時）、`automation_id`（`rm-trend-radar-lp-reflection`）、`source_repo`（`rm-trend-radar`）、`articles`（配列）を持つ。新規記事が 0 件でも `run_at_utc` を更新する。各記事は `public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url` の 7 項目だけを持つ。
+
+`python -m rm_trend_radar validate-public-export exports/public_rm_articles.json` で、7 項目以外の混入、空欄、`title_ja` の 80 字超、`summary_ja` の 160 字超、`public_category.py` に定義されたカテゴリと表示ラベルの不一致、https 以外の URL、URL の重複、`published_date` の `YYYY-MM-DD` 形式違反を検出する。export 更新時は `validate_public_export.yml` が検証し、`watch_export_freshness.yml` は `run_at_utc` が 7 日を超えて古い場合に失敗する。
+
+SideBiz Actions の `sync_overseas_rm_articles.yml` は毎日、読み取り専用 PAT を secret `RTR_READ_TOKEN` として使い、この repo の export を pull して副業リポ側の記事一覧へ反映する。Codex automation は SideBiz のファイルを更新しない。
 
 副業リポ側の初期実装例は、次の Markdown 構造に相当する。
 
