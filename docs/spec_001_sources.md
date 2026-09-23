@@ -258,7 +258,7 @@ RSS 取得直後の記事は、手動確認または将来の自動処理の前�
 
 ### GitHub Actions Scheduled Snapshot
 
-定期取得の主経路は GitHub Actions とする。GitHub Actions は private repository のまま利用できる。公開 repository に変更する必要はない。ただし、private repository で GitHub-hosted runner を使う場合は、GitHub Actions の利用枠または課金条件の対象になる。
+定期取得の主経路は GitHub Actions とする。2026-09-23 に repository を public にした（`D-20260923-021`）。workflow log と `rss-snapshot` artifact は公開されるため、snapshot には英語 title、URL、公開日などの metadata だけを含め、RSS description や本文を含めない。
 
 GitHub Actions workflow は `.github/workflows/fetch-rss-snapshot.yml` に置く。実行条件は次の通りである。
 

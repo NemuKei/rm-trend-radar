@@ -34,7 +34,7 @@ optional docsは存在するだけで毎回全文を読まない。sourceが衝�
 - app本体はPython、Streamlit、SQLiteによる個人利用のlocal管理面として扱う。公開面、認証、cloud DBを暗黙に追加しない。
 - 収集対象は公開RSSまたは公開blog一覧pageに限定し、loginが必要なpage、robots.txtや利用規約に反する取得、access control回避を行わない。
 - summaryは原文確認の補助であり、原文を読まずに代替できる長文や構成再現を作らない。公開面には短い紹介、独自の示唆、source、日付、原文linkだけを渡す。
-- `rm-trend-radar`は非公開の収集・確認正本、`SideBiz_HotelRM`は公開LPと発信の正本である。公開候補flagがあっても自動的な公開承認を意味しない。
+- `rm-trend-radar`は収集・確認の正本、`SideBiz_HotelRM`は公開LPと発信の正本である。repoはpublicであり、記事DB（未確認記事、AI候補、自分用要約、手動メモ）はgitignore対象のlocal SQLiteだけに置く非公開dataとする。公開候補flagがあっても自動的な公開承認を意味しない。
 - automationが書き込むのは`exports/public_rm_articles.json`だけとし、SideBizへの反映はSideBiz Actionsがこのexportをpullして行う。
 - RSS snapshot、SideBiz反映、automationの許可範囲と停止条件はactive spec / decisionを正本とし、取得、翻訳、公開判断、公開file更新の責務を混ぜない。
 

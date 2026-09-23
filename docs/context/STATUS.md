@@ -115,7 +115,7 @@ Last Updated: 2026-09-23
 
 ## Next Re-entry
 
-次スレッドは、Task 10 の SideBiz 日次取込 workflow を確認し、利用者による読み取り専用 PAT の発行と SideBiz secret `RTR_READ_TOKEN` の登録、Codex アプリでの旧 automation 停止と新しい RTR 限定 automation への切り替えを待つ。切り替え後は、export の `run_at_utc`、7 項目の検証、最大 5 件の追加、SideBiz 取込結果をそれぞれ確認する。
+次スレッドは、Task 10 の SideBiz 日次取込 workflow を確認し、Codex アプリでの旧 automation 停止と新しい RTR 限定 automation への切り替えを待つ。切り替え後は、export の `run_at_utc`、7 項目の検証、最大 5 件の追加、SideBiz 取込結果をそれぞれ確認する。
 
 ### Thread Contract
 
@@ -134,7 +134,7 @@ Last Updated: 2026-09-23
   2. `docs/spec_002_review_workflow.md` の `Public Candidate Policy`、公開カテゴリ定義、`Side Business LP Initial Listing Contract` を確認する。
   3. `docs/spec_001_sources.md` の `GitHub Actions Scheduled Snapshot` と `Codex App LP Reflection Automation` を確認する。
   4. `exports/public_rm_articles.json` と `validate-public-export` の結果を確認する。
-  5. SideBiz の `sync_overseas_rm_articles.yml` 実装、読み取り専用 PAT と secret `RTR_READ_TOKEN` の登録状態を確認する。
+  5. SideBiz の `sync_overseas_rm_articles.yml` が token なしで public repo の export を取得できることを確認する。
   6. 旧 automation の停止、新 automation の RTR 限定設定、SideBiz 側の JSON / HTML 取込結果を確認する。
 - この bundle で変更しない契約:
   - 記事本文全文を保存しない。
@@ -149,7 +149,7 @@ Last Updated: 2026-09-23
   - GitHub Actions が 3 日に 1 回程度で RSS snapshot を作る。
   - Codex automation が MacBook Pro 上で `gpt-6-luna` を使い、RTR の export だけを更新する。
   - 新規 0 件でも `run_at_utc` を更新し、7 日超の停止を監視できる。
-  - SideBiz Actions が読み取り専用 PAT で export を日次 pull し、7 項目だけで記事一覧を更新する。
+  - SideBiz Actions が public repo の export を token なしで日次 pull し、7 項目だけで記事一覧を更新する。
   - LP 自動更新対象に、自分用要約、手動メモ、原文記事の代替になる長文が含まれていない。
   - 検証が通過した場合は、automation が RTR の export だけを commit / push し、SideBiz 側の反映は Actions で確認する。
 - subagent 利用方針:

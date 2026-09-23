@@ -298,7 +298,7 @@ GitHub Actions の cron で `*/3` 日指定を使う場合、月末から月初�
 
 `python -m rm_trend_radar validate-public-export exports/public_rm_articles.json` で、7 項目以外の混入、空欄、`title_ja` の 80 字超、`summary_ja` の 160 字超、`public_category.py` に定義されたカテゴリと表示ラベルの不一致、https 以外の URL、URL の重複、`published_date` の `YYYY-MM-DD` 形式違反を検出する。export 更新時は `validate_public_export.yml` が検証し、`watch_export_freshness.yml` は `run_at_utc` が 7 日を超えて古い場合に失敗する。
 
-SideBiz Actions の `sync_overseas_rm_articles.yml` は毎日、読み取り専用 PAT を secret `RTR_READ_TOKEN` として使い、この repo の export を pull して副業リポ側の記事一覧へ反映する。Codex automation は SideBiz のファイルを更新しない。
+SideBiz Actions の `sync_overseas_rm_articles.yml` は毎日、この public repo の export を token なしで pull して副業リポ側の記事一覧へ反映する。Codex automation は SideBiz のファイルを更新しない。
 
 副業リポ側の初期実装例は、次の Markdown 構造に相当する。
 

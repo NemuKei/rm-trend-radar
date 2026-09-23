@@ -4,6 +4,7 @@
 
 - 決定日: 2026-05-02
 - 決定: `market-stats-viewer` へ統合せず、`rm-trend-radar` という新規プロジェクトとして開始する。
+- 後続決定: private repo 前提は `D-20260923-021` により public repository へ変更した。
 - 理由: `market-stats-viewer` は会場公式データの取得と表示を主対象にしている。一方でこのプロジェクトは、ホテル・レベニューマネジメント領域の記事リンク、要約、タグ、重要度、示唆を扱う。入力データ、著作権上の注意点、画面設計、将来の公開範囲が異なるため、同じリポジトリへ入れると責務が混在する。
 
 ## D-20260502-002: MVP は Python、Streamlit、SQLite とする
@@ -41,6 +42,7 @@
 - 決定日: 2026-05-02
 - 決定: `rm-trend-radar` は、記事データ、AI 要約候補、タグ、重要度、示唆、手動メモ、公開候補フラグを持つ非公開の収集確認リポジトリとして扱う。副業リポ側 LP は、公開してよい記事だけを材料に、原文記事の代替にならない短い紹介、独自の見解、業務上の示唆を掲載する公開面として扱う。
 - 理由: 収集確認段階では未確認記事、AI 候補、手動メモ、原文確認前の仮要約が混在する。これを公開 LP と同じ場所で扱うと、未確認情報の公開、原文代替に近い転載、公開範囲の誤りが起きやすい。非公開の管理面で選別し、公開面には確認済みで公開してよい内容だけを渡す構成にする。
+- 後続決定: 「非公開」の対象は `D-20260923-021` により repository ではなく local SQLite の記事データへ限定した。責務分離は維持する。
 
 ## D-20260503-008: 公開 LP と X は短い導線に留め、詳細理解は原文サイトに戻す
 
@@ -131,7 +133,15 @@
 ## D-20260923-020: 公開 export を SideBiz への受け渡し正本にする
 
 - 決定日: 2026-09-23
-- 決定: `exports/public_rm_articles.json` を公開記事の受け渡し正本とする。Codex アプリ automation `rm-trend-radar-lp-reflection` は `rm-trend-radar` のこのファイルだけを更新し、SideBiz のファイルには触れない。SideBiz は GitHub Actions が読み取り専用 PAT で export を pull し、公開用 JSON / HTML に反映する。
+- 決定: `exports/public_rm_articles.json` を公開記事の受け渡し正本とする。Codex アプリ automation `rm-trend-radar-lp-reflection` は `rm-trend-radar` のこのファイルだけを更新し、SideBiz のファイルには触れない。SideBiz は GitHub Actions が export を pull し、公開用 JSON / HTML に反映する（取得方法は `D-20260923-021` で token 不要に変更）。
 - 実行方式: Codex Cloud には定期実行がないため、利用者の MacBook Pro 上の Codex アプリで local automation として実行する。model は `gpt-6-luna` とする。
 - 置き換える範囲: `D-20260902-019` と `D-20260630-017` のうち、automation が SideBiz のファイルを直接書き換える部分を置き換える。
 - 理由: 記事の判断と公開面への反映を repo ごとの責務に分け、automation の書き込み先を 1 ファイルに限定するため。
+
+## D-20260923-021: repository を public にし、非公開の対象を local 記事データに限定する
+
+- 決定日: 2026-09-23
+- 決定: `NemuKei/rm-trend-radar` を public repository にする。非公開にするのは gitignore 対象の local SQLite（未確認記事、AI 候補、自分用要約、手動メモ、公開前の下書き）だけとし、repository に置くのはコード、docs、tests、公開 7 項目だけの `exports/public_rm_articles.json` に限る。SideBiz の `sync_overseas_rm_articles.yml` は token なしで export を取得し、`RTR_READ_TOKEN` は使わない。
+- 確認: 公開前に全 72 commit の履歴を確認した。記事 DB は一度も commit されておらず、secret、記事本文の転載、案件情報はなかった。commit author のメールアドレスとホスト名は、既に public の `market-stats-viewer` で公開済みのものと同じだった。`rss-snapshot` artifact は英語 title と URL などの metadata だけを持つ。
+- 理由: LP に掲載している公開 7 項目の受け渡しのためだけに PAT の発行、登録、期限更新を運用するのは過剰であり、期限切れで取込が止まる故障点になる。守る対象は repository ではなく local の記事データである。
+- 置き換える範囲: `D-20260502-001` の private repo 前提、`D-20260502-007` の「非公開の収集確認リポジトリ」という表現、`D-20260923-020` の PAT による取得。
