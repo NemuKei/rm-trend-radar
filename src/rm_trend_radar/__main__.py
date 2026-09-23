@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import sys
@@ -12,6 +13,7 @@ from .fetch import (
     has_failures,
     unknown_source_names,
 )
+from .public_export_validation import validate_public_export
 from .snapshot import (
     build_snapshot,
     snapshot_has_failures,
@@ -77,6 +79,22 @@ def main(argv: list[str] | None = None) -> int:
         help="Return success when at least one source succeeds and failed sources are recorded in the snapshot.",
     )
 
+    export_parser = subparsers.add_parser(
+        "validate-public-export",
+        help="Validate the public article export JSON.",
+    )
+    export_parser.add_argument(
+        "path",
+        nargs="?",
+        default="exports/public_rm_articles.json",
+        help="Path to the public article export JSON.",
+    )
+    export_parser.add_argument(
+        "--max-age-days",
+        type=float,
+        help="Maximum age in days for the export.",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command in (None, "init"):
@@ -133,6 +151,20 @@ def main(argv: list[str] | None = None) -> int:
             if args.allow_partial and snapshot_has_successes(snapshot):
                 return 0
             return 3
+        return 0
+
+    if args.command == "validate-public-export":
+        payload = json.loads(Path(args.path).read_text(encoding="utf-8"))
+        errors = validate_public_export(
+            payload,
+            now=datetime.now(timezone.utc),
+            max_age_days=args.max_age_days,
+        )
+        if errors:
+            for error in errors:
+                print(error, file=sys.stderr)
+            return 1
+        print(f"articles={len(payload['articles'])}")
         return 0
 
     parser.error(f"Unknown command: {args.command}")

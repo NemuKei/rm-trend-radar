@@ -1,0 +1,1295 @@
+{
+  "schema_version": 1,
+  "run_at_utc": "2026-09-23T00:00:00Z",
+  "automation_id": "rm-trend-radar-lp-reflection",
+  "source_repo": "rm-trend-radar",
+  "articles": [
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "競合料金の7つの変化を追い、ホテル価格へ生かす",
+      "summary_ja": "季節のピーク、ショルダー期、直前値下げ、宿泊日数、イベント、曜日、休日という競合料金の変化を追う記事。競合へ単純追随せず、自施設の予約ペースや需要と照らして料金を判断する視点を確認できます。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-18",
+      "url": "https://roompricegenie.com/competitor-price-trends-track-hotels/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "季節別ホテル料金の設定方法: 基準料金と予約ペースで調整する",
+      "summary_ja": "季節ごとの需要に合わせ、基準料金に上限・下限を設け、予約ペースや競合情報で料金を調整する考え方を紹介。ADR・稼働率・RevPARを見ながら運用を見直す入口になる記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-10",
+      "url": "https://roompricegenie.com/seasonal-hotel-pricing-how-to-set-rates/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルの競合料金調査が誤る8つの理由: 料金精度と収益改善を考える",
+      "summary_ja": "競合料金データがずれる原因を整理し、料金調査の精度や料金表示の整合性を高める視点を紹介。競合情報を価格判断へ使う前に、データの見方を点検するための記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-09",
+      "url": "https://www.revfine.com/hotel-rate-shopping-8-reasons-competitor-rate-data-is-wrong/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルの料金インテリジェンス: ホテリエ向け完全ガイド",
+      "summary_ja": "料金インテリジェンスを、勘ではなく市場変化や競合状況を見ながら客室料金を判断する仕組みとして紹介する記事。料金更新の理由を把握し、日々の価格調整を説明可能にしたい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-29",
+      "url": "https://roompricegenie.com/hotel-rate-intelligence-guide/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルは直前料金を大幅に下げずに競争力を保てるのか",
+      "summary_ja": "周辺ホテルが直前に値下げする市場で、自施設も追随すべきかを扱う記事。直前値下げに頼る前に、初期価格、PACE、Booking Window、セグメント、ブランド価値を見直す重要性を整理している。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-25",
+      "url": "https://www.revfine.com/hotel-pricing-strategy-last-minute-rate-drops/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルのダイナミックプライシング: 2026年に知っておくべきこと",
+      "summary_ja": "ホテルのダイナミックプライシングを、需要、稼働、競合料金、予約ペースに応じて料金を調整する仕組みとして解説する記事。固定料金からの見直しを考える施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-24",
+      "url": "https://roompricegenie.com/hotel-dynamic-pricing-everything-you-need-to-know-in-2026/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテル料金最適化の完全ガイド 2026年版",
+      "summary_ja": "ホテル料金最適化を、需要、競合、稼働、予約パターンに合わせて客室料金を継続的に調整するプロセスとして整理した記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-21",
+      "url": "https://roompricegenie.com/hotel-pricing-optimization-complete-guide-for-2026/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルが競合料金で陥りやすい5つの誤り",
+      "summary_ja": "ホテルが競合料金を使った価格判断で陥りやすい誤りを整理する記事。競合への単純追随を避け、自施設の需要と比較条件を確認する入口になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-05",
+      "url": "https://roompricegenie.com/competitor-pricing-mistakes-hotels/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "9施設の事例から見るホテル価格自動化の変化",
+      "summary_ja": "豪州・ニュージーランドの9施設が価格設定の自動化を導入した後の変化を紹介する記事。自動化の効果を読む際に、施設条件と人の判断範囲を分けて確認したい。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-28",
+      "url": "https://roompricegenie.com/automated-hotel-pricing-australia-nz/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "2都市・2つの時計: 9月前のホテル価格を整える理由",
+      "summary_ja": "アムステルダムとブリュッセルの需要時期を例に、9月の繁忙期前に価格を整える考え方を扱う記事。地域イベントと予約ペースを価格判断へ反映する視点を確認できる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-27",
+      "url": "https://roompricegenie.com/hotel-pricing-peak-demand-september/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ビジネスホテルの閑散期を繁忙期前の価格機会に変える",
+      "summary_ja": "ビジネスホテルの閑散期と展示会シーズンの間で、価格をどう設計するかを扱う記事。地域イベント、曜日別需要、予約ペースを組み合わせる視点を確認できる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-24",
+      "url": "https://roompricegenie.com/trade-fair-hotel-pricing-summer/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "山岳ホテルの冬季価格を繁忙期前に整える",
+      "summary_ja": "山岳ホテルが冬季シーズンの需要を見越して価格を準備する考え方を扱う記事。販売開始時期、需要の立ち上がり、在庫制限を季節計画と合わせて考える材料になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-24",
+      "url": "https://roompricegenie.com/hotel-winter-pricing-ski-season/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "2026年夏の英国ホテル料金: 国際情勢で収益判断が変わる",
+      "summary_ja": "英国の2026年夏商戦について、国際的な旅行環境や需要の変化を踏まえ、ホテルの収益・料金判断を見直す観点を示す記事。夏季価格や販売計画を確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-01",
+      "url": "https://roompricegenie.com/uk-hotel-pricing-summer-2026/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "この夏のホテル料金にどこまで自信を持てるか",
+      "summary_ja": "夏の料金設定に対する自信を問い直し、需要変化や競合状況を見ながら価格戦略を確認するための記事。繁忙期前後の料金調整を見直したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-30",
+      "url": "https://roompricegenie.com/hotel-pricing-strategy-summer-2026-2/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ドイツ宿泊企業の危機感と価格判断の見直し",
+      "summary_ja": "宿泊企業の経営圧力を背景に、価格判断の遅れや見直し不足が収益に与える影響を考えるための記事です。",
+      "source_name": "IDeaS",
+      "published_date": "2026-06-23",
+      "url": "https://ideas.com/revenue-reactions-nearly-20-of-german-hospitality-firms-report-survival-threatened/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテル料金設定で見るべき7つの顧客セグメント",
+      "summary_ja": "顧客セグメントごとの予約行動や価格感度を踏まえ、ホテル料金をどう考えるかを整理する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-04",
+      "url": "https://roompricegenie.com/customer-segments-hotel-pricing/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "競合料金モニタリングがホテル収益を高める理由",
+      "summary_ja": "競合料金を定点確認し、自施設の価格判断にどう反映するかを扱う記事。追随のためではなく、比較対象と更新頻度を決めて、値付けの根拠を整える実務向けの内容。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-19",
+      "url": "https://roompricegenie.com/how-competitor-rate-monitoring-boosts-hotel-revenue/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "リゾートホテルの料金設定: 季節ごとの価格調整を設計する",
+      "summary_ja": "リゾートの季節変動に合わせて、繁忙期・閑散期の料金調整をどう組み立てるかを紹介する記事。需要の波に合わせて価格と販売方針を整えたい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-07",
+      "url": "https://roompricegenie.com/resort-hotel-seasonal-pricing-strategy/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテル料金戦略プランナー: 料金方針を整理する手順",
+      "summary_ja": "料金戦略を作る際に、目標、需要見込み、競合、セグメント、販売期間などを順に整理するためのガイド記事。日々の価格変更を場当たりにしないための観点をまとめる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-07",
+      "url": "https://roompricegenie.com/hotel-pricing-strategy-planner/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "繁忙期に最大の成果を出す: 2026年夏の収益最大化5戦略",
+      "summary_ja": "夏の繁忙期に向けて、料金、需要、販売機会をどう整えるかを扱うRoomPriceGenieの記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-14",
+      "url": "https://roompricegenie.com/peak-season-hotel-revenue-strategies-summer-2026/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "2026年への不安に備える: 不確実な市場でホテル料金を管理する6つの戦略",
+      "summary_ja": "不確実な市場でホテル料金をどう管理するかを扱うRoomPriceGenieの記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-03-11",
+      "url": "https://roompricegenie.com/6-strategies-for-managing-hotel-pricing-in-an-uncertain-market/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "PMSで見えるリアルタイム料金インサイト",
+      "summary_ja": "PMSの中で料金判断に使える情報をどう見せるかを扱う記事。料金変更の根拠をその場で確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-03-02",
+      "url": "https://roompricegenie.com/revenue-intelligence-is-here-real-time-pricing-insights-right-inside-your-pms/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルテックの変化で料金設定が中心になる理由",
+      "summary_ja": "料金設定をホテルテックの中心に置き直し、価格更新の考え方や運用を見直す記事。手作業の値付けから整理したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-02-18",
+      "url": "https://roompricegenie.com/something-is-changing-in-hotel-tech-and-pricing-is-at-the-center-of-it/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "勘に頼らずホテル料金を動かす要因を理解する",
+      "summary_ja": "料金が動く理由を分かりやすく説明し、どの要因が客室料金に影響しているかを把握するための記事。価格変更の背景を見える化したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-24",
+      "url": "https://roompricegenie.com/hotel-price-explanations-dynamic-pricing/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルは価格を価値と市場ポジションにどう合わせるべきか",
+      "summary_ja": "ホテルの価格を、単なる競合追随ではなく、自施設の価値、商品内容、市場ポジションとどう整合させるかを扱う記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-07",
+      "url": "https://www.revfine.com/hotel-pricing-value-analysis-market-positioning/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "細部までイールドする: 適切な価格設定がスイート、眺望、アメニティを最適化する方法",
+      "summary_ja": "スイート、眺望、アメニティなど客室ごとの価値差を、料金設定にどう反映するかを扱う記事。細かな商品差を収益化したい施設向け。",
+      "source_name": "IDeaS",
+      "published_date": "2026-01-15",
+      "url": "https://ideas.com/yielding-the-details-how-the-right-pricing-optimizes-suites-views-and-amenities/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "2026年にやめたいホテル料金設定の5つの習慣",
+      "summary_ja": "2026年に見直したいホテル料金設定の古い習慣を整理し、より柔軟でデータに基づく収益管理へ移る考え方を紹介する記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2025-12-15",
+      "url": "https://roompricegenie.com/hotel-pricing-habits-to-kick-2026/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテルの予測精度を高める: データ整備から誤差検証まで",
+      "summary_ja": "PMSやCRSのデータを整え、予約ペースを顧客区分別に確認し、イベントなどの外部要因と予測誤差を定期的に見直す手順を整理する記事。予測のずれを料金や在庫制限の判断へつなげる視点を確認できます。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-14",
+      "url": "https://roompricegenie.com/improve-hotel-forecast-accuracy/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "秋の団体・イベント予約を収益につなげる方法",
+      "summary_ja": "団体やイベントの引き合いを、対象日の需要予測、予約ペース、付帯売上と合わせて評価する考え方を紹介する記事。値下げだけに頼らず、回答の速さや提案内容も含めて受注判断を整える入口になります。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-14",
+      "url": "https://roompricegenie.com/hotel-group-bookings-fall/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "2026年秋のホテル需要と料金戦略: ショルダー期・法人需要を読む",
+      "summary_ja": "2026年秋の旅行動向として、ショルダーシーズンの動きや法人需要の弱さ、イベントによる需要波を取り上げ、客室価格を準備する視点を紹介。需要シグナルを予測と料金判断にどうつなぐか考える記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-07",
+      "url": "https://roompricegenie.com/fall-2026-hotel-trends-pricing/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ライブ予測でホテルの価格設定の迷いを減らす",
+      "summary_ja": "更新される需要予測を使って、ホテルの価格設定にある推測を減らす考え方を扱う記事。予測の更新頻度、根拠、担当者の修正判断を確認する入口になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-21",
+      "url": "https://roompricegenie.com/how-live-forecasts-cut-hotel-pricing-guesswork/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "2026年夏の旅行トレンド: 想定外に備えるホテル運営",
+      "summary_ja": "夏季需要の変化に備え、ホテルが需要予測、在庫、料金調整をどのように準備するかを考えるための記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-22",
+      "url": "https://roompricegenie.com/summer-2026-travel-trends-hotels/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "2026年夏の外部環境がホテル収益ルールを書き換える",
+      "summary_ja": "世界的な旅行環境の変化を踏まえ、夏季の料金戦略や需要の読み方を見直すための記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-16",
+      "url": "https://roompricegenie.com/hotel-pricing-strategy-summer-2026/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "気づく前に失っていたイベント予約",
+      "summary_ja": "イベント需要を早く捉えられないことで、予約機会や価格判断を逃すリスクを考える記事です。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-06-05",
+      "url": "https://www.hotelspeak.com/2026/06/the-event-booking-you-lost-before-you-knew-about-it/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "2026年W杯は、期待されたホテル需要をまだ生んでいない",
+      "summary_ja": "2026年W杯に対する需要期待と実際の予約動向のずれを扱い、イベント需要を前提にするなら、予約ペース、販売開始時期、価格変更のタイミングを分けて見直す必要があると示す記事。",
+      "source_name": "IDeaS",
+      "published_date": "2026-05-21",
+      "url": "https://ideas.com/revenue-reactions-2026-world-cup-hasnt-delivered-hotel-boom/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテルのショルダーナイトを埋める4つの収益戦略",
+      "summary_ja": "肩日の売上をどう作るかを、料金調整、販売制限、販売期間の設計から整理する記事。無理な値下げだけに頼らず、低需要日の販売条件を先に決める考え方を示す。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-20",
+      "url": "https://roompricegenie.com/fill-shoulder-nights-hotel-revenue-strategies/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "最低宿泊日数ルールが収益と稼働率を高める仕組み",
+      "summary_ja": "最低宿泊日数ルールを使い、ピーク日やイベント日の短泊予約による販売機会損失を抑える考え方を紹介する記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-16",
+      "url": "https://roompricegenie.com/how-minimum-stay-rules-boost-revenue-and-occupancy/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "断片化した PMS から予測への信頼へ: ケーススタディ",
+      "summary_ja": "PMSの分断を減らし、予測への信頼を高める流れを扱うRevfineのケーススタディ。",
+      "source_name": "Revfine",
+      "published_date": "2026-03-15",
+      "url": "https://www.revfine.com/from-fragmented-pms-to-forecast-confidence-a-case-study/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "大型イベントは大きな機会: 先々の需要に今日から備える5つの方法",
+      "summary_ja": "大型イベントに備え、先々の需要を早めに捉えるための準備を扱う記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-02-12",
+      "url": "https://roompricegenie.com/big-events-big-opportunities-5-ways-to-prepare-for-far-out-demand-today/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "変動性から可視性へ: ホテルで予測の高度化がこれまで以上に重要な理由",
+      "summary_ja": "需要変動が大きい環境で、ホテルにとって予測精度と予測プロセスの高度化がなぜ重要かを扱う記事。価格判断や運営判断の前提となる見通しを改善したい施設向け。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-15",
+      "url": "https://www.revfine.com/why-forecasting-sophistication-matters-more-than-ever-for-hotels/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "多くのホテル予測が始まる前に失敗する理由",
+      "summary_ja": "ホテル予測が失敗しやすい理由を、データの分断や部門間の認識ずれから整理する記事。予測の精度以前に、入力データと前提条件を整える重要性を示している。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-15",
+      "url": "https://www.revfine.com/why-most-hotel-forecasts-fail-before-they-start/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテルの最低宿泊制限プランナー",
+      "summary_ja": "最低宿泊制限を検討するためのプランナーを紹介し、需要が強い期間に宿泊日数条件をどう使うかを考える記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-02-04",
+      "url": "https://roompricegenie.com/hotel-minimum-stay-restriction-planner/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテル需要予測の完全ガイド",
+      "summary_ja": "ホテル需要予測について、データとテクノロジーを使って価格、運営、収益を改善する考え方をまとめたガイド記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-01-29",
+      "url": "https://roompricegenie.com/complete-guide-to-hotel-demand-forecasting/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "宿泊日数別料金: 収益を高める仕組み",
+      "summary_ja": "宿泊日数別料金が、連泊を促し、客室在庫を効率よく使いながら収益を高める方法として紹介されている記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-01-19",
+      "url": "https://roompricegenie.com/length-of-stay-pricing-boosts-revenue-2/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテル稼働率プランナー",
+      "summary_ja": "ホテル稼働率を把握し、目標設定や予約最大化につなげるためのプランナーを紹介する記事。稼働率の基本確認に向いている。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2025-12-18",
+      "url": "https://roompricegenie.com/hotel-occupancy-rate-planner/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ゴーストブッキング: ホテルの無断不泊予約を減らす方法",
+      "summary_ja": "無断不泊やゴーストブッキングを減らすために、テクノロジーやポリシーをどう使うかを整理する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-10-13",
+      "url": "https://www.siteminder.com/r/no-show-hotel/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "CPOR（販売客室あたりコスト）を利益管理に生かす",
+      "summary_ja": "販売した客室1室あたりの運営コストを示すCPORについて、費用範囲をそろえて継続的に測る考え方を整理する記事。ADRや自施設の推移と照らし、サービス品質を損なわずに利益を確認する視点を得られます。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-30",
+      "url": "https://www.revfine.com/cost-per-occupied-room/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル RevPAR を高める方法: 2026年に使える8つの実践戦略",
+      "summary_ja": "RevPAR を高めるために、ADR と稼働率を別々に見るだけでなく、価格、需要、配信、競合状況を継続的に調整する考え方を整理した記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-28",
+      "url": "https://roompricegenie.com/how-to-increase-hotel-revpar-2026/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルの収益性: 売上が全てではない理由",
+      "summary_ja": "ホテルの収益性を売上だけでなく利益の視点から捉える記事。客室売上の伸びを追う際に、コスト構造や利益へのつながりも見直すための入口になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-28",
+      "url": "https://roompricegenie.com/hotel-profitability-beyond-revenue/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル収益管理システムのIDC MarketScapeを読む方法",
+      "summary_ja": "世界のホテル向け収益管理システムを扱うIDC MarketScapeについて、内容をどう読み進めるかを整理する記事。市場レポートを導入候補の比較材料に使う際の前提を確認したい施設向け。",
+      "source_name": "IDeaS",
+      "published_date": "2026-07-15",
+      "url": "https://ideas.com/what-is-the-idc-marketscape-for-revenue-management-systems/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "高コスト市場でGOPPARを守るためのホテル経営判断",
+      "summary_ja": "人件費や運営コストが高い市場で、ホテル経営者がGOPPARを守るために見るべき収益性の論点を扱う記事。売上だけでなく利益指標を確認したい施設向け。",
+      "source_name": "Revfine",
+      "published_date": "2026-07-15",
+      "url": "https://www.revfine.com/how-hotel-leaders-can-protect-goppar-in-a-high-cost-market/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "Revenue Intelligenceとは何か: PMSに必要な理由",
+      "summary_ja": "Revenue Intelligence（収益インテリジェンス）の考え方と、PMSにどう結び付くかを扱う記事。予約・宿泊データを料金や運営判断へ使うときの連携範囲を確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-13",
+      "url": "https://roompricegenie.com/revenue-intelligence-hotels/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル事業の収益性を測る方法",
+      "summary_ja": "ホテル事業の収益性を見るための指標や確認観点を整理し、売上だけでなく利益面から経営を把握する記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-06-10",
+      "url": "https://www.revfine.com/measure-profitability-hotel/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ADR計算ツール",
+      "summary_ja": "ADRの計算方法を確認し、平均客室単価を日々の料金判断や収益確認にどう使うかを整理する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-03",
+      "url": "https://roompricegenie.com/adr-calculator/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "RevPAR計算ツール",
+      "summary_ja": "RevPARの計算方法を確認し、客室単価と稼働のバランスを収益判断にどう使うかを整理する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-01",
+      "url": "https://roompricegenie.com/revpar-calculator/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "付帯収益ガイド: ホテル収益を賢く伸ばす方法",
+      "summary_ja": "客室以外の付帯収益を、ホテル収益の伸びしろとして整理するRevfineのガイド記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-20",
+      "url": "https://www.revfine.com/ancillary-revenue/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "客室以外の収益: ゲスト価値を最大化するためのガイド",
+      "summary_ja": "客室売上だけでなく、滞在中の総ゲスト価値を高める考え方を扱うRevfineの記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-20",
+      "url": "https://www.revfine.com/revenue-beyond-rooms-a-guide-to-maximize-total-guest-value/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル経営のBIを実務に使う方法",
+      "summary_ja": "ホテルの売上、需要、販売、運営データを見える化し、意思決定に使う考え方を整理する記事。指標を見て次の打ち手を決めたい施設向け。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-02-23",
+      "url": "https://www.siteminder.com/r/hotel-business-intelligence-practical-guide/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "満室でも利益とは限らないホテル収益の見直し方",
+      "summary_ja": "満室でも利益が出るとは限らない前提で、稼働率だけでなく単価、構成、チャネル、コストを合わせて収益を見直す記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-02-06",
+      "url": "https://www.revfine.com/the-myth-of-full-profitable-in-hotels/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "データと人の判断で収益リーダーシップを見直す",
+      "summary_ja": "AI と人の洞察をどう組み合わせるかを、収益責任者の判断設計として考える記事。数字を増やすだけでなく、判断の質を上げたい施設向け。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-11-29",
+      "url": "https://www.hotelspeak.com/2025/11/from-data-chaos-to-intelligent-strategy-how-ai-human-insight-are-redefining-revenue-leadership/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルにおける ADR",
+      "summary_ja": "ADR の意味、計算方法、RevPAR や稼働率との違いを整理し、単価改善にどう使うかを説明する記事。基本指標を再確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-15",
+      "url": "https://roompricegenie.com/adr-in-hotels/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "RevPAR を超えて: ホテル収益を再定義する指標",
+      "summary_ja": "RevPAR だけでは捉えにくいホテル収益の見方として、利用効率、ゲスト価値、価格の機動性などの指標に注目する記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-03-25",
+      "url": "https://www.revfine.com/beyond-revpar-the-metrics-redefining-hotel-revenue/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "RevPAR を超えるリターン: ホテルオーナーが今見るべき指標",
+      "summary_ja": "ホテルオーナーが RevPAR だけでなく、総合的な投資リターンや資産価値に関わる指標を見るべきだと提案する記事。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-03-23",
+      "url": "https://www.hotelspeak.com/2026/03/returns-beyond-revpar-the-hotel-metrics-owners-should-be-watching-now/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "Revenue Reactions: 2025年に米国ホテルの稼働率と RevPAR が低下、ホテリエが知るべきこと",
+      "summary_ja": "米国ホテル市場で稼働率と RevPAR が低下した背景を整理し、ホテルが次年度にどう対応すべきかを扱う IDeaS の記事。",
+      "source_name": "IDeaS",
+      "published_date": "2026-02-05",
+      "url": "https://ideas.com/revenue-reactions-u-s-hotel-occupancy-and-revpar-declined-in-2025/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "EBITDAR とは何か、ホテル収益性になぜ重要か",
+      "summary_ja": "EBITDAR の意味と、所有形態や賃料条件が異なるホテル同士を比較するときに役立つ理由を説明する記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-02-04",
+      "url": "https://www.revfine.com/what-is-ebitdar-and-why-does-it-matter-for-hotel-profitability/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル収益見積もりツール",
+      "summary_ja": "客室数、料金、稼働率からホテル収益を試算するツールを紹介する記事。日次、週次、年次の収益イメージを確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2025-12-09",
+      "url": "https://roompricegenie.com/hotel-revenue-estimator/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "RevPAC とは何か: ホテルオーナー向けの意味と計算式",
+      "summary_ja": "RevPAC の意味と計算方法を紹介し、ゲスト単位の価値や複数施設の収益管理にどう使うかを説明する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-08-06",
+      "url": "https://www.siteminder.com/r/revpac/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "予約行動をホテルの価格設定に生かす方法",
+      "summary_ja": "予約のタイミングや動き方を価格設定にどう結び付けるかを扱う記事。予約ペースを需要の変化として読むときの視点を確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-27",
+      "url": "https://roompricegenie.com/how-hotels-use-booking-behavior-pricing/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AIエージェントはホテルの収益管理をどう改善できるか",
+      "summary_ja": "AIエージェントをホテルの収益管理にどう活用できるかを扱う記事。自動化の可能性だけでなく、人が承認する判断、データ品質、例外対応を確認しながら読む入口になる。",
+      "source_name": "Revfine",
+      "published_date": "2026-07-27",
+      "url": "https://www.revfine.com/ai-agents-hotel-revenue-management/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AIはホテルをどう予約するのか: 運営者向けガイド",
+      "summary_ja": "AI経由でホテルが検索・比較・予約される変化を、ホテル運営者向けに整理する記事。掲載情報、価格・在庫の整合性、予約導線を確認する視点を得たい施設向け。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-07-15",
+      "url": "https://www.siteminder.com/r/ai-hotel-booking-distribution/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "SiteMinderのAI開発をホテル向けプラットフォームの内側から見る",
+      "summary_ja": "SiteMinderがホテルのゲスト獲得と収益プラットフォームで進めるAI開発を紹介する記事。AI機能の説明だけでなく、使われるデータと現場の判断範囲を確認しながら読む入口になる。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-07-14",
+      "url": "https://www.siteminder.com/r/ai-development-siteminder/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "Agentic AIはホテルのROIとチーム運営をどう変えるか",
+      "summary_ja": "Agentic AIがホテルの業務成果やチーム編成にどう関わるかを扱う記事。ROIという言葉だけで効果を断定せず、対象業務、導入コスト、人の監督範囲を確認する材料になる。",
+      "source_name": "Revfine",
+      "published_date": "2026-07-13",
+      "url": "https://www.revfine.com/agentic-ai-hotels-roi-team-restructuring/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AIがホテルの価格設定と流通戦略を変える方法",
+      "summary_ja": "AIがホテルの価格設定と販売流通戦略に与える影響を扱う記事。価格、在庫、チャネルの判断をAIに任せる範囲と、人が確認すべき条件を考える入口になる。",
+      "source_name": "Revfine",
+      "published_date": "2026-07-12",
+      "url": "https://www.revfine.com/ai-impact-hotel-pricing-distribution-strategy/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AIと価格アルゴリズムが変えるレベニューマネジメント",
+      "summary_ja": "AIと価格アルゴリズムが、ホテルの料金判断やレベニューマネジメントの進め方にどう関わるかを扱う記事。自動化に任せる範囲と、人が確認すべき前提を考える材料になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-01",
+      "url": "https://roompricegenie.com/ai-pricing-algorithms-revenue-management/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AI主導のホスピタリティでSiteMinderが勝ち筋を示す理由",
+      "summary_ja": "AIが検索、販売、運用判断に入り込む中で、ホテルの販売基盤やデータ連携をどう整えるかを考えるための記事です。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-06-25",
+      "url": "https://www.siteminder.com/r/ai/siteminder-ai-led-hospitality/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテルRMでAIを中核に置く意味",
+      "summary_ja": "AIを補助機能としてではなく、ホテルの収益判断の中心に組み込むときの考え方を整理する記事です。",
+      "source_name": "IDeaS",
+      "published_date": "2026-06-17",
+      "url": "https://ideas.com/smarter-decisions-start-here-why-ai-at-the-core-matters-for-hotel-revenue-management/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "クリックから価値へ: シームレスなゲスト導線を評価する5項目",
+      "summary_ja": "予約前後のゲスト導線を評価し、クリックから予約価値につなげるための確認観点を整理する記事です。",
+      "source_name": "IDeaS",
+      "published_date": "2026-05-27",
+      "url": "https://ideas.com/from-click-to-value-a-5-point-evaluation-for-seamless-guest-journeys/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "理想のレベニューマネジメントAIエージェントに何を任せるか",
+      "summary_ja": "レベニューマネジメント業務でAIエージェントに期待する役割や、ワークフロー設計の考え方を整理する記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-05-25",
+      "url": "https://www.revfine.com/ai-agent-design-revenue-management-workflows/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "選ばれるために選ぶ: ホテリエが AI でトレンドを先取りする考え方",
+      "summary_ja": "AI を使って業界トレンドや顧客行動の変化を把握し、商品・販売・運営の意思決定に反映する視点を扱う記事。技術導入を目的化せず、意思決定の材料として扱う観点を整理する。",
+      "source_name": "Revfine",
+      "published_date": "2026-03-25",
+      "url": "https://www.revfine.com/choose-to-be-chosen-how-hoteliers-use-ai-to-stay-ahead-of-hospitality-trends/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "Revenue Reactions: ホスピタリティの AI で勝者を決めるデータ、数学、信頼",
+      "summary_ja": "ホテルAI活用で、データ、数理、信頼が収益判断に与える影響を扱うIDeaSの記事。",
+      "source_name": "IDeaS",
+      "published_date": "2026-03-23",
+      "url": "https://ideas.com/revenue-reactions-ai-in-hospitality-why-data-math-and-trust-will-decide-the-winners/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AI と収益管理: ホテルが避けられる3つの失敗",
+      "summary_ja": "ホテルのAI活用と収益管理で避けたい失敗を整理するRevfineの記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-03-15",
+      "url": "https://www.revfine.com/ai-and-revenue-management-3-avoidable-mistakes-for-hotels/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテル業界における AI の最前線を探る: SiteMinder 連載 第3回",
+      "summary_ja": "ホテル業界における AI 活用の変化を、ホテリエと旅行者の両面から扱う SiteMinder の連載記事。AI が予約行動や業務判断に与える影響を追うための参考になる。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-04-16",
+      "url": "https://www.siteminder.com/r/exploring-frontier-ai-hotel-industry-part-3/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "イエローページから AI へ: ホテル予約行動はどう変わっているか",
+      "summary_ja": "旅行者の予約行動が、従来の検索や OTA から AI を含む新しい情報探索へ変化していることを扱う記事。ホテルが見つけられるための導線を考える参考になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-02",
+      "url": "https://roompricegenie.com/from-yellow-pages-to-ai-how-hotel-booking-behaviour-is-changing/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテル業界における AI の最前線を探る: SiteMinder 連載 第2回",
+      "summary_ja": "ホテル業界における AI 活用の変化を扱う SiteMinder 連載の第2回。ホテリエと旅行者が AI をどう受け止め、予約や運営にどう影響するかを整理する内容。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-03-02",
+      "url": "https://www.siteminder.com/r/exploring-frontier-ai-hotel-industry-part-2/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテル業界における AI の最前線を探る: SiteMinder 連載 第1回",
+      "summary_ja": "ホテル業界における AI の最前線を扱う SiteMinder 連載の第1回。AI が旅行者行動やホテル運営にどう関わり始めているかを整理する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-01-27",
+      "url": "https://www.siteminder.com/r/exploring-frontier-ai-hotel-industry-part-1/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテル向けエージェント型 AI: 何であり、どう動き、自施設に何を意味するか",
+      "summary_ja": "エージェント型 AI が何であり、生成 AI とどう違い、ホテル運営にどのような意味を持つかを解説する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-01-07",
+      "url": "https://www.siteminder.com/r/agentic-ai-for-hotels/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "ホテルは AI 導入を急いでいるが、見通しなく走っている",
+      "summary_ja": "ホテル業界で AI 導入が急速に進む一方、目的や運用設計が曖昧なまま進めるリスクを指摘する記事。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-12-05",
+      "url": "https://www.hotelspeak.com/2025/12/hotels-are-racing-to-adopt-ai-but-theyre-running-in-blind/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "Google AI Mode の検索結果にホテルを表示させる方法: Google Hotel Ads 活用",
+      "summary_ja": "Google AI Mode の検索結果にホテルが表示されるために、Google Hotel Ads 連携や予約可能料金の露出が重要になることを扱う記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-10-20",
+      "url": "https://www.siteminder.com/r/google-ai-mode-hotels/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AI 旅行エージェント解説: ChatGPT の旅行計画がホテル予約に与える影響",
+      "summary_ja": "AI 旅行エージェントが旅行計画やホテル予約にどう影響するかを解説する記事。AI が作る旅程に施設が入るための視点を得られる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-10-13",
+      "url": "https://www.siteminder.com/r/ai-travel-agent/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテルの顧客獲得コストをチャネル別に捉える",
+      "summary_ja": "顧客獲得コストをOTA手数料だけでなく、広告、予約・決済費用、販促なども含めて捉える記事。直販と外部チャネルを名称だけで判断せず、獲得後の収益や再訪も含めた貢献で比較する視点を確認できます。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-30",
+      "url": "https://www.revfine.com/guest-acquisition-cost/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテルのマーケティング予算をどう設計するか",
+      "summary_ja": "ホテルのマーケティング予算を、売上に対する水準と販売チャネルへの配分から考える記事。集客施策の役割と収益へのつながりを確認しながら予算を見直す入口になる。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-10",
+      "url": "https://www.revfine.com/hotel-marketing-budget/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテルの共有在庫と固定配分を比較する",
+      "summary_ja": "ホテルの客室在庫を共有在庫と固定配分のどちらで扱うかを比較する記事。需要変動や販売チャネルに応じた在庫配分の考え方を確認したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-31",
+      "url": "https://roompricegenie.com/shared-inventory-vs-fixed-allocation-for-hotels/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "PMSとチャネルマネージャーの違い",
+      "summary_ja": "PMSとチャネルマネージャーの役割を切り分け、予約、在庫、料金配信をどのシステムで管理するかを整理する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-22",
+      "url": "https://roompricegenie.com/the-difference-between-pms-and-channel-manager/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "TikTok GOはホテルのゲスト獲得に何を意味するか",
+      "summary_ja": "TikTok GOのような新しい集客導線が、ホテルの認知、予約行動、販売チャネルに与える影響を考える記事です。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-06-15",
+      "url": "https://www.siteminder.com/r/tiktok-go/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "チャネルマネージャー連携の完全ガイド",
+      "summary_ja": "チャネルマネージャー連携を、PMSや料金管理との接続を含めて確認するためのガイド記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-01",
+      "url": "https://roompricegenie.com/channel-manager-integration-guide/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "料金の一貫性を守る方法: 自社チャネルを選ばれるチャネルにする",
+      "summary_ja": "直販を選ばれる販売チャネルにするため、料金一貫性の守り方を扱うHotel Speakの記事。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-05-29",
+      "url": "https://www.hotelspeak.com/2025/05/how-to-protect-your-rate-integrity-making-your-direct-channel-the-preferred-choice/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテルのレートパリティを理解する: ホテルオーナー向けガイド",
+      "summary_ja": "ホテルのレートパリティについて、OTA と直販で価格をどう整合させるか、よくある問題と管理方法を整理する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-03-09",
+      "url": "https://www.siteminder.com/r/hotel-rate-parity/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテルのマーケティング予算を無駄にしない方法: Potential to Influence の紹介",
+      "summary_ja": "ホテルのマーケティング予算を、影響を与えやすい需要や顧客に集中させる考え方を紹介する記事。キャンペーン投資の無駄を減らしたい施設向け。",
+      "source_name": "IDeaS",
+      "published_date": "2026-02-25",
+      "url": "https://ideas.com/how-to-stop-wasting-your-hotel-marketing-budget/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "需要を形作る: SiteMinder の新しいアプローチがゲスト獲得と収益管理を明確にする",
+      "summary_ja": "ゲスト獲得と収益管理を一体で捉え、市場変化を見ながら需要を作る SiteMinder の考え方を紹介する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-09-16",
+      "url": "https://www.siteminder.com/r/shaping-demand/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "Agoda Partner Central: ホテル向け完全ガイド",
+      "summary_ja": "Agoda Partner Central の機能や使い方を、ホテルの予約最大化や収益改善の観点で整理するガイド記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-08-06",
+      "url": "https://www.siteminder.com/r/agoda-partner-central/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのレベニューマネジメントチームを強くする6つの方法",
+      "summary_ja": "レベニューマネジメントを個人業務に閉じず、部門間の連携、収益会議、共通情報の運用で強化する考え方を紹介。担当者だけでなく、ホテル全体で商業判断をそろえる視点を確認できます。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-08-03",
+      "url": "https://roompricegenie.com/hotel-revenue-management-team/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "不確実な環境でRMテクノロジーへ投資する予算の考え方",
+      "summary_ja": "不確実な市場環境で、収益管理テクノロジーへの投資予算をどう考えるかを扱う記事。導入効果を期待だけで判断せず、業務負荷、データ、運用定着の条件を確認したい施設向け。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-07-23",
+      "url": "https://www.hotelspeak.com/2026/07/budgeting-for-uncertainty-why-investment-in-revenue-management-technology-matters-more-than-ever/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "PMS連携によるリアルタイム価格設定の仕組み",
+      "summary_ja": "PMSと価格設定を連携し、運用中のデータを料金判断へ反映する考え方を扱う記事。連携項目、更新タイミング、誤反映時の停止・確認手順を見たい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-20",
+      "url": "https://roompricegenie.com/real-time-pricing-pms-integration/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルシステム連携がRM判断を速くする理由",
+      "summary_ja": "PMS、チャネルマネージャー、RMSが別々に動くと、予測、価格更新、在庫制限、流通管理に手作業が残る。各システムのデータ連携で、予約ペースやADR、在庫情報を使った判断を速くし、料金・制限・販売チャネル更新のズレを減らす観点を整理している。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-02",
+      "url": "https://roompricegenie.com/hotel-system-connectivity-revenue-management/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "レベニューマネジメントから収益主導の運営へ",
+      "summary_ja": "独立系ホテルに向けて、料金担当だけでなく運営全体を収益視点で動かす考え方を扱う記事。価格、販売、現場運営を分けずに見直したい施設の参考になる。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-29",
+      "url": "https://roompricegenie.com/revenue-led-operations-independent-hotels/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ゲスト体験がホテル収益を動かす理由と最大化の方法",
+      "summary_ja": "予約前から滞在後までのゲスト体験を、単価、追加利用、再訪につなげる視点で整理する記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-06-29",
+      "url": "https://www.revfine.com/how-guest-experience-drives-hotel-revenue/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "柔軟なチェックイン・チェックアウトを収益機会に変える方法",
+      "summary_ja": "早着、レイトチェックアウト、デイユースなど時間単位の柔軟な滞在を、需要予測、客室準備、価格設定と組み合わせて運用する考え方を扱う記事。ゲスト体験の改善と空室時間の活用を同時に考えたい施設向け。",
+      "source_name": "Revfine",
+      "published_date": "2026-06-28",
+      "url": "https://www.revfine.com/flexible-check-in-and-check-out-that-improve-guest-experience-and-roi/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホスピタリティエンジニア: ホテル運営に必要な新しいスキルセット",
+      "summary_ja": "ホテル運営でテクノロジーとデータを扱う人材像を整理し、現場、RM、ITの役割分担を見直す観点を提供する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-06-24",
+      "url": "https://roompricegenie.com/hospitality-engineer-hotel-skillset/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "RMS近代化を遅らせる隠れたコスト",
+      "summary_ja": "RMSの更新を先送りすることで、価格判断、作業効率、競争対応にどのような負担が出るかを考える記事です。",
+      "source_name": "IDeaS",
+      "published_date": "2026-06-11",
+      "url": "https://ideas.com/why-delaying-rms-modernization-carries-a-real-price-in-hospitality/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "休暇前のレベニューマネージャー向けチェックリスト",
+      "summary_ja": "担当者が不在になる前に、料金、在庫、予約ペース、例外対応をどう整えておくかを確認する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-28",
+      "url": "https://roompricegenie.com/revenue-manager-vacation-checklist/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "RoomPriceGenie と RMS の対談: PMS 内で収益インテリジェンスを使う",
+      "summary_ja": "RoomPriceGenie と RMS の連携で、PMS 内に料金判断の情報を直接出し、画面を切り替えずに価格更新を進める考え方を紹介する記事。PMS と RMS の連携で運用負荷を下げたい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-18",
+      "url": "https://roompricegenie.com/revenue-intelligence-roompricegenie-rms-cloud/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "CASABLANCA と RoomPriceGenie の連携: 料金判断を運用に組み込む",
+      "summary_ja": "ホテルシステム（PMS）と料金最適化ツールを連携し、運用負荷を下げながら料金判断を改善する方向性を紹介する記事。導入時に確認すべき連携観点を把握したい施設向け。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-05-07",
+      "url": "https://roompricegenie.com/casablanca-hotelsoftware-roompricegenie-integration/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテル運営を効率化する PMS 連携戦略",
+      "summary_ja": "PMS（Property Management System: 宿泊管理システム）を中心に、周辺システムとどう連携させると現場業務とデータ活用が改善するかを整理する記事。連携の目的と優先順位を確認したい施設向け。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-20",
+      "url": "https://www.revfine.com/pms-integration/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのレセプションスタッフが収益管理成功に果たす役割",
+      "summary_ja": "早着、レイトチェックアウト、清掃状況、販売停止、口コミリスクなど、フロントスタッフが日々判断する場面を収益管理と結び付けて説明する記事。数字だけでは扱いにくい、現場判断とゲスト満足の関係を確認できる。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-20",
+      "url": "https://www.revfine.com/the-role-of-hotel-reception-staff-on-revenue-management/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "レベニューマネージャーは新しいリスクマネージャーなのか",
+      "summary_ja": "レベニューマネージャーの役割が、売上最大化だけでなく、流通コスト、キャンセル、需要変動、運営負荷を含むリスク管理へ広がっていることを扱う記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-04-15",
+      "url": "https://www.revfine.com/are-revenue-managers-the-new-risk-managers/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "2026年のホテル収益管理を成功させる7つのリーダーシップ戦略",
+      "summary_ja": "収益管理を成果につなげるためのリーダーシップやチーム運営を扱う記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-04-13",
+      "url": "https://roompricegenie.com/hotel-revenue-management-strategies-2026/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "良い状態から優れた状態へ: 成果を出すレベニューマネージャーの習慣",
+      "summary_ja": "レベニューマネージャーの日々の習慣や判断姿勢を整理するRoomPriceGenieの記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-03-24",
+      "url": "https://roompricegenie.com/top-habits-of-highly-effective-revenue-managers/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルの収益管理システムを選ぶ方法",
+      "summary_ja": "RMSを比較するときの確認観点を整理し、導入前に要件、運用負荷、既存システムとの相性を見極める記事。選定候補を絞りたい施設向け。",
+      "source_name": "IDeaS",
+      "published_date": "2026-03-16",
+      "url": "https://ideas.com/how-to-choose-the-best-revenue-management-system/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルシステム連携でデータ駆動の収益を作る",
+      "summary_ja": "PMSや周辺システムをつなぎ、データを収益判断に使う考え方を整理する記事。連携先の優先順位を見直したい施設向け。",
+      "source_name": "Revfine",
+      "published_date": "2026-02-23",
+      "url": "https://www.revfine.com/hotel-data-integration-tips-revenue-management/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのフロントオフィス業務: 完全ガイド",
+      "summary_ja": "チェックイン、チェックアウト、予約、客室割当、ゲスト対応、部門間連携を含むフロントオフィス業務を整理する記事。宿泊施設の第一印象と最終印象を作る部門として、サービス品質と業務標準化の両面を確認できる。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-02-23",
+      "url": "https://www.siteminder.com/r/hotel-front-office-operations/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "リアルタイム個別化でゲスト情報を収益に変える",
+      "summary_ja": "ゲストの行動や属性を、その場の提案や販売に反映して単価や追加売上につなげる考え方を扱う記事。個別化を収益面から見たい施設向け。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-02-19",
+      "url": "https://www.hotelspeak.com/2026/02/how-real-time-personalisation-turns-guest-insight-into-revenue/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "RMS導入の価値実現を早める考え方",
+      "summary_ja": "RMS の導入や切り替えで、準備、データ整備、現場定着をそろえながら、価値が出るまでの時間を短くする考え方を整理する記事。",
+      "source_name": "IDeaS",
+      "published_date": "2026-01-26",
+      "url": "https://ideas.com/accelerating-rms-implementation-time-to-value/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのレピュテーション管理: ホテルオーナー向け完全ガイド",
+      "summary_ja": "口コミ、予約サイト、SNS上の評価を確認し、返信や改善活動につなげるレピュテーション管理を扱う記事。現場で起きたサービス体験が外部評価に残り、次の予約判断へ影響する流れを確認できる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-11-13",
+      "url": "https://www.siteminder.com/r/hotel-reputation-management/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテル収益管理ソフトの選び方",
+      "summary_ja": "収益管理ソフトを選ぶときに、価格自動化、データ連携、運用定着、レポートの見方をどう比較するかを整理する記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-05-15",
+      "url": "https://www.siteminder.com/r/hotel-revenue-management-software/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "顧客関係管理（CRM）: ホテル向け完全ガイド",
+      "summary_ja": "顧客関係管理（CRM）を、予約履歴、事前要望、滞在中の好み、滞在後フィードバックを一つのゲスト理解につなげる仕組みとして説明する記事。個別対応、再訪、ロイヤルティを現場業務に落とし込む視点を確認できる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-05-09",
+      "url": "https://www.siteminder.com/r/customer-relationship-management/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ゲストサービスを高めるホテル従業員エンゲージメントのヒント",
+      "summary_ja": "ホテルスタッフの仕事への納得感、チームとの関係、問題解決力、部門間コミュニケーションがゲストサービスにどう表れるかを扱う記事。サービス品質を個人の頑張りだけにせず、働き方と組織運営から考える材料になる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-05-05",
+      "url": "https://www.siteminder.com/r/hotel-employee-engagement/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "収益テクノロジーは複雑でなくても大きな成果を出せる",
+      "summary_ja": "収益管理テクノロジーは複雑でなくても成果を出せるという視点から、自動化、リアルタイムデータ、連携の重要性を紹介する記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-03-06",
+      "url": "https://roompricegenie.com/revenue-technology-doesnt-have-to-be-complicated-to-drive-powerful-results/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "レベニューマネージャーと RMS: 理想的な協働関係",
+      "summary_ja": "レベニューマネージャーと RMS の関係を、人間の戦略判断と自動化の組み合わせとして整理する記事。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-01-05",
+      "url": "https://roompricegenie.com/revenue-manager-rms-perfect-partnership/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテル用語: ホテルオーナー向け完全ガイド",
+      "summary_ja": "ホテル運営や収益管理で使われる主要用語を整理したガイド記事。業界用語を確認しながら施策理解を進めたい施設向け。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-08-06",
+      "url": "https://www.siteminder.com/r/hotel-terminology/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "強い旅行ブランドを作る方法: ホテル向けガイド",
+      "summary_ja": "ホテルが混雑した旅行市場で選ばれるために、旅行ブランドをどう作り、育てるかを扱うガイド記事。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-07-21",
+      "url": "https://www.siteminder.com/r/travel-brand/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのマーケティングチームと収益チームが連携すべき理由: コストになる前に",
+      "summary_ja": "ホテルのマーケティングチームと収益チームが分断されると、データ活用や販売判断にズレが生じることを指摘する記事。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-05-23",
+      "url": "https://www.hotelspeak.com/2025/05/why-hotel-marketing-and-revenue-teams-must-align-before-it-costs-them/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "RevPAMとは何か: ホテルの空間生産性を測る指標",
+      "summary_ja": "RevPAMを、利用可能な空間あたりの収益を測る指標として紹介。宴会場や会議室など客室以外のスペースの使い方と収益性を考える入口になる記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-30",
+      "url": "https://www.revfine.com/what-is-revpam/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルの平均滞在日数（ALOS）とは: 予約構成を読む指標",
+      "summary_ja": "平均滞在日数（ALOS）の計算方法と、客室の滞在構成を読む視点を紹介。予約件数だけでなく宿泊日数や追加滞在の収益性を考える入口になる記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-30",
+      "url": "https://www.revfine.com/what-is-average-length-of-stay/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルのeNPSとは: チームの定着を考える指標",
+      "summary_ja": "従業員が職場を薦める可能性を測るeNPSを、計算方法や部門別の読み方とともに紹介。離職の兆候を早めに捉え、ホテル運営の改善を考える入口になる記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-20",
+      "url": "https://www.revfine.com/what-is-enps/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "料金判断に自信を持つための5つの習慣",
+      "summary_ja": "需要データの読み方やツールとの向き合い方など、レベニューマネージャーが料金判断を説明可能にする5つの習慣を紹介する記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-20",
+      "url": "https://roompricegenie.com/confident-pricing-decisions/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "ホテル需要パターンシミュレーター: 過去データから予測を試す",
+      "summary_ja": "過去の需要データを入力し、今後の月の需要を予測する無料シミュレーター。繁忙期や閑散期の見通しを作り、価格・販売計画を考える入口として使えるページです。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-07-31",
+      "url": "https://roompricegenie.com/hotel-demand-pattern-simulator/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ショルダー期のホテル収益を伸ばす: 需要に合わせた価格と販売",
+      "summary_ja": "繁忙期と閑散期の間を一律値下げで埋めず、予約ペース、曜日、イベント、客層に合わせて運用する視点を紹介。ADRやRevPARも見ながら、次の30日を定期的に見直します。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-01",
+      "url": "https://roompricegenie.com/shoulder-season-hotel-revenue/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルのCLV（顧客生涯価値）を予約後まで捉える",
+      "summary_ja": "一回の予約売上ではなく、再訪頻度、滞在価値、チャネルコストまで含めて顧客との関係を測る考え方。セグメント別にCLVを定義し、獲得コストや必要日への貢献と併せて判断します。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-01",
+      "url": "https://www.revfine.com/customer-lifetime-value-hotels/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテルのDynamic Pricingを読み解く10の事例",
+      "summary_ja": "ホテルの需要連動価格を、予約ペース、リードタイム、滞在パターン、パッケージ、直前在庫の観点から整理。カレンダー型の値引きと、実績を見て価格を変える運用の違いを確認できます。",
+      "source_name": "Revfine",
+      "published_date": "2026-08-20",
+      "url": "https://www.revfine.com/dynamic-pricing-examples/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "2026年秋の旅行トレンドとホテル価格を読む",
+      "summary_ja": "法人需要の弱さ、レジャー需要、イベントによる波を手掛かりに、予約ペースや地域イベントを見ながら秋の料金判断を見直す視点を紹介する記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-03",
+      "url": "https://www.revfine.com/fall-2026-travel-trends-what-they-mean-for-hotel-pricing/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "朝食サービスをホテルの収益機会として見直す",
+      "summary_ja": "朝食をコストではなく、ゲスト体験、口コミ、販売条件に関わる収益機会として捉え直す視点を紹介する記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-03",
+      "url": "https://www.revfine.com/how-breakfast-service-can-be-a-profit-center-for-hotels/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "受け身から先回りへ: ホテル収益管理テクノロジーの変化",
+      "summary_ja": "必要な情報を探しに行くのではなく、収益テクノロジーが注目すべき変化と理由を先に知らせる考え方を紹介。日々の確認作業を減らし、料金や在庫の判断を早める入口になる記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-08",
+      "url": "https://roompricegenie.com/proactive-revenue-management-hotels/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルMPIを読む: 低い数値でもすぐ値下げしない",
+      "summary_ja": "競合セットに対する稼働の取り分を示すMPIを、ARIやRGI、曜日・セグメントと合わせて読む記事。数値が低いときも、原因を確かめずに一律値下げへ進まない視点を整理します。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-02",
+      "url": "https://www.revfine.com/market-penetration-index-hotel/"
+    }
+  ]
+}
