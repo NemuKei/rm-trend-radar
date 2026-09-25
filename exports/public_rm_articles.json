@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-09-23T00:00:00Z",
+  "run_at_utc": "2026-09-25T06:11:41Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1290,6 +1290,51 @@
       "source_name": "Revfine",
       "published_date": "2026-09-02",
       "url": "https://www.revfine.com/market-penetration-index-hotel/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "独立系ホテルグループの複数施設RMを少人数で運営する",
+      "summary_ja": "複数施設の料金管理を担う独立系ホテルグループの事例を紹介。共通の運用基準とRMSで日々の作業を効率化し、少人数でも価格戦略や市場分析に時間を振り向ける考え方を確認できます。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-21",
+      "url": "https://roompricegenie.com/multi-property-revenue-management-hotel-groups/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "市場の不確実性に対応するホテルのレベニューマネジメント",
+      "summary_ja": "当初予算と実際の予約・市場動向を継続的に照らし、需要や競争環境の変化に応じて予測と施策を更新する考え方を紹介。年間計画を現場の判断につなげる視点を確認できます。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-18",
+      "url": "https://www.revfine.com/how-revenue-management-helps-hotels-navigate-uncertainty/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルRGIとは: 指標が良くても注意したい比較の前提",
+      "summary_ja": "競合群に対するRevPARの相対位置を示すRGIを解説。比較対象の妥当性や曜日・需要期ごとの確認に加え、稼働率指数と平均客室単価指数も合わせて価格・販売施策を考える視点を紹介します。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-03",
+      "url": "https://www.revfine.com/revenue-generation-index-hotel/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルのARIとは: 競合との平均客室単価を比較する",
+      "summary_ja": "自施設のADRを競合群と比べるARIを解説。単価の相対的位置だけで結論を出さず、稼働率やRevPAR、比較対象の設定も確認して料金判断へつなげる考え方を紹介します。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-02",
+      "url": "https://www.revfine.com/average-rate-index-ari/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテルの顧客生涯価値: リピーターの収益貢献を捉える",
+      "summary_ja": "宿泊ごとのADRやRevPARに加えて、顧客が複数回の滞在を通じてもたらす累積収益を捉える視点を紹介。自施設のPMSデータで再訪客の価値を測り、顧客維持施策を考える入口となる記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-20",
+      "url": "https://www.revfine.com/the-guests-worth-18x-more-why-most-hotels-cant-name-them/"
     }
   ]
 }
