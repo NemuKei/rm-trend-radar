@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-09-25T06:11:41Z",
+  "run_at_utc": "2026-09-28T06:12:57Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1335,6 +1335,51 @@
       "source_name": "Revfine",
       "published_date": "2026-09-20",
       "url": "https://www.revfine.com/the-guests-worth-18x-more-why-most-hotels-cant-name-them/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "前年踏襲の予算を見直し、需要からホテル計画を組み立てる",
+      "summary_ja": "前年実績に一律の成長率を足す予算編成を見直し、需要や販売構成、コストの前提から計画を組み立てる考え方を紹介。収益機会や過去の判断を再点検する材料になります。",
+      "source_name": "Revfine",
+      "published_date": "2026-09-19",
+      "url": "https://www.revfine.com/burn-the-budget-template-the-case-for-a-blank-canvas/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "AI検索がホテルをどう紹介するかを確認し、情報を整える",
+      "summary_ja": "生成AIがホテルを推薦・説明する際に参照する自社サイトやOTAなどの公開情報を点検する記事。施設情報の食い違いを減らし、検索経由の予約機会を考える手掛かりです。",
+      "source_name": "SiteMinder",
+      "published_date": "2026-09-17",
+      "url": "https://www.siteminder.com/r/hotel-ai-visibility/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "行動セグメントに応じた駐車料金と在庫管理",
+      "summary_ja": "予約時期や柔軟性、緊急度から支払意思を捉え、価格や在庫を調整する駐車場の収益管理を紹介。宿泊以外の付帯収入にも需要別価格を応用する視点を得られます。",
+      "source_name": "IDeaS",
+      "published_date": "2026-04-15",
+      "url": "https://ideas.com/smarter-parking-pricing-with-behavioral-segmentation/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "未販売客室を減らすための需要・販売戦略",
+      "summary_ja": "販売日を過ぎると価値を失う客室在庫について、需要の見誤り、料金調整の遅れ、販売経路の不足を踏まえた対策を整理。値下げと長期的な価格維持のバランスを考える入口です。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-10-13",
+      "url": "https://www.siteminder.com/r/what-do-hotels-do-with-unsold-rooms/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "予約曜日と宿泊曜日を分けて考えるホテル料金",
+      "summary_ja": "予約する曜日と宿泊開始の曜日を区別し、曜日別の需要や市場差を価格・販促へ生かす記事。単一の「安い予約曜日」に頼らず、施設や顧客層ごとの傾向を確認する視点を紹介します。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-10-29",
+      "url": "https://www.siteminder.com/r/what-day-is-cheaper-to-book-a-hotel/"
     }
   ]
 }
