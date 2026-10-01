@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-09-28T06:12:57Z",
+  "run_at_utc": "2026-10-01T06:14:24Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1380,6 +1380,51 @@
       "source_name": "SiteMinder",
       "published_date": "2025-10-29",
       "url": "https://www.siteminder.com/r/what-day-is-cheaper-to-book-a-hotel/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ADRの比較指標を使い、料金判断の根拠を点検する",
+      "summary_ja": "宿泊施設のADRを競合や予約時期と照らして読む方法を扱う記事。単価だけで判断せず、稼働率やRevPARと合わせて料金設定を点検する入口になります。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-24",
+      "url": "https://roompricegenie.com/adr-dashboard-benchmarks-for-rental-teams/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "レベニューマネージャーからホテル全体の利益を担う戦略担当へ",
+      "summary_ja": "LodgIQ担当者の寄稿。RMの役割を客室料金の調整からホテル全体の利益へ広げる視点を提示し、営業・運営・財務との連携を考えるきっかけになります。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-11-07",
+      "url": "https://www.hotelspeak.com/2025/11/from-revenue-manager-to-commercial-strategist-a-new-era-for-hotel-profitability/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "価格調整に偏るRMを見直す：宿泊日数と在庫制御の視点",
+      "summary_ja": "IDeaS担当者が価格中心のRMに問題提起する寄稿。連泊需要や予約の置き換えを踏まえ、料金と販売可能在庫を一緒に判断する必要性を考える入口です。",
+      "source_name": "Hotel Speak",
+      "published_date": "2025-07-31",
+      "url": "https://www.hotelspeak.com/2025/07/the-cost-of-convenience-why-pricing-centric-revenue-management-is-failing-your-hotel/"
+    },
+    {
+      "public_category": "ai_search_booking_behavior",
+      "public_category_label": "AI・検索・予約行動",
+      "title_ja": "2026年の旅行者はホテルをどう探し、選び、予約するか",
+      "summary_ja": "SiteMinderの旅行者調査をもとにホテルの検索・予約行動を紹介。販売チャネルや客室タイプの見せ方を、自施設の顧客構成と照らして見直すきっかけになります。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-11-26",
+      "url": "https://www.siteminder.com/r/latest-trends-in-hotel-industry/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "営業・マーケティング・RM・販売チャネルをつなぐホテル戦略",
+      "summary_ja": "ホテルの営業、マーケティング、RM、販売チャネルを結び付ける商業戦略の入門記事。部門間でデータと目標を共有し、収益改善を進める体制を考える入口になります。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-06-06",
+      "url": "https://www.siteminder.com/r/hotel-commercial-strategy/"
     }
   ]
 }
