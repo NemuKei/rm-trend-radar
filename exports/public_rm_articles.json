@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-01T06:14:24Z",
+  "run_at_utc": "2026-10-04T06:13:32Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1425,6 +1425,42 @@
       "source_name": "SiteMinder",
       "published_date": "2025-06-06",
       "url": "https://www.siteminder.com/r/hotel-commercial-strategy/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "出張と休暇を組み合わせるブレジャー需要をホテル収益につなげる",
+      "summary_ja": "SiteMinderが、出張に休暇を加える旅行者の宿泊延長や閑散日の需要を考える記事。法人客向けプランと販売条件を見直す際の参考になる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-11-13",
+      "url": "https://www.siteminder.com/r/bleisure-travel/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルの収益機会を逃さないシステム連携とは：SiteMinderの調査",
+      "summary_ja": "SiteMinderが2025年に実施したホテル事業者調査を紹介。市場変化への対応速度や手作業の負担を扱う。収益向上の数値は回答者の期待であり、実績とは区別して読む必要がある。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-09-16",
+      "url": "https://www.siteminder.com/news/hotel-industry-eyes-billions-through-deepened-system-connectivity/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "需要が揺れる市場でホテルの収益と利益を守るには",
+      "summary_ja": "2025年の経済不確実性を背景に、SiteMinderが専門家へ取材した記事。国内需要や付加価値の提案、運営部門との連携を通じて利益を考える視点を紹介する。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-06-23",
+      "url": "https://www.siteminder.com/r/hotels-leaning-in-amid-uncertainty/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテル広告の料金・在庫表示を直販と整合させるには",
+      "summary_ja": "SiteMinderがホテル広告の表示料金、在庫、予約先の整合性を扱う記事。広告費と直販予約の関係を、配信後の確認やチャネル間の表示差から見直す際の参考になる。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-06-06",
+      "url": "https://www.siteminder.com/r/hotel-ad/"
     }
   ]
 }
