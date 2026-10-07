@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-04T06:13:32Z",
+  "run_at_utc": "2026-10-07T06:12:07Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1461,6 +1461,51 @@
       "source_name": "SiteMinder",
       "published_date": "2025-06-06",
       "url": "https://www.siteminder.com/r/hotel-ad/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "値下げの前に、予約が弱い日の原因を見極める",
+      "summary_ja": "予約が伸びない日に、すぐ値下げする前の診断を扱うHotel Speakの寄稿。料金変更が適切な対応かを、自施設のデータに照らして考える入口になります。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-10-03",
+      "url": "https://www.hotelspeak.com/2026/10/before-the-discount-what-a-weak-hotel-date-is-really-telling-you/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "MICE需要をホテルの平日・閑散期販売に生かす",
+      "summary_ja": "会議・展示会などのMICE需要とホテル収益の関係を扱うSiteMinderの解説。平日や閑散期の販売を考える際に、自施設が狙える法人需要を確認する入口になります。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-12-10",
+      "url": "https://www.siteminder.com/r/mice-hotel/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル会議販売を宿泊・料飲と合わせて考える",
+      "summary_ja": "ホテルの会議販売を、宿泊や料飲を含む収益機会として扱うSiteMinderの記事。会場単独の売上だけでなく、施設全体の販売設計を見直す際の参考になります。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-12-10",
+      "url": "https://www.siteminder.com/r/hotel-conferences/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテル名非公開の販売で、低需要日の在庫をどう扱うか",
+      "summary_ja": "入札型販売と、予約後にホテル名が分かる固定価格販売の違いを扱うSiteMinderの解説。低需要日の追加販路を検討する入口として、公開料金との関係を確認できます。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-07-21",
+      "url": "https://www.siteminder.com/r/hotel-bidding-sites/"
+    },
+    {
+      "public_category": "revenue_metrics_owner_view",
+      "public_category_label": "収益指標・オーナー視点",
+      "title_ja": "ホテル収益をコスト面から見直す",
+      "summary_ja": "ホテルの費用と利益管理を扱うSiteMinderの解説。売上指標に加え、稼働に応じた費用の動きを確認し、自施設の利益を見直す際の参考になります。",
+      "source_name": "SiteMinder",
+      "published_date": "2025-08-11",
+      "url": "https://www.siteminder.com/r/hotel-distribution/hotel-revenue-management/hotel-costs/"
     }
   ]
 }
