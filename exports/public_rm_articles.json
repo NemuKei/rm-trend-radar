@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-07T06:12:07Z",
+  "run_at_utc": "2026-10-10T06:11:01Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1506,6 +1506,24 @@
       "source_name": "SiteMinder",
       "published_date": "2025-08-11",
       "url": "https://www.siteminder.com/r/hotel-distribution/hotel-revenue-management/hotel-costs/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "ホテル販売チャネルの収益性を指標で見直す",
+      "summary_ja": "販売経路ごとの売上と獲得コストを扱うRoomPriceGenieの解説。予約件数だけでは見えにくい収益性を確認し、自施設のチャネル配分を見直す際の入口になります。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-30",
+      "url": "https://roompricegenie.com/hotel-distribution-metrics-guide/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "料金自動化に向けたPMS連携の点検ポイント",
+      "summary_ja": "PMSと料金管理システムの連携を扱うRoomPriceGenieの解説。自動化に進む前に、予約データの精度や料金反映を点検し、運用中の異常を見つける視点を確認できます。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-09-28",
+      "url": "https://roompricegenie.com/pms-integration-dynamic-pricing-setup/"
     }
   ]
 }
