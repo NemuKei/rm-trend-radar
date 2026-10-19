@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-16T06:15:51Z",
+  "run_at_utc": "2026-10-19T06:10:06Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1524,6 +1524,15 @@
       "source_name": "RoomPriceGenie",
       "published_date": "2026-09-28",
       "url": "https://roompricegenie.com/pms-integration-dynamic-pricing-setup/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルの自動料金設定と競争法: RMSのデータ利用を点検する",
+      "summary_ja": "自動料金設定と競争法の接点を、RMSが使う競合データや価格判断の独立性から扱う記事。海外の議論を入口に、自施設の料金システムのデータ利用を考える参考になります。",
+      "source_name": "Revfine",
+      "published_date": "2026-10-01",
+      "url": "https://www.revfine.com/hotel-algorithmic-pricing-antitrust/"
     }
   ]
 }
