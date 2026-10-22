@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-19T06:10:06Z",
+  "run_at_utc": "2026-10-22T06:12:07Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1533,6 +1533,15 @@
       "source_name": "Revfine",
       "published_date": "2026-10-01",
       "url": "https://www.revfine.com/hotel-algorithmic-pricing-antitrust/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "予約ペースの遅れをどう診断するか：値下げ前の確認",
+      "summary_ja": "予約ペースの遅れから値下げに進む前の診断を扱うHotel Speakの寄稿。価格以外の販売上の要因にも目を向け、日々の料金判断に必要な根拠を考える入口になります。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-10-14",
+      "url": "https://www.hotelspeak.com/2026/10/a-booking-gap-is-not-a-demand-diagnosis-four-checks-before-you-discount/"
     }
   ]
 }
