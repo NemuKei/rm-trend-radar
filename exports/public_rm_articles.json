@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-22T06:12:07Z",
+  "run_at_utc": "2026-10-25T06:11:40Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1542,6 +1542,33 @@
       "source_name": "Hotel Speak",
       "published_date": "2026-10-14",
       "url": "https://www.hotelspeak.com/2026/10/a-booking-gap-is-not-a-demand-diagnosis-four-checks-before-you-discount/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "450人調査で見るホテルRMの運用課題と担当体制",
+      "summary_ja": "RoomPriceGenieが委託した収益管理担当者450人の調査を紹介する記事。戦略の見直し、AIへの信頼、担当者の役割を通じて、自施設のRM運用を点検する入口になります。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-10-20",
+      "url": "https://roompricegenie.com/hotel-revenue-management-2026-survey-findings/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "繁忙日の満室で見えなくなる需要と収益機会",
+      "summary_ja": "満室になった日の予約実績だけでは捉えにくい需要を扱う記事。先行する市場情報と自施設の予約動向を照らし、繁忙日の料金や在庫配分を見直す視点を紹介します。",
+      "source_name": "Revfine",
+      "published_date": "2026-10-19",
+      "url": "https://www.revfine.com/why-your-busiest-nights-may-miss-revenue-opportunities/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "ホテル料金を変えるとき・据え置くときの判断",
+      "summary_ja": "料金変更が必要な日をどう見極めるかを扱う記事。予約増減、キャンセル、予約時期、残室を合わせて確認し、競合料金に反応する前に自施設の状況を点検する視点を紹介します。",
+      "source_name": "Revfine",
+      "published_date": "2026-10-19",
+      "url": "https://www.revfine.com/hotel-pricing-know-when-to-act-and-when-to-leave-it-alone/"
     }
   ]
 }
