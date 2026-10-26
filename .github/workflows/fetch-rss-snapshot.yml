@@ -9,6 +9,7 @@ on:
       - ".github/workflows/fetch-rss-snapshot.yml"
       - "src/rm_trend_radar/**"
       - "tests/test_snapshot.py"
+      - "tests/test_snapshot_log.py"
   schedule:
     # Roughly every 3 days at 14:37 JST. GitHub Actions schedules use UTC.
     - cron: "37 5 */3 * *"
@@ -34,11 +35,36 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Test selection log safety
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -p test_snapshot_log.py
+
       - name: Fetch RSS metadata snapshot
         env:
           PYTHONPATH: src
         run: |
           python -m rm_trend_radar fetch-snapshot --output artifacts/rss_snapshot.json --timeout 20 --allow-partial
+
+      - name: Log bounded selection metadata
+        if: always() && hashFiles('artifacts/rss_snapshot.json') != ''
+        env:
+          PYTHONPATH: src
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import sys
+          from rm_trend_radar.snapshot_log import emit_snapshot_log
+
+          raise SystemExit(emit_snapshot_log(
+              Path("artifacts/rss_snapshot.json"),
+              run_id=os.environ["GITHUB_RUN_ID"],
+              run_attempt=os.environ["GITHUB_RUN_ATTEMPT"],
+              head_sha=os.environ["GITHUB_SHA"],
+              stream=sys.stdout,
+          ))
+          PY
 
       - name: Upload RSS snapshot
         if: always() && hashFiles('artifacts/rss_snapshot.json') != ''

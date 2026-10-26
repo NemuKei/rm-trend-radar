@@ -309,6 +309,21 @@ GitHub Actions では `--allow-partial` を付ける。これは、一部 source
 
 この JSON は LP 側の直接入力ではない。`lp_ready` は常に `false` とし、`publish_decision` は `manual_review_required` とする。LP 側に渡すデータは、LP 自動反映用に別途生成する短い記事一覧データとする。LP 自動反映用データには、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長い公開用コンテンツを含めない。
 
+### Selection Metadata Log
+
+ZIP転送を必要とせず正規GitHubコネクターのjob log読取で選別材料を受け取れるよう、同じsnapshotから `RM_SELECTION_V1 ` を接頭辞とするASCII NDJSONを出力する。既存CLI、artifact、SQLite、公開export、取得時刻・頻度は変更しない。
+
+- `snapshot`: contract `rss-selection-log-v1`、run ID・attempt・commit SHA、UTC生成時刻、source数・元記事数、`lp_ready=false`、`publish_decision=manual_review_required`。
+- `source`: 初期取得対象の出典名、取得件数、失敗フラグのみ。例外本文は出さない。
+- `article`: 出典名、英語タイトル、原文URL、公開日のみ。本文、description、content:encoded、著者、タグ、内部情報は出さない。
+- `end`: 出力件数、除外件数と固定の理由コード、`complete`、前行までのJSON文字列をLF終端で連結したSHA-256。接頭辞とActionsが付ける時刻はdigestに含めない。
+
+入力は2 MiB、記事は先頭200件、ログ全体は128 KiB、タイトルは240字、URLは512字を上限とする。URLは設定済みsourceと一致するhttpsホストと単純な公開記事pathに限定し、userinfo、port、query、fragment、percent encodingを持つものはURLを書き換えず保留する。pathは30字以下の英小文字の単語、または独立した1〜4桁の数字をハイフン・slashで区切る形式に限る。`b2b`などの英数字混在、大文字、underscore、5桁以上の数値IDも保留する。メールアドレス・電話番号・認証値の代表的な形式、制御文字、HTML、長い不透明なtokenなどの疑いがある記事も値を出さず件数だけを残す。これは任意の個人名や普通の短い単語に偽装した秘密文字列を意味的に判定する仕組みではないため、許可された公開RSSのタイトルだけを入力とする。未知のsource、時刻・件数の不整合、不正JSONは値を含まない固定エラーにする。
+
+Actionsコマンドの `::` と旧形式の `##[` はJSON文字列内でescapeし、改行・Unicode制御文字を生のログ行にしない。本文を取得し直したり、失敗sourceを別経路で取得したりしない。
+
+consumerは最新成功runのID・commit・attempt・生成時刻を照合し、sourceの部分失敗、footer、digest、元件数＝出力件数＋除外件数を確認する。footer欠落、digest不一致、`complete=false` は完全なsnapshotとして扱わず保留理由を報告する。同じ日付やworkflow成功だけで取得済み・反映済みとは判断しない。記事は引き続き原文確認と選別が必要で、このログだけでは公開を承認しない。
+
 ### Codex App LP Reflection Automation
 
 GitHub Actions の取得結果を確認した後、翻訳、短い紹介文作成、公開カテゴリ付与、副業リポ側 LP 反映は Codex アプリの automation で実行する。
