@@ -485,3 +485,7 @@ const overseasRmSources: OverseasRmSource[] = [
 - 公開候補 export preview に自分用要約は含まれない。
 - 確認済みレビュー画面には、確認済み記事だけが表示される。
 - 確認済みレビュー画面で、要約、レベニューマネジメント担当者向けの示唆、原文 URL を同じ画面で確認できる。
+
+## 公開exportと確認の境界
+
+公開LP/Xは短い導線と原文linkを中心とし、記事全文や原文構成を再現する紹介を公開しない。DBの未確認記事/候補/メモはGit外の非公開SQLiteに保持する。公開候補flagを公開承認にしない。automationはexports/public_rm_articles.jsonのみ、1回最大5件、0件でもrun_at_utcを更新し、鮮度監視は7日。SideBizがexportを取得して公開面へ反映し、その結果は別に確認する。
