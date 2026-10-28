@@ -145,7 +145,7 @@ GitHub Actions の snapshot 取得は、SQLite を更新しません。取得結
 
 ## ドキュメント
 
-- 現在地: `docs/context/STATUS.md`
+- 現在地: [関連Issue/整理前記録](https://github.com/NemuKei/rm-trend-radar/issues/7)
 - 判断原則: `docs/context/INTENT.md`
 - 意思決定: `docs/context/DECISIONS.md`
 - タスク: `docs/tasks_backlog.md`

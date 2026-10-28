@@ -233,7 +233,7 @@
   完了メモ: 2026-05-04 に `fetch-snapshot` CLI と `.github/workflows/fetch-rss-snapshot.yml` を追加した。workflow は毎日 23:00 UTC、日本時間 08:00 に実行し、`artifacts/rss_snapshot.json` を `rss-snapshot` artifact として 14 日保存する。`permissions` は `contents: read` のみにした。初回手動実行で Hotel Speak だけ取得失敗し exit 3 になったため、Actions では `--allow-partial` を付け、少なくとも 1 source が成功した場合は artifact を残して成功扱いにする。
 
 - [x] `P5-03` RSS snapshot の実行頻度を 3 日に 1 回程度へ変更する
-  Done条件: `.github/workflows/fetch-rss-snapshot.yml` の schedule が 3 日に 1 回程度の 14:37 JST 相当に変更され、`README.md`、`docs/spec_001_sources.md`、`docs/context/STATUS.md` に頻度、時刻、GitHub Actions cron の制約が記録されている。
+  Done条件: `.github/workflows/fetch-rss-snapshot.yml` の schedule が 3 日に 1 回程度の 14:37 JST 相当に変更され、`README.md`、`docs/spec_001_sources.md`、[関連Issue/整理前記録](https://github.com/NemuKei/rm-trend-radar/issues/7) に頻度、時刻、GitHub Actions cron の制約が記録されている。
   依存: `P5-02`
   spec-impact: yes
   spec-checkpoint: before-impl
@@ -257,11 +257,11 @@
   完了メモ: 2026-05-11 に SideBiz 側の `refresh_overseas_rm_articles.py` と `styles.css` を更新した。カテゴリごとの日本語タイトル一覧は先頭 8 件を常時表示し、超過分は `<details class="article-title-more">` に入れて「さらにN件を表示」で展開できる。60 件反映後は 5 カテゴリで折りたたみが生成され、超過件数は 2, 2, 2, 2, 6 件である。
 
 - [x] `P5-06` Codex automation の初回実行結果を確認する
-  Done条件: `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加または更新された記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、検証結果、commit hash、push 先 branch を `docs/context/STATUS.md` に記録する。LP 用 JSON に許可項目以外が含まれていないこと、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長文公開コンテンツが含まれていないことを確認する。
+  Done条件: `rm-trend-radar-lp-reflection` の初回実行結果を確認し、追加または更新された記事数、保留記事、カテゴリ別件数、SideBiz 側変更ファイル、検証結果、commit hash、push 先 branch を [関連Issue/整理前記録](https://github.com/NemuKei/rm-trend-radar/issues/7) に記録する。LP 用 JSON に許可項目以外が含まれていないこと、記事本文全文、RSS `description`、RSS `content:encoded`、自分用要約、手動メモ、長文公開コンテンツが含まれていないことを確認する。
   依存: `P5-04`
   spec-impact: no
   spec-checkpoint: not-needed
-  完了メモ: 2026-05-11 に初回実行を完了し、結果を `docs/context/STATUS.md` に記録した。新規に公開候補へ 5 件追加し、副業リポ側 LP の公開候補記事数は 60 → 65 になった。SideBiz 側では `02_Service/web_lp/data/overseas_rm_articles.json` と `02_Service/web_lp/overseas_rm_articles.html` を更新した。LP 用 JSON の `articles` は許可 7 項目（`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`）のみであることを確認した。検証として、`rm-trend-radar` の `compileall` と `pytest tests`、SideBiz 側 script の `py_compile` と JSON/HTML 構造チェック、`git diff --check` を通過した。commit/push は `rm-trend-radar` main `89d0da3`、`SideBiz_HotelRM` main `4fe4f80` である。
+  完了メモ: 2026-05-11 に初回実行を完了し、結果を [関連Issue/整理前記録](https://github.com/NemuKei/rm-trend-radar/issues/7) に記録した。新規に公開候補へ 5 件追加し、副業リポ側 LP の公開候補記事数は 60 → 65 になった。SideBiz 側では `02_Service/web_lp/data/overseas_rm_articles.json` と `02_Service/web_lp/overseas_rm_articles.html` を更新した。LP 用 JSON の `articles` は許可 7 項目（`public_category`, `public_category_label`, `title_ja`, `summary_ja`, `source_name`, `published_date`, `url`）のみであることを確認した。検証として、`rm-trend-radar` の `compileall` と `pytest tests`、SideBiz 側 script の `py_compile` と JSON/HTML 構造チェック、`git diff --check` を通過した。commit/push は `rm-trend-radar` main `89d0da3`、`SideBiz_HotelRM` main `4fe4f80` である。
 
 ## Remaining Task Triage
 
