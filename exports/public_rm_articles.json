@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-10-28T06:45:35Z",
+  "run_at_utc": "2026-10-31T06:08:11Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1569,6 +1569,15 @@
       "source_name": "Revfine",
       "published_date": "2026-10-19",
       "url": "https://www.revfine.com/hotel-pricing-know-when-to-act-and-when-to-leave-it-alone/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "競合への料金追随が招く値下げの連鎖を考える",
+      "summary_ja": "競合料金への反応が値下げの連鎖につながる可能性を論じる、RoomPriceGenieのCEOによる寄稿。ホテルの自動価格設定と、需要を見極める判断の関係を考える入口になります。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-10-26",
+      "url": "https://www.hotelspeak.com/2026/10/are-hotels-accidentally-teaching-each-other-to-lower-their-rates/"
     }
   ]
 }
