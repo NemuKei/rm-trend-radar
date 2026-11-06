@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-11-03T06:11:15Z",
+  "run_at_utc": "2026-11-06T06:09:59Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1578,6 +1578,42 @@
       "source_name": "Hotel Speak",
       "published_date": "2026-10-26",
       "url": "https://www.hotelspeak.com/2026/10/are-hotels-accidentally-teaching-each-other-to-lower-their-rates/"
+    },
+    {
+      "public_category": "forecast_occupancy_controls",
+      "public_category_label": "需要予測・稼働・宿泊制限",
+      "title_ja": "閑散期の平日需要を育てる宿泊企画とデータの使い方",
+      "summary_ja": "ホテルのRM担当者が、閑散期の平日需要を捉える宿泊企画について寄稿。予約データを企画と効果検証につなげる考え方を紹介する。",
+      "source_name": "Hotel Speak",
+      "published_date": "2026-11-03",
+      "url": "https://www.hotelspeak.com/2026/11/filling-the-shoulder-season-what-demand-data-reveals-about-midweek-lifestyle-programming/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "競合が値下げしたとき、自館の料金をどう判断するか",
+      "summary_ja": "CloudbedsによるRevfine寄稿。競合料金を参考にしながら、自館の需要や販売状況を踏まえて値下げの要否を考える記事。",
+      "source_name": "Revfine",
+      "published_date": "2026-11-01",
+      "url": "https://www.revfine.com/your-competitor-lowered-rates-why-you-shouldnt-follow/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "AIとRM担当者の協働をチェスの事例から考える",
+      "summary_ja": "Juyo AnalyticsによるRevfine寄稿。人とAIが組むチェスを題材に、ホテルの収益管理でAIを活用する働き方や担当者の判断の役割を論じる。",
+      "source_name": "Revfine",
+      "published_date": "2026-11-01",
+      "url": "https://www.revfine.com/ai-in-hotel-revenue-management-lessons-from-centaur-chess/"
+    },
+    {
+      "public_category": "pricing_optimization",
+      "public_category_label": "料金設定・価格最適化",
+      "title_ja": "都市・海辺・山間・郊外のホテルで考えるRMの違い",
+      "summary_ja": "Franco GrassoによるRevfine寄稿。ホテルの立地や季節性によって異なる収益管理の論点を紹介する。自施設の料金戦略を見直す際の参考に。",
+      "source_name": "Revfine",
+      "published_date": "2026-11-01",
+      "url": "https://www.revfine.com/revenue-management-tips-for-beach-city-mountain-or-countryside-hotels/"
     }
   ]
 }
