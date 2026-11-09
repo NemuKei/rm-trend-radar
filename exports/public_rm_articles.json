@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-11-06T06:09:59Z",
+  "run_at_utc": "2026-11-09T06:15:15Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1614,6 +1614,24 @@
       "source_name": "Revfine",
       "published_date": "2026-11-01",
       "url": "https://www.revfine.com/revenue-management-tips-for-beach-city-mountain-or-countryside-hotels/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "自館のレベニューマネジメントはどの段階にあるか",
+      "summary_ja": "RoomPriceGenieが自社委託の調査をもとに、ホテルの料金決定プロセスを段階別に分析。自館の料金見直しの頻度や担当体制を点検するきっかけになる記事です。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-11-05",
+      "url": "https://roompricegenie.com/hotel-revenue-management-tiers/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテル向けAI収益管理システムを導入前にどう評価するか",
+      "summary_ja": "自館の予約実績で需要予測を検証し、料金提案の根拠を現場で確認できるかを見極める方法を紹介。AIを使った収益管理システムの選定を扱うRevfineの記事です。",
+      "source_name": "Revfine",
+      "published_date": "2026-11-01",
+      "url": "https://www.revfine.com/ai-revenue-management-system-evaluation/"
     }
   ]
 }
