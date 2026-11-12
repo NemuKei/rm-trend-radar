@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-11-09T06:15:15Z",
+  "run_at_utc": "2026-11-12T06:15:16Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1632,6 +1632,24 @@
       "source_name": "Revfine",
       "published_date": "2026-11-01",
       "url": "https://www.revfine.com/ai-revenue-management-system-evaluation/"
+    },
+    {
+      "public_category": "distribution_ota_direct",
+      "public_category_label": "Distribution・OTA・直販",
+      "title_ja": "独立系ホテルが予約ペースを直販施策に生かすには",
+      "summary_ja": "RoomPriceGenieに掲載されたWebRezProの寄稿。予約の入り方を見ながら、需要が弱い日程の販促や再訪客の直販につなげるために、料金管理と宿泊客向けの販促をどう連携させるかを扱います。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-11-03",
+      "url": "https://roompricegenie.com/hotel-technology-trends-revenue/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "2027年に向けてホテルの収益部門は何を優先するか",
+      "summary_ja": "IDeaSが業界関係者への聞き取りと簡易調査をもとに、ホテルの収益部門が抱える課題を紹介。収益性の管理や部門間の連携など、自社で優先すべき課題を考える材料になります。",
+      "source_name": "IDeaS",
+      "published_date": "2026-11-03",
+      "url": "https://ideas.com/meeting-the-future-with-confidence-whats-top-of-mind-for-hospitality-leaders-2027/"
     }
   ]
 }
