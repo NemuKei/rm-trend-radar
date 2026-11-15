@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "run_at_utc": "2026-11-12T06:15:16Z",
+  "run_at_utc": "2026-11-15T06:10:07Z",
   "automation_id": "rm-trend-radar-lp-reflection",
   "source_repo": "rm-trend-radar",
   "articles": [
@@ -1650,6 +1650,15 @@
       "source_name": "IDeaS",
       "published_date": "2026-11-03",
       "url": "https://ideas.com/meeting-the-future-with-confidence-whats-top-of-mind-for-hospitality-leaders-2027/"
+    },
+    {
+      "public_category": "organization_process",
+      "public_category_label": "組織・業務プロセス",
+      "title_ja": "ホテルの料金管理で自動化する仕事と人が担う判断",
+      "summary_ja": "RoomPriceGenieに掲載されたSmart Hostの寄稿。日々の料金更新を自動化するとき、料金の上下限や狙う客層など、ホテル側が決めるべきことを扱います。",
+      "source_name": "RoomPriceGenie",
+      "published_date": "2026-11-09",
+      "url": "https://roompricegenie.com/hotel-automation-tasks-to-automate/"
     }
   ]
 }
